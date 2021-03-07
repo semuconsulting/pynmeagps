@@ -97,7 +97,7 @@ Examples:
 
 ## Parsing
 
-You can parse individual UBX messages using the static `NMEAReader.parse(data, validate=1)` function, which takes a bytes array containing a binary UBX message and returns a `NMEAMessage` object.
+You can parse individual NMEA messages using the static `NMEAReader.parse(data, validate=1)` function, which takes a string or bytes containing an NMEA message and returns a `NMEAMessage` object.
 
 The validate flag signifies whether to validate the incoming checksum (1), msgid (2), both (3) or neither (0). If invalid, a `NMEAParseError` will be raised. The default (1) is to validate the checksum but ignore (and discard) an unknown msgID.
 
@@ -105,7 +105,7 @@ Example:
 
 ```python
 >>> from pynmeagps import NMEAReader
->>> msg = NMEAReader.parse('$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n', True)
+>>> msg = NMEAReader.parse('$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n', 1)
 >>> print(msg)
 <NMEA(GNGLL, lat=-53.45072, NS=S, lon=2.240233, EW=E, time=22:32:32, status=A, posMode=A)>
 ```
