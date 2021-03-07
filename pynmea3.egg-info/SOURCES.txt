@@ -1,0 +1,16 @@
+LICENSE
+MANIFEST.in
+README.md
+setup.py
+pynmea3/__init__.py
+pynmea3/_version.py
+pynmea3/exceptions.py
+pynmea3/nmeahelpers.py
+pynmea3/nmeamessage.py
+pynmea3/nmeareader.py
+pynmea3/nmeatypes_core.py
+pynmea3/nmeatypes_get.py
+pynmea3.egg-info/PKG-INFO
+pynmea3.egg-info/SOURCES.txt
+pynmea3.egg-info/dependency_links.txt
+pynmea3.egg-info/top_level.txt

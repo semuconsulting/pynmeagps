@@ -1,0 +1,422 @@
+"""
+Main NMEA GNSS/GPS Message Protocol Class.
+
+Created on 04 Mar 2021
+
+:author: semuadmin
+:copyright: SEMU Consulting © 2021
+:license: BSD 3-Clause
+"""
+# pylint: disable=invalid-name
+
+import struct
+import pynmeagps.exceptions as nme
+import pynmeagps.nmeatypes_core as nmt
+import pynmeagps.nmeatypes_get as nmg
+import pynmeagps.nmeatypes_poll as nmp
+import pynmeagps.nmeatypes_set as nms
+from pynmeagps.nmeahelpers import (
+    date2utc,
+    time2utc,
+    dmm2ddd,
+    list2csv,
+    calc_checksum,
+)
+
+
+class NMEAMessage:
+    """NMEA GNSS/GPS Message Class."""
+
+    def __init__(self, talker, msgID, mode: int, **kwargs):
+        """Constructor.
+
+        If 'payload' is passed as a keyword arg, this is taken to contain the entire
+        message content as a list of string values; any other keyword args are ignored.
+
+        Otherwise, any individual attributes passed as keyword args will be set to the
+        value provided, all others will be assigned a nominal value according to type.
+
+        :param str talker: message talker e.g. "GP"
+        :param str msgID: message ID e.g. "GGA"
+        :param int mode: mode (0=GET, 1=SET, 2=POLL)
+        :param kwargs: keyword arg(s) representing all or some payload attributes
+        :raises: NMEAMessageError
+
+        """
+
+        # object is mutable during initialisation only
+        super().__setattr__("_immutable", False)
+
+        self._mode = mode
+        if mode not in (0, 1, 2):
+            raise nme.NMEAMessageError(f"Invalid mode {mode} - must be 0, 1 or 2.")
+
+        self._talker = talker
+        self._msgID = msgID
+        self._do_attributes(**kwargs)
+        self._sign_latlon()
+        self._immutable = True  # once initialised, object is immutable
+
+    def _do_attributes(self, **kwargs):
+        """
+        Populate NMEAMessage from named attribute keywords.
+        Where a named attribute is absent, set to a nominal value (zeros or blanks).
+
+        :param kwargs: optional content key/value pairs
+        :raises: UBXTypeError
+        """
+
+        pindex = 0  # payload index
+        gindex = []  # (nested) grouped attribute indices
+
+        try:
+
+            self._payload = kwargs.get("payload", [])
+            self._checksum = kwargs.get("checksum", "00")
+
+            pdict = self._get_dict(**kwargs)  # get payload definition dict
+            for key in pdict.keys():  # process each attribute in dict
+                (pindex, gindex) = self._set_attribute(
+                    pindex, pdict, key, gindex, **kwargs
+                )
+            # recalculate checksum for (re)constructed message
+            self._checksum = calc_checksum(self.serialize())
+
+        except (
+            AttributeError,
+            OverflowError,
+            struct.error,
+            TypeError,
+            ValueError,
+        ) as err:
+            raise nme.NMEATypeError(
+                f"Incorrect type for attribute {key} in msgID {self._msgID}."
+            ) from err
+
+    def _set_attribute(
+        self, pindex: int, pdict: dict, key: str, gindex: list, **kwargs
+    ) -> tuple:
+        """
+        Recursive routine to set individual or grouped payload attributes.
+
+        :param int pindex: payload index
+        :param dict pdict: dict representing payload definition
+        :param str key: attribute keyword
+        :param list gindex: repeating group index array
+        :param kwargs: optional payload key/value pairs
+        :return: (pindex, gindex[])
+        :rtype: tuple
+        """
+
+        att = pdict[key]  # get attribute type
+        if isinstance(att, tuple):  # repeating group of attributes
+            (pindex, gindex) = self._set_attribute_group(att, pindex, gindex, **kwargs)
+        else:  # single attribute
+            pindex = self._set_attribute_single(att, pindex, key, gindex, **kwargs)
+
+        return (pindex, gindex)
+
+    def _set_attribute_group(
+        self, att: tuple, pindex: int, gindex: list, **kwargs
+    ) -> tuple:
+        """
+        Process (nested) group of attributes.
+
+        :param tuple att: attribute group - tuple of (num repeats, attribute dict)
+        :param int pindex: payload index
+        :param list gindex: repeating group index array
+        :param kwargs: optional payload key/value pairs
+        :return: (pindex, gindex[])
+        :rtype: tuple
+        """
+
+        gindex.append(0)  # add a (nested) group index
+        numr, attd = att  # number of repeats, group dictionary
+
+        # derive or retrieve number of items in group
+        if isinstance(numr, int):  # fixed number of repeats
+            rng = numr
+        elif numr == "None":  # indeterminate number of repeats
+            pindexend = 0  # TODO some contents have fields before and after group
+            rng = self._calc_num_repeats(attd, self._payload, pindex, pindexend)
+        else:  # number of repeats is defined in named attribute
+            rng = getattr(self, numr)
+        # recursively process each group attribute,
+        # incrementing the payload index and group index as we go
+        for i in range(rng):
+            gindex[-1] = i + 1
+            for key1 in attd.keys():
+                (pindex, gindex) = self._set_attribute(
+                    pindex, attd, key1, gindex, **kwargs
+                )
+
+        gindex.pop()  # remove this (nested) group index
+
+        return (pindex, gindex)
+
+    def _set_attribute_single(
+        self, att: str, pindex: int, key: str, gindex: list, **kwargs
+    ) -> int:
+        """
+        Set individual attribute value.
+
+        :param str att: attribute type e.g. 'NU'
+        :param int pindex: payload index
+        :param str key: attribute keyword
+        :param list gindex: repeating group index array
+        :param kwargs: optional payload key/value pairs
+        :return: pindex
+        :rtype: int
+        """
+        # pylint: disable=no-member
+
+        # if attribute is part of a (nested) repeating group, suffix name with group index
+        keyr = key
+        for i in gindex:  # one index for each nested level
+            if i > 0:
+                keyr = keyr + "_{0:0=2d}".format(i)
+
+        try:
+            # all attribute values have been provided
+            if "payload" in kwargs:
+                val = self._payload[pindex]
+                val = self.str2val(val, att)
+            # some attribute values have been provided,
+            # the rest will be set to a nominal value
+            else:
+                nomval = 0 if att in (nmt.IN, nmt.DE) else ""
+                val = kwargs.get(keyr, nomval)
+                vals = self.val2str(val, att)
+                self._payload.append(vals)
+
+        except IndexError:  # probably just an older device missing NMEA <=4.10 dict attributes
+            return pindex
+
+        setattr(self, keyr, val)  # add attribute to NMEAMessage object
+        pindex += 1  # move on to next attribute in payload definition
+
+        return pindex
+
+    def _sign_latlon(self):
+        """
+        Adjust sign of decimal lat/lon according to direction (NS/EW) value
+        """
+        # pylint: disable=no-member, E0203
+
+        if (
+            hasattr(self, "lat")
+            and hasattr(self, "lon")
+            and hasattr(self, "NS")
+            and hasattr(self, "EW")
+        ):
+            if self.NS == "S" and self.lat > 0:
+                self.lat = self.lat * -1
+            if self.EW == "W" and self.lon > 0:
+                self.lon = self.lon * -1
+
+    def _get_dict(self, **kwargs) -> dict:
+        """
+        Get payload dictionary.
+
+        :return: dictionary representing payload definition
+        :rtype: dict
+        """
+
+        try:
+            key = self.msgID
+            if key == "PUBX":  # proprietary UBX message
+                if "payload" in kwargs:
+                    key += self._payload[0]
+                elif "msgId" in kwargs:
+                    key += kwargs["msgId"]
+                else:
+                    raise nme.NMEAMessageError(
+                        "PUBX message definitions must include payload or msgId keyword arguments."
+                    )
+            if self._mode == nmt.POLL:
+                return nmp.NMEA_PAYLOADS_POLL[key]
+            if self._mode == nmt.SET:
+                return nms.NMEA_PAYLOADS_SET[key]
+            return nmg.NMEA_PAYLOADS_GET[key]
+        except KeyError as err:
+            raise nme.NMEAMessageError(f"Unknown message type msgID {key}.") from err
+
+    def _calc_num_repeats(
+        self, attd: dict, payload: list, pindex: int, pindexend: int = 0
+    ) -> int:
+        """
+        Deduce number of items in repeating group.
+
+        :param dict attd: grouped attribute dictionary
+        :param list payload : content as list
+        :param int pindex: number of payload attributes before group
+        :param int pindexend: number of payload attributes after group
+        :return: number of repeats
+        :rtype: int
+        """
+        # pylint: disable=no-self-use
+
+        lenpayload = len(payload) - pindex - pindexend
+        lengroup = len(attd)
+        return int(lenpayload / lengroup)
+
+    def __str__(self) -> str:
+        """
+        Human readable representation.
+
+        :return: human readable representation
+        :rtype: str
+        """
+
+        stg = f"<NMEA({self._talker}{self._msgID}"
+        stg += ", "
+        for i, att in enumerate(self.__dict__):
+            if att[0] != "_":  # only show public attributes
+                val = self.__dict__[att]
+                stg += att + "=" + str(val)
+                if i < len(self.__dict__) - 1:
+                    stg += ", "
+        stg += ")>"
+
+        return stg
+
+    def __repr__(self) -> str:
+        """
+        Machine readable representation.
+
+        eval(repr(obj)) = obj
+
+        :return: machine readable representation
+        :rtype: str
+        """
+
+        return (
+            f"NMEAMessage('{self._talker}','{self._msgID}', "
+            f"{self._mode}, payload={self._payload})"
+        )
+
+    def __setattr__(self, name, value):
+        """
+        Override setattr to make object immutable after instantiation.
+
+        :param str name: attribute name
+        :param object value: attribute value
+        :raises: NMEAMessageError
+        """
+
+        if self._immutable:
+            raise nme.NMEAMessageError(
+                f"Object is immutable. Updates to {name} not permitted after initialisation."
+            )
+
+        super().__setattr__(name, value)
+
+    def serialize(self) -> bytes:
+        """
+        Serialize message.
+
+        :return: serialized output
+        :rtype: bytes
+        """
+
+        output = "$" + self._talker + self._msgID + ","
+        if len(self._payload) > 0:
+            output += list2csv(self._payload)
+        output += "*" + self._checksum + "\r\n"
+        return output.encode("utf-8")  # convert str to bytes
+
+    @property
+    def talker(self) -> str:
+        """
+        Talker getter.
+
+        :return: talker
+        :rtype: str
+        """
+        return self._talker
+
+    @property
+    def msgID(self) -> str:
+        """
+        Message id getter.
+
+        :return: message id
+        :rtype: str
+        """
+
+        return self._msgID
+
+    @property
+    def payload(self) -> list:
+        """
+        Payload getter.
+
+        :return: raw payload as list of strings
+        :rtype: list
+        """
+
+        return self._payload
+
+    @property
+    def checksum(self) -> str:
+        """
+        Checksum getter.
+
+        :return: checksum as hex string
+        :rtype: str
+        """
+
+        return self._checksum
+
+    @staticmethod
+    def str2val(vals: str, att: str) -> object:
+        """
+        Convert string to typed value
+        (this is the format that will be available to end users).
+
+        :param str vals: attribute value in string format
+        :param str att: attribute type e.g. 'DE'
+        :return: attribute value
+        :rtype: object
+        :raises: MMEATypeError
+        """
+
+        val = vals
+        if att in (nmt.CH, nmt.ST, nmt.HX):  # character, string, hex
+            pass
+        elif att == nmt.DE:  # decimal
+            if vals != "":
+                val = float(vals)
+        elif att == nmt.DT:  # date ddmmyy
+            val = date2utc(vals)
+        elif att == nmt.IN:  # integer
+            if vals != "":
+                val = int(vals)
+        elif att in (nmt.LA, nmt.LN):  # lat/lon (d)ddmm.mmmmm
+            val = dmm2ddd(vals, att)
+        elif att == nmt.TM:  # time hhmmss.ss
+            val = time2utc(vals)
+        else:
+            raise nme.NMEATypeError(f"Unknown attribute type {att}.")
+        return val
+
+    @staticmethod
+    def val2str(val, att: str) -> str:
+        """
+        Convert typed value to string
+        (this is the format used internally by the NMEA protocol).
+
+        :param object val: typed attribute value
+        :param str att: attribute type e.g. 'IN'
+        :return: attribute value as string
+        :rtype: str
+        :raises: NMEATypeError
+
+        """
+        # TODO does it need to be more refined than this e.g. for dates/times/floats/hex?
+
+        if att in (nmt.CH, nmt.DE, nmt.DT, nmt.HX, nmt.IN, nmt.ST, nmt.TM):
+            vals = str(val)
+        else:
+            raise nme.NMEATypeError(f"Unknown attribute type {att}.")
+        return vals
