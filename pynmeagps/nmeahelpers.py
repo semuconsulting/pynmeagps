@@ -131,6 +131,30 @@ def dmm2ddd(pos: str, att: str) -> float:
     return round((posdeg + posmin / 60), 6)
 
 
+def ddd2dmm(degrees: float, att: str) -> str:
+    """
+    Convert decimal degrees to degrees decimal minutes string
+    (i.e. the native NMEA format).
+
+    :param float degrees: degrees
+    :param str att: 'LA' (lat) or 'LN' (lon)
+    :return: degrees as dm.m formatted string
+    :rtype: str
+
+    """
+
+    if not isinstance(degrees, (float, int)) or att not in (LA, LN):
+        return ""
+    degrees = abs(degrees)
+    degrees, minutes = divmod(degrees * 60, 60)
+    degrees = int(degrees * 100)
+    if att == "LA":
+        dmm = format(degrees + minutes, "011f")[0:10]
+    else:  # LN
+        dmm = format(degrees + minutes, "012f")[0:11]
+    return dmm
+
+
 def date2utc(dates: str) -> datetime.date:
     """
     Convert NMEA Date to UTC datetime.
@@ -160,3 +184,84 @@ def time2utc(times: str) -> datetime.time:
     # TODO not quite right should be decimal secs, not microsecs
     utc = datetime.strptime(times, "%H%M%S.%f")
     return utc.time()
+
+
+def time2str(tim: datetime.time) -> str:
+    """
+    Convert datetime.time to NMEA formatted string.
+
+    :param datetime.time tim: time
+    :return: NMEA formatted time string hhmmss.ss
+    :rtype: str
+    """
+
+    return tim.strftime("%H%M%S.%f")[0:9]
+
+
+def date2str(dat: datetime.date) -> str:
+    """
+    Convert datetime.date to NMEA formatted string.
+
+    :param datetime.date dat: date
+    :return: NMEA formatted date string ddmmyy
+    :rtype: str
+    """
+
+    return dat.strftime("%d%m%y")
+
+
+def deg2dms(degrees: float, att: str) -> str:
+    """
+    Convert decimal degrees to degrees minutes seconds string
+    e.g. for display purposes.
+
+    :param float degrees: degrees
+    :param str att: 'LA' (lat) or 'LN' (lon)
+    :return: degrees as d.m.s formatted string
+    :rtype: str
+
+    """
+
+    if not isinstance(degrees, (float, int)):
+        return ""
+    negative = degrees < 0
+    degrees = abs(degrees)
+    minutes, seconds = divmod(degrees * 3600, 60)
+    degrees, minutes = divmod(minutes, 60)
+    if negative:
+        sfx = "S" if att == "LA" else "W"
+    else:
+        sfx = "N" if att == "LA" else "E"
+    return (
+        str(int(degrees))
+        + "\u00b0"
+        + str(int(minutes))
+        + "\u2032"
+        + str(round(seconds, 3))
+        + "\u2033"
+        + sfx
+    )
+
+
+def deg2dmm(degrees: float, att: str) -> str:
+    """
+    Convert decimal degrees to degrees decimal minutes string
+    e.g. for display purposes.
+
+    :param float degrees: degrees
+    :param str att: 'LA' (lat) or 'LN' (lon)
+    :return: degrees as dm.m formatted string
+    :rtype: str
+
+    """
+
+    if not isinstance(degrees, (float, int)):
+        return ""
+    negative = degrees < 0
+    degrees = abs(degrees)
+    degrees, minutes = divmod(degrees * 60, 60)
+    if negative:
+        sfx = "S" if att == "LA" else "W"
+    else:
+        sfx = "N" if att == "LA" else "E"
+    return str(int(degrees)) + "\u00b0" + str(round(minutes, 5)) + "\u2032" + sfx

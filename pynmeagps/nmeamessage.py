@@ -10,6 +10,7 @@ Created on 04 Mar 2021
 # pylint: disable=invalid-name
 
 import struct
+import datetime
 import pynmeagps.exceptions as nme
 import pynmeagps.nmeatypes_core as nmt
 import pynmeagps.nmeatypes_get as nmg
@@ -17,8 +18,11 @@ import pynmeagps.nmeatypes_poll as nmp
 import pynmeagps.nmeatypes_set as nms
 from pynmeagps.nmeahelpers import (
     date2utc,
+    date2str,
     time2utc,
+    time2str,
     dmm2ddd,
+    ddd2dmm,
     list2csv,
     calc_checksum,
 )
@@ -184,8 +188,10 @@ class NMEAMessage:
             # some attribute values have been provided,
             # the rest will be set to a nominal value
             else:
-                nomval = 0 if att in (nmt.IN, nmt.DE) else ""
-                val = kwargs.get(keyr, nomval)
+                if keyr in kwargs:
+                    val = kwargs[keyr]
+                else:
+                    val = self.nomval(att)
                 vals = self.val2str(val, att)
                 self._payload.append(vals)
 
@@ -413,10 +419,44 @@ class NMEAMessage:
         :raises: NMEATypeError
 
         """
-        # TODO does it need to be more refined than this e.g. for dates/times/floats/hex?
 
-        if att in (nmt.CH, nmt.DE, nmt.DT, nmt.HX, nmt.IN, nmt.ST, nmt.TM):
+        if att in (nmt.CH, nmt.HX, nmt.ST):
             vals = str(val)
+        elif att == nmt.DE:
+            vals = str(val)
+        elif att == nmt.IN:
+            vals = str(val)
+        elif att in (nmt.LA, nmt.LN):
+            vals = ddd2dmm(val, att)
+        elif att == nmt.TM:
+            vals = time2str(val)
+        elif att == nmt.DT:
+            vals = date2str(val)
         else:
             raise nme.NMEATypeError(f"Unknown attribute type {att}.")
         return vals
+
+    @staticmethod
+    def nomval(att: str) -> object:
+        """
+        Return nominal value for specified attribute type
+
+        :param str att: attribute type e.g. 'DE'
+        :return: nominal value for type
+        :rtype: object
+        :raises: NMEATypeError
+        """
+
+        if att in (nmt.CH, nmt.HX, nmt.ST, nmt.LA, nmt.LN):
+            val = ""
+        elif att == nmt.DE:
+            val = 0.0
+        elif att == nmt.IN:
+            val = 0
+        elif att == nmt.TM:
+            val = datetime.datetime.now().time()
+        elif att == nmt.DT:
+            val = datetime.datetime.now().date()
+        else:
+            raise nme.NMEATypeError(f"Unknown attribute type {att}.")
+        return val

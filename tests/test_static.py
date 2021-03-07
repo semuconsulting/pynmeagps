@@ -10,7 +10,7 @@ Created on 3 Oct 2020
 
 import unittest
 import datetime
-from pynmeagps import NMEAReader, NMEAMessage, NMEAMessageError  # pylint: disable=unused-import
+from pynmeagps import NMEAReader, NMEAMessage, NMEAMessageError, NMEATypeError  # pylint: disable=unused-import
 import pynmeagps.nmeahelpers as nmh
 
 
@@ -73,6 +73,14 @@ class StaticTest(unittest.TestCase):
         res = nmh.dmm2ddd('00214.12345', 'LN')
         self.assertEqual(res, 2.235391)
 
+    def testDDD2DMM(self):
+        res = nmh.ddd2dmm(53.75000, 'LA')
+        self.assertEqual(res, '5345.00000')
+        res = nmh.ddd2dmm(-2.75000, 'LN')
+        self.assertEqual(res, '00245.00000')
+        res = nmh.ddd2dmm("", 'LN')
+        self.assertEqual(res, "")
+
     def testDate2UTC(self):
         res = nmh.date2utc('')
         self.assertEqual(res, "")
@@ -84,6 +92,30 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, "")
         res = nmh.time2utc('081123.000')
         self.assertEqual(res, datetime.time(8, 11, 23))
+
+    def testTime2str(self):
+        res = nmh.time2str(datetime.time(8, 11, 23))
+        self.assertEqual(res, '081123.00')
+
+    def testDate2str(self):
+        res = nmh.date2str(datetime.date(2021, 3, 7))
+        self.assertEqual(res, '070321')
+
+    def testdeg2dms(self):
+        res = nmh.deg2dms(53.346, 'LA')
+        self.assertEqual(res, ('53°20′45.6″N'))
+        res = nmh.deg2dms(-2.5463, 'LN')
+        self.assertEqual(res, ('2°32′46.68″W'))
+        res = nmh.deg2dms("", 'LN')
+        self.assertEqual(res, (""))
+
+    def testdeg2dmm(self):
+        res = nmh.deg2dmm(-53.346, 'LA')
+        self.assertEqual(res, ('53°20.76′S'))
+        res = nmh.deg2dmm(2.5463, 'LN')
+        self.assertEqual(res, ('2°32.778′E'))
+        res = nmh.deg2dmm("", 'LN')
+        self.assertEqual(res, (""))
 
 #*******************************************
 # NMEAMessage property methods
@@ -142,6 +174,48 @@ class StaticTest(unittest.TestCase):
         res1 = self.msgPUBX00
         res2 = NMEAReader.parse(self.msgPUBX00.serialize())
         self.assertEqual(str(res1), str(res2))
+
+    def testNomVal(self):
+        for att in ('CH', 'HX', 'ST', 'LA', 'LN'):
+            res = NMEAMessage.nomval(att)
+            self.assertEqual(res, "")
+        res = NMEAMessage.nomval('IN')
+        self.assertEqual(res, 0)
+        res = NMEAMessage.nomval('DE')
+        self.assertEqual(res, 0.0)
+        res = NMEAMessage.nomval('TM')
+        self.assertIsInstance(res, datetime.time)
+        res = NMEAMessage.nomval('DT')
+        self.assertIsInstance(res, datetime.date)
+
+    def testNomValBAD(self):
+        EXPECTED_ERROR = "Unknown attribute type XX."
+        with self.assertRaises(NMEATypeError) as context:
+            NMEAMessage.nomval('XX')
+        self.assertTrue(EXPECTED_ERROR in str(context.exception))
+
+    def testVal2Str(self):
+        for att in ('CH', 'HX', 'ST'):
+            res = NMEAMessage.val2str("AB", att)
+            self.assertEqual(res, "AB")
+        res = NMEAMessage.val2str(23, 'IN')
+        self.assertEqual(res, '23')
+        res = NMEAMessage.val2str(15.286, 'DE')
+        self.assertEqual(res, '15.286')
+        res = NMEAMessage.val2str(55.5, 'LA')
+        self.assertEqual(res, "5530.00000")
+        res = NMEAMessage.val2str(2.75, 'LN')
+        self.assertEqual(res, "00245.00000")
+        res = NMEAMessage.val2str(datetime.datetime(2021, 5, 7, 2, 45, 23), 'TM')
+        self.assertEqual(res, '024523.00')
+        res = NMEAMessage.val2str(datetime.datetime(2020, 6, 7, 3, 27, 24), 'DT')
+        self.assertEqual(res, '070620')
+
+    def testVal2StrBAD(self):
+        EXPECTED_ERROR = "Unknown attribute type XX."
+        with self.assertRaises(NMEATypeError) as context:
+            NMEAMessage.val2str(23.45, 'XX')
+        self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
 #*******************************************
 # NMEAMessage magic methods

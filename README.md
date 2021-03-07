@@ -138,17 +138,33 @@ The 'mode' parameter signifies whether the message payload refers to a:
 * SET message (i.e. command input to the receiver)
 * POLL message (i.e. query input to the receiver in anticipation of a response back)
 
-The message payload can be defined via keyword parameters in one of three ways:
+The message payload can be defined via keyword parameters in one of two ways:
 1. A single keyword parameter of `payload` containing the full payload as a list of string values (any other keyword parameters will be ignored).
 2. One or more keyword parameters corresponding to individual message attributes. Any attributes not explicitly provided as keyword
 parameters will be set to a nominal value according to their type.
-3. If no keyword parameters are passed, the payload is assumed to be null.
 
-e.g. to generate a GNGPQ POLL message:
+e.g. Create a GLL message, passing the entire payload as a list of strings in native NMEA format:
+
+```python
+>>> from pynmeagps import NMEAMessage, GET
+>>> pyld=['4330.00000','N','00245.000000','W','120425.234','A','A']
+>>> msg = NMEAMessage('GN', 'GLL', GET, payload=pyld)
+print(msg)
+<NMEA(GNGLL, lat=43.5, NS=N, lon=-2.75, EW=W, time=12:04:25.234000, status=A, posMode=A)>
+```
+
+e.g. Create GLL and GPQ message, passing individual typed values as keywords, with any omitted keywords defaulting to nominal values (in the GLL example, the 'time' parameter has been omitted and has defaulted to the current time):
+
+```python
+>>> from pynmeagps import NMEAMessage, GET
+>>> msg = NMEAMessage('GN', 'GLL', GET, lat=43.5, NS='N', lon=2.75, EW='W', status='A', posMode='A')
+>>> print(msg)
+<NMEA(GNGLL, lat=43.5, NS='N', lon=-2.75, EW='W', time='12:04:25.234745', status='A', posMode='A')>
+```
 
 ```python
 >>> from pynmeagps import NMEAMessage, POLL
->>> msg = NMEAMessage('GN','GPQ', POLL, msgId='GGA')
+>>> msg = NMEAMessage('GN', 'GPQ', POLL, msgId='GGA')
 >>> print(msg)
 <NMEA(GNGPQ, msgId=GGA)>
 ```
@@ -177,7 +193,7 @@ The following examples can be found in the `\examples` folder:
 
 1. `nmeadump.py` is a simple command line utility to stream the parsed NMEA output of a GNSS/GPS device on a specified port.
 
-1. `nmeastreamer.py` illustrates how to implement a threaded serial reader for NMEA messages using pynmeagps.NMEAReader. 
+1. `nmeastreamer.py` illustrates how to implement a threaded serial reader for NMEA messages using pynmeagps.NMEAReader, and send poll requests for specific NMEA message types. 
 
 1. `nmeafile.py` illustrates how to implement a binary file reader for NMEA messages using the pynmeagps.NMEAReader iterator function. 
 
