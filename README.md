@@ -157,13 +157,16 @@ e.g. to generate a GNGPQ POLL message:
 
 ### Serializing
 
-The `NMEAMessage` class implements a `serialize()` method to convert a `NMEAMessage` object to a bytes array suitable for writing to an output stream.
+The `NMEAMessage` class implements a `serialize()` method to convert an `NMEAMessage` object to a bytes array suitable for writing to an output stream.
 
 ```python
+>>> from serial import Serial
 >>> from pynmeagps import NMEAMessage, POLL
+>>> stream = Serial('COM6', 38400, timeout=3)
 >>> msg = NMEAMessage('GN','GPQ', POLL, msgId='GGA')
 >>> msg.serialize()
 b'$GNGPQ,GGA*22\r\n'
+>>> stream.write(msg.serialize())
 ```
 
 ---
@@ -176,13 +179,13 @@ The following examples can be found in the `\examples` folder:
 
 1. `nmeastreamer.py` illustrates how to implement a threaded serial reader for NMEA messages using pynmeagps.NMEAReader. 
 
-1. `nmeafile.py` illustrates how to implement a binary file reader for UBX messages using the pynmeagps.NMEAReader iterator function. 
+1. `nmeafile.py` illustrates how to implement a binary file reader for NMEA messages using the pynmeagps.NMEAReader iterator function. 
 
-1. `gpxtracker.py` illustrates a simple CLI tool to convert a binary NMEA data dump to a `*.gpx` track file using pynmeagps.NMEAReader.
+1. `gpxtracker.py` illustrates a simple CLI tool to convert an NMEA data dump to a `*.gpx` track file using pynmeagps.NMEAReader.
 
 ## <a name="extensibility">Extensibility</a>
 
-The UBX protocol is principally defined in the modules `nmeatypes_*.py` as a series of dictionaries. Additional message types 
+The NMEA protocol is principally defined in the modules `nmeatypes_*.py` as a series of dictionaries. Additional message types 
 can be readily added to the appropriate dictionary. Message payload definitions must conform to the following rules:
 
 ```
