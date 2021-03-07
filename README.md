@@ -144,13 +144,13 @@ The message payload can be defined via keyword parameters in one of three ways:
 parameters will be set to a nominal value according to their type.
 3. If no keyword parameters are passed, the payload is assumed to be null.
 
-e.g. to generate a GNGGA message:
+e.g. to generate a GNGPQ POLL message:
 
 ```python
->>> from pynmeagps import NMEAMessage, GET
->>> msg = NMEAMessage("GN", "GLL", GET, NMEAMessage('GN','GLL', 0, payload=['5327.04304', 'S', '00214.41453', 'E', '222216.00', 'A', 'A'])
+>>> from pynmeagps import NMEAMessage, POLL
+>>> msg = NMEAMessage('GN','GPQ', POLL, msgId='GGA')
 >>> print(msg)
-<NMEA(GNGLL, lat=-53.450768, NS=S, lon=2.240169, EW=E, time=22:18:38, status=A, posMode=A)>
+<NMEA(GNGPQ, msgId=GGA)>
 ```
 
 **NB:** Once instantiated, an `NMEAMessage` object is immutable.
@@ -161,9 +161,9 @@ The `NMEAMessage` class implements a `serialize()` method to convert a `NMEAMess
 
 ```python
 >>> from pynmeagps import NMEAMessage, POLL
->>> msg = NMEAMessage('GN','GLL', 0, payload=['5327.04304', 'S', '00214.41453', 'E', '222216.00', 'A', 'A'])
+>>> msg = NMEAMessage('GN','GPQ', POLL, msgId='GGA')
 >>> msg.serialize()
-b'$GNGLL,5327.04304,S,00214.41453,E,222216.00,A,A*62\r\n'
+b'$GNGPQ,GGA*22\r\n'
 ```
 
 ---
