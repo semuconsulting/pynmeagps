@@ -65,6 +65,10 @@ deactivate
 
 ## Reading (Streaming)
 
+```
+class pynmeagps.nmeareader.NMEAReader(stream, nmea_only: bool = False, validate: int = 1, mode: int = 0)
+```
+
 You can create an `NMEAReader` object by calling the constructor with an active stream object. 
 The stream object can be any data stream which supports a `read(n) -> bytes` method (e.g. File or Serial, with 
 or without a buffer wrapper).
@@ -75,7 +79,7 @@ The `NMEAReader` constructor includes an optional `nmea_only` flag which governs
 
 The `NMEAReader` constructor also includes an optional `validate` flag which is passed to the `parse()` function - see **Parsing** below.
 
-A further optional `mode` flag signifies the message stream mode (GET/SET/POLL). Ordinarily this can be left at the default 0 (GET)).
+A further optional `mode` flag signifies the message stream mode (0=GET, 1=SET, 2=POLL). Ordinarily this can be left at the default 0 (GET)).
 
 Examples:
 
@@ -101,7 +105,7 @@ Examples:
 
 ## Parsing
 
-You can parse individual NMEA messages using the static `NMEAReader.parse(data, validate=1)` function, which takes a string or bytes containing an NMEA message and returns a `NMEAMessage` object.
+You can parse individual NMEA messages using the static `NMEAReader.parse(message)` function, which takes a string or bytes containing an NMEA message and returns a `NMEAMessage` object.
 
 An optional `validate` flag governs the level of validation applied during message parsing. The options are VALNONE (0 - no validation), VALCKSUM (1 - validate checksum, the default) and/or VALMSGID (2 - validate msgID). If invalid, an `NMEAParseError` is raised.
 
@@ -129,6 +133,10 @@ e.g. the `RMC` message has the following properties:
 ```
 
 ## Generating
+
+```
+class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, mode: int, **kwargs)
+```
 
 You can create an `NMEAMessage` object by calling the constructor with the following parameters:
 1. talker (must be a valid talker from `pynmeagps.NMEA_TALKERS`, or blank for proprietary messages)

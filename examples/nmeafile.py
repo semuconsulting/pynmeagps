@@ -39,11 +39,14 @@ class NMEAStreamer:
         Open file.
         """
 
+        self._connected = False
         try:
             self._stream = open(self._filename, "rb")
             self._connected = True
         except Exception as err:
             print(f"Error opening file {err}")
+
+        return self._connected
 
     def close(self):
         """
@@ -56,6 +59,8 @@ class NMEAStreamer:
             except Exception as err:
                 print(f"Error closing file {err}")
         self._connected = False
+
+        return self._connected
 
     def reader(self, nmea_only=False, validate=VALCKSUM, mode=GET):
         """
@@ -83,24 +88,28 @@ class NMEAStreamer:
 
 if __name__ == "__main__":
 
+    YES = ("Y", "y", "YES,", "yes", "True")
+    NO = ("N", "n", "NO,", "no", "False")
+
     print("Enter fully qualified name of file containing binary NMEA data: ", end="")
     filefqn = input().strip('"')
-    print("Do you want to ignore non-NMEA data (y/n)? (y) ", end="")
+    print("Do you want to ignore any non-NMEA data (y/n)? (y) ", end="")
     val = input() or "y"
-    NMEA_ONLY = val in ("N", "n", "NO,", "no", "False")
-    print("Do you want to validate the data stream (0/1/2/3)? (1) ", end="")
-    val = input() or "1"
-    VALD = int(val)
-    print("Message mode (0=GET (output), 1=SET (input), 2=POLL (poll)? (0) ", end="")
-    moded = input() or "0"
-    MODED = int(moded)
+    nmeaonly = val in NO
+    print("Do you want to validate the message checksums ((y/n)? (y) ", end="")
+    val = input() or "y"
+    val1 = val in YES
+    print("Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ", end="")
+    val = input() or "n"
+    val1 = 2 * val in YES
+    vald = val1 + val1
 
     print("Instantiating NMEAStreamer class...")
     ubf = NMEAStreamer(filefqn)
     print(f"Opening file {filefqn}...")
-    ubf.open()
-    print("Starting file reader")
-    ubf.reader(NMEA_ONLY, VALD, MODED)
-    print("\n\nClosing file...")
-    ubf.close()
-    print("Test Complete")
+    if ubf.open():
+        print("Starting file reader")
+        ubf.reader(nmeaonly, vald, 0)
+        print("\n\nClosing file...")
+        ubf.close()
+        print("Test Complete")

@@ -23,7 +23,6 @@ Created on 7 Mar 2021
 @author: semuadmin
 """
 
-from sys import platform
 from io import BufferedReader
 from threading import Thread
 from time import sleep
@@ -39,7 +38,7 @@ class NMEAStreamer:
     NMEAStreamer class.
     """
 
-    def __init__(self, port, baudrate, timeout=5):
+    def __init__(self, port, baudrate, timeout=5, nmea_only=0, validate=1):
         """
         Constructor.
         """
@@ -52,6 +51,8 @@ class NMEAStreamer:
         self._port = port
         self._baudrate = baudrate
         self._timeout = timeout
+        self._nmea_only = nmea_only
+        self._validate = validate
 
     def __del__(self):
         """
@@ -66,14 +67,17 @@ class NMEAStreamer:
         Open serial connection.
         """
 
+        self._connected = False
         try:
             self._serial_object = Serial(
                 self._port, self._baudrate, timeout=self._timeout
             )
-            self._nmeareader = NMEAReader(BufferedReader(self._serial_object), False)
+            self._nmeareader = NMEAReader(BufferedReader(self._serial_object), self._nmea_only, self._validate, 0)
             self._connected = True
         except (SerialException, SerialTimeoutException) as err:
             print(f"Error connecting to serial port {err}")
+
+        return self._connected
 
     def disconnect(self):
         """
@@ -86,6 +90,8 @@ class NMEAStreamer:
             except (SerialException, SerialTimeoutException) as err:
                 print(f"Error disconnecting from serial port {err}")
         self._connected = False
+
+        return self._connected
 
     def start_read_thread(self):
         """
@@ -150,31 +156,47 @@ class NMEAStreamer:
 
 if __name__ == "__main__":
 
-    # set PORT, BAUDRATE and TIMEOUT as appropriate
-    if platform == "win32":
-        PORT = "COM6"
-    else:
-        PORT = "/dev/tty.usbmodem14101"
-    BAUDRATE = 38400
-    TIMEOUT = 1
+    YES = ("Y", "y", "YES,", "yes", "True")
+    NO = ("N", "n", "NO,", "no", "False")
+    PAUSE = 5
+
+    print("Enter port: ", end="")
+    val = input().strip('"')
+    prt = val
+    print("Enter baud rate (9600): ", end="")
+    val = input().strip('"') or '9600'
+    baud = int(val)
+    print("Enter timeout (10): ", end="")
+    val = input().strip('"') or '10'
+    timout = int(val)
+    print("Do you want to ignore any non-NMEA data (y/n)? (y) ", end="")
+    val = input() or "y"
+    nmeaonly = val in NO
+    print("Do you want to validate the message checksums ((y/n)? (y) ", end="")
+    val = input() or "y"
+    val1 = val in YES
+    print("Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ", end="")
+    val = input() or "n"
+    val2 = 2 * val in YES
+    vald = val1 + val2
 
     print("Instantiating NMEAStreamer class...")
-    nms = NMEAStreamer(PORT, BAUDRATE, TIMEOUT)
-    print(f"Connecting to serial port {PORT} at {BAUDRATE} baud...")
-    nms.connect()
-    print("Starting reader thread...")
-    nms.start_read_thread()
+    nms = NMEAStreamer(prt, baud, timout, nmeaonly, vald)
+    print(f"Connecting to serial port {prt} at {baud} baud...")
+    if nms.connect():
+        print("Starting reader thread...")
+        nms.start_read_thread()
 
-    # DO OTHER STUFF HERE WHILE THREAD RUNS IN BACKGROUND...
-    for mid in ('GAQ', 'GBQ', 'GLQ', 'GNQ', 'GPQ', 'GQQ'):
-        print(f"\nSending a {mid} message to poll for an RMC response.")
-        print("Look out for an RMC (known) or TXT (unknown) message in the input stream...\n")
-        msg = NMEAMessage('EI', mid, POLL, msgId='RMC')
-        nms.send(msg.serialize())
-        sleep(3)
+        # DO OTHER STUFF HERE WHILE THREAD RUNS IN BACKGROUND...
+        for mid in ('GAQ', 'GBQ', 'GLQ', 'GNQ', 'GPQ', 'GQQ'):
+            print(f"\nSending a {mid} message to poll for an RMC response.")
+            print("Look out for an RMC (known) or TXT (unknown) message in the input stream...\n")
+            msg = NMEAMessage('EI', mid, POLL, msgId='RMC')
+            nms.send(msg.serialize())
+            sleep(PAUSE)
 
-    print("\n\nStopping reader thread...")
-    nms.stop_read_thread()
-    print("Disconnecting from serial port...")
-    nms.disconnect()
-    print("Test Complete")
+        print("\n\nStopping reader thread...")
+        nms.stop_read_thread()
+        print("Disconnecting from serial port...")
+        nms.disconnect()
+        print("Test Complete")
