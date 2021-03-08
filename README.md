@@ -69,9 +69,13 @@ You can create an `NMEAReader` object by calling the constructor with an active 
 The stream object can be any data stream which supports a `read(n) -> bytes` method (e.g. File or Serial, with 
 or without a buffer wrapper).
 
-Individual input NMEA messages can then be read using the `NMEAReader.read()` function, which returns both the raw data (as bytes) and the parsed data (as an `NMEAMessage` object). The function is thread-safe in so far as the incoming data stream object is thread-safe. `NMEAReader` also implements an iterator.
+Individual input NMEA messages can then be read using the `NMEAReader.read()` function, which returns both the raw data (as bytes) and the parsed data (as an `NMEAMessage` object, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `NMEAReader` also implements an iterator.
 
-The `NMEAReader` constructor includes an optional `nmea_only` flag which governs behaviour if the stream includes non-NMEA data (e.g. proprietary UBX or Garmin data). If set to 'False' (the default), it will ignore such data and continue with the next valid NMEA message. If set to 'True', it will raise a `NMEAStreamError`. **NB:** if the `nmea_only` flag is set to 'False', the `NMEAReader.read()` function will block until it receives a NMEA message (or the input stream times out).
+The `NMEAReader` constructor includes an optional `nmea_only` flag which governs behaviour if the stream includes non-NMEA data (e.g. UBX or Garmin binary protocols). If set to 'False' (the default), it will ignore such data and continue with the next valid NMEA message. If set to 'True', it will raise a `NMEAStreamError`. **NB:** if the `nmea_only` flag is set to 'False', the `NMEAReader.read()` function will block until it receives a NMEA message (or the input stream times out).
+
+The `NMEAReader` constructor also includes an optional `validate` flag which is passed to the `parse()` function - see **Parsing** below.
+
+A further optional `mode` flag signifies the message stream mode (GET/SET/POLL). Ordinarily this can be left at the default 0 (GET)).
 
 Examples:
 
@@ -99,7 +103,7 @@ Examples:
 
 You can parse individual NMEA messages using the static `NMEAReader.parse(data, validate=1)` function, which takes a string or bytes containing an NMEA message and returns a `NMEAMessage` object.
 
-The validate flag signifies whether to validate the incoming checksum (1), msgid (2), both (3) or neither (0). If invalid, a `NMEAParseError` will be raised. The default (1) is to validate the checksum but ignore (and discard) an unknown msgID.
+An optional `validate` flag governs the level of validation applied during message parsing. The options are VALNONE (0 - no validation), VALCKSUM (1 - validate checksum, the default) and/or VALMSGID (2 - validate msgID). If invalid, an `NMEAParseError` is raised.
 
 Example:
 

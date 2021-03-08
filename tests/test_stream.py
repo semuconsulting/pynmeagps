@@ -56,7 +56,7 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEASTARTUP, False)
+        nmr = NMEAReader(self.streamNMEASTARTUP, False, 1)
         while raw is not None:
             (raw, parsed) = nmr.read()
             if raw is not None:
@@ -98,7 +98,7 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEA4, False)
+        nmr = NMEAReader(self.streamNMEA4, False, 3)
         while raw is not None:
             (raw, parsed) = nmr.read()
             if raw is not None:
@@ -221,7 +221,7 @@ class StreamTest(unittest.TestCase):
     def testNMEABADMODE(self):  # invalid stream mode
         EXPECTED_ERROR = "Invalid stream mode 4 - must be 0, 1 or 2."
         with self.assertRaises(NMEAStreamError) as context:
-            NMEAReader(self.streamNMEAFOO1, False, 4)
+            NMEAReader(self.streamNMEAFOO1, False, 1, 4)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testBADEOF(self):  # stream with premature EOF - should just be tolerated

@@ -72,12 +72,16 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, 53.235391)
         res = nmh.dmm2ddd('00214.12345', 'LN')
         self.assertEqual(res, 2.235391)
+        res = nmh.dmm2ddd('12825.12344', 'LN')
+        self.assertEqual(res, 128.418724)
 
     def testDDD2DMM(self):
         res = nmh.ddd2dmm(53.75000, 'LA')
         self.assertEqual(res, '5345.00000')
         res = nmh.ddd2dmm(-2.75000, 'LN')
         self.assertEqual(res, '00245.00000')
+        res = nmh.ddd2dmm(128.418724, 'LN')
+        self.assertEqual(res, '12825.12344')
         res = nmh.ddd2dmm("", 'LN')
         self.assertEqual(res, "")
 

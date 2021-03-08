@@ -38,12 +38,20 @@ class NMEAReader:
     NMEAReader class.
     """
 
-    def __init__(self, stream, nmea_only: bool = False, mode: int = 0):
+    def __init__(
+        self,
+        stream,
+        nmea_only: bool = False,
+        validate: int = VALCKSUM,
+        mode: int = 0,
+    ):
         """Constructor.
 
         :param stream stream: input data stream (e.g. Serial or binary File)
         :param bool nmea_only: check for non-NMEA data (False (ignore - default), True (reject))
+        :param int validate: parse validation flag (0=None, 1-Checkum (default), 2=MsgID, 3=Both)
         :param int mode: message mode (0=GET (default), 1=SET, 2=POLL)
+
         :raises: NMEAStreamError (if mode is invalid)
 
         """
@@ -55,6 +63,7 @@ class NMEAReader:
 
         self._stream = stream
         self._nmea_only = nmea_only
+        self._validate = validate
         self._mode = mode
 
     def __iter__(self):
@@ -109,7 +118,7 @@ class NMEAReader:
             if is_nmeas or is_nmeap:  # it's a NMEA message
                 byten = self._stream.readline()
                 raw_data = byte1 + byte2 + byten
-                parsed_data = self.parse(raw_data, VALCKSUM, self._mode)
+                parsed_data = self.parse(raw_data, self._validate, self._mode)
                 reading = False
             else:  # it's not a NMEA message (UBX or something else)
                 prevbyte = byte1
