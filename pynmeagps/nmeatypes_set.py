@@ -23,7 +23,17 @@ Created on 4 Mar Sep 2021
 :author: semuadmin
 """
 
-from pynmeagps.nmeatypes_core import HX, IN
+from pynmeagps.nmeatypes_core import (
+    CH,
+    DE,
+    DT,
+    HX,
+    IN,
+    LA,
+    LN,
+    ST,
+    TM,
+)
 
 NMEA_PAYLOADS_SET = {
     # *********************************************
@@ -31,7 +41,59 @@ NMEA_PAYLOADS_SET = {
     # *********************************************
     # No standard SET messages that I'm aware of
     # *********************************************
-    # PROPRIETARY MESSAGES
+    # GARMIN PROPRIETARY MESSAGES
+    # *********************************************
+    "PGRMI": {  # sensor initialisation information
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "date": DT,
+        "time": TM,
+        "rcvr_cmd": CH,
+    },
+    "PGRMC": {  # sensor configuration information
+        "fix": CH,
+        "alt": DE,
+        "dtm": ST,
+        "smAxis": DE,
+        "iffac": DE,
+        "xecc": DE,
+        "yecc": DE,
+        "zecc": DE,
+        "diff": CH,
+        "baud": IN,
+        "vfilt": IN,
+        "reserved1": ST,
+        "reserved2": ST,
+        "drtime": IN,
+    },
+    "PGRMC1": {  # additional sensor configuration information
+        "nmeatim": IN,
+        "bphase": IN,
+        "autopos": IN,
+        "dgpsfr": DE,
+        "dgpsbr": IN,
+        "dgpssc": IN,
+        "nmeaver": IN,
+        "dgpsmod": CH,
+        "pwrsave": CH,
+        "attran": IN,
+        "autopwr": IN,
+        "extpwr": IN,
+    },
+    "PGRMO": {  # output sentence enable
+        "msgId": ST,
+        "mode": IN,
+    },
+    "PGRMW": {  # additional waypoint information
+        "wptId": ST,
+        "alt": DE,
+        "symnum": HX,
+        "comment": ST,
+    },
+    # *********************************************
+    # U-BLOX PROPRIETARY MESSAGES
     # *********************************************
     "PUBX40": {  # set message rates per port
         "msgId": IN,  # 40

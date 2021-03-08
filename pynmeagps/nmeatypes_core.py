@@ -131,7 +131,23 @@ NMEA_MSGIDS = {
     "VTG": "Course over ground and Groundspeed",
     "ZDA": "Time and Date",
     # ***************************************************************
-    # NMEA Proprietary message types
+    # GARMIN Proprietary message types
+    # ***************************************************************
+    "PGRME": "Estimated Error Information",
+    "PGRMF": "GPS Fix Data sentence",
+    "PGRMH": "Aviation Height and VNAV data",
+    "PGRMM": "MapDatum",
+    "PGRMT": "Sensor Status Information",
+    "PGRMV": "3D Velocity Information",
+    "PGRMZ": "Altitude",
+    "PGRMB": "DGPS Beacon Information",
+    "PGRMI": "Set Sensor Initialisation Information",
+    "PGRMC": "Set Sensor Configuration information",
+    "PGRMC1": "Set Additional Sensor Configuration Information",
+    "PGRMO": "Set Output Sentence Enable",
+    "PGRMW": "Set Additional Waypoint Information",
+    # ***************************************************************
+    # U-BLOX Proprietary message types
     # ***************************************************************
     "PUBX00": "PUBX-POSITION Lat/Long Position Data",
     "PUBX03": "PUBX-SVSTATUS Satellite Status",

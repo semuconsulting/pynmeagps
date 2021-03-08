@@ -31,7 +31,7 @@ from pynmeagps.nmeahelpers import (
 class NMEAMessage:
     """NMEA GNSS/GPS Message Class."""
 
-    def __init__(self, talker, msgID, mode: int, **kwargs):
+    def __init__(self, talker: str, msgID: str, mode: int, **kwargs):
         """Constructor.
 
         If 'payload' is passed as a keyword arg, this is taken to contain the entire

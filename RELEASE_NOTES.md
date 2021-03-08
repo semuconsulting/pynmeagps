@@ -1,6 +1,14 @@
 # pynmeagps Release Notes
 
+### RELEASE 0.1.4-beta
+
+ENHANCEMENTS:
+
+1. Add Garmin proprietary NMEA sentences GET and SET.
+
 ### RELEASE 0.1.3-beta
+
+ENHANCEMENTS:
 
 1. Parse validate flag added to NMEAReader.read() method, defaults to VLCKSUM (1 - check checksum only); other options are VALNONE = 0, 
 VALMSGID = 2. Options can be ANDed. Examples updated accordingly.

@@ -209,7 +209,75 @@ NMEA_PAYLOADS_GET = {
         "ltzn": ST,
     },
     # *********************************************
-    # PROPRIETARY MESSAGES
+    # GARMIN PROPRIETARY MESSAGES
+    # *********************************************
+    "PGRME": {  # estimated error information
+        "HPE": DE,
+        "VPE": DE,
+        "EPE": DE,
+    },
+    "PGRMF": {  # GPS fix data sentence
+        "week": IN,
+        "secs": IN,
+        "date": DT,
+        "time": TM,
+        "leapsec": IN,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "mode": CH,
+        "fix": IN,
+        "spd": DE,
+        "course": IN,
+        "PDOP": DE,
+        "TDOP": DE,
+    },
+    "PGRMH": {  # aviation height and VNAV data
+        "status": CH,
+        "vspd": DE,
+        "verr": DE,
+        "spdtgt": DE,
+        "spdwpt": DE,
+        "height": DE,
+        "trk": DE,
+        "course": DE,
+    },
+    "PGRMM": {  # map datum
+        "dtm": ST,
+    },
+    "PGRMT": {  # sensor status information
+        "ver": ST,
+        "ROMtest": CH,
+        "rcvrtest": CH,
+        "stortest": CH,
+        "rtctest": CH,
+        "osctest": CH,
+        "datatest": CH,
+        "temp": DE,
+        "cfgdata": CH,
+    },
+    "PGRMV": {  # 3D velocity information
+        "velE": DE,
+        "velN": DE,
+        "velZ": DE,
+    },
+    "PGRMZ": {  # altitude
+        "alt": DE,
+        "fix": IN,
+    },
+    "PGRMB": {  # DGPS Beacon information
+        "freq": DE,
+        "bps": IN,
+        "snr": IN,
+        "quality": IN,
+        "dist": DE,
+        "status": IN,
+        "fixsrc": CH,
+        "mode": CH,
+    },
+    # *********************************************
+    # U-BLOX PROPRIETARY MESSAGES
     # *********************************************
     "PUBX00": {
         "msgId": IN,  # 00
