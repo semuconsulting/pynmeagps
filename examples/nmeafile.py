@@ -103,13 +103,16 @@ if __name__ == "__main__":
     val = input() or "n"
     val1 = 2 * val in YES
     vald = val1 + val1
+    print("Message mode (0=GET (output), 1=SET (input), 2=POLL (poll)? (0) ", end="")
+    mode = input() or "0"
+    moded = int(mode)
 
     print("Instantiating NMEAStreamer class...")
     ubf = NMEAStreamer(filefqn)
     print(f"Opening file {filefqn}...")
     if ubf.open():
         print("Starting file reader")
-        ubf.reader(nmeaonly, vald, 0)
+        ubf.reader(nmeaonly, vald, moded)
         print("\n\nClosing file...")
         ubf.close()
         print("Test Complete")

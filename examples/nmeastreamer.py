@@ -166,9 +166,9 @@ if __name__ == "__main__":
     print("Enter baud rate (9600): ", end="")
     val = input().strip('"') or '9600'
     baud = int(val)
-    print("Enter timeout (10): ", end="")
-    val = input().strip('"') or '10'
-    timout = int(val)
+    print("Enter timeout (0): ", end="")
+    val = input().strip('"') or '0'
+    timout = float(val)
     print("Do you want to ignore any non-NMEA data (y/n)? (y) ", end="")
     val = input() or "y"
     nmeaonly = val in NO
