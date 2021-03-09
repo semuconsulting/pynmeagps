@@ -31,7 +31,7 @@ from pynmeagps.nmeahelpers import (
 class NMEAMessage:
     """NMEA GNSS/GPS Message Class."""
 
-    def __init__(self, talker: str, msgID: str, mode: int, **kwargs):
+    def __init__(self, talker: str, msgID: str, msgmode: int, **kwargs):
         """Constructor.
 
         If 'payload' is passed as a keyword arg, this is taken to contain the entire
@@ -42,7 +42,7 @@ class NMEAMessage:
 
         :param str talker: message talker e.g. "GP"
         :param str msgID: message ID e.g. "GGA"
-        :param int mode: mode (0=GET, 1=SET, 2=POLL)
+        :param int msgmode: mode (0=GET, 1=SET, 2=POLL)
         :param kwargs: keyword arg(s) representing all or some payload attributes
         :raises: NMEAMessageError
 
@@ -51,9 +51,9 @@ class NMEAMessage:
         # object is mutable during initialisation only
         super().__setattr__("_immutable", False)
 
-        self._mode = mode
-        if mode not in (0, 1, 2):
-            raise nme.NMEAMessageError(f"Invalid mode {mode} - must be 0, 1 or 2.")
+        if msgmode not in (0, 1, 2):
+            raise nme.NMEAMessageError(f"Invalid mode {msgmode} - must be 0, 1 or 2.")
+        self._mode = msgmode
 
         self._talker = talker
         self._msgID = msgID
@@ -245,7 +245,10 @@ class NMEAMessage:
                 return nms.NMEA_PAYLOADS_SET[key]
             return nmg.NMEA_PAYLOADS_GET[key]
         except KeyError as err:
-            raise nme.NMEAMessageError(f"Unknown message type msgID {key}.") from err
+            modestr = ["GET", "SET", "POLL"][self._mode]
+            raise nme.NMEAMessageError(
+                f"Unknown message type msgID {key} msgmode {modestr}."
+            ) from err
 
     def _calc_num_repeats(
         self, attd: dict, payload: list, pindex: int, pindexend: int = 0

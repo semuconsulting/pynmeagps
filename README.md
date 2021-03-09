@@ -66,7 +66,7 @@ deactivate
 ## Reading (Streaming)
 
 ```
-class pynmeagps.nmeareader.NMEAReader(stream, nmea_only: bool = False, validate: int = 1, mode: int = 0)
+class pynmeagps.nmeareader.NMEAReader(stream, nmea_only: bool = False, validate: int = 1, msgmode: int = 0)
 ```
 
 You can create an `NMEAReader` object by calling the constructor with an active stream object. 
@@ -79,7 +79,7 @@ The `NMEAReader` constructor includes an optional `nmea_only` flag which governs
 
 The `NMEAReader` constructor also includes an optional `validate` flag which is passed to the `parse()` function - see **Parsing** below.
 
-A further optional `mode` flag signifies the message stream mode (0=GET, 1=SET, 2=POLL). Ordinarily this can be left at the default 0 (GET)).
+A further optional `msgmode` flag signifies the message stream mode (0=GET, 1=SET, 2=POLL). Ordinarily this can be left at the default 0 (GET)).
 
 Examples:
 
@@ -165,7 +165,7 @@ print(msg)
 <NMEA(GNGLL, lat=43.5, NS=N, lon=-2.75, EW=W, time=12:04:25.234000, status=A, posMode=A)>
 ```
 
-e.g. Create GLL and GPQ message, passing individual typed values as keywords, with any omitted keywords defaulting to nominal values (in the GLL example, the 'time' parameter has been omitted and has defaulted to the current time):
+e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as keywords, with any omitted keywords defaulting to nominal values (in the GLL example, the 'time' parameter has been omitted and has defaulted to the current time):
 
 ```python
 >>> from pynmeagps import NMEAMessage, GET
@@ -176,9 +176,9 @@ e.g. Create GLL and GPQ message, passing individual typed values as keywords, wi
 
 ```python
 >>> from pynmeagps import NMEAMessage, POLL
->>> msg = NMEAMessage('GN', 'GPQ', POLL, msgId='GGA')
+>>> msg = NMEAMessage('GN', 'GNQ', POLL, msgId='RMC')
 >>> print(msg)
-<NMEA(GNGPQ, msgId=GGA)>
+<NMEA(GNGNQ, msgId=RMC)>
 ```
 
 **NB:** Once instantiated, an `NMEAMessage` object is immutable.
@@ -191,9 +191,9 @@ The `NMEAMessage` class implements a `serialize()` method to convert an `NMEAMes
 >>> from serial import Serial
 >>> from pynmeagps import NMEAMessage, POLL
 >>> stream = Serial('COM6', 38400, timeout=3)
->>> msg = NMEAMessage('GN','GPQ', POLL, msgId='GGA')
+>>> msg = NMEAMessage('GN','GNQ', POLL, msgId='RMC')
 >>> msg.serialize()
-b'$GNGPQ,GGA*22\r\n'
+b'$GNGNQ,RMC*21\r\n'
 >>> stream.write(msg.serialize())
 ```
 

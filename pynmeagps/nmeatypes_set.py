@@ -62,7 +62,7 @@ NMEA_PAYLOADS_SET = {
         "yecc": DE,
         "zecc": DE,
         "diff": CH,
-        "baud": IN,
+        "baudRate": IN,
         "vfilt": IN,
         "reserved1": ST,
         "reserved2": ST,
@@ -84,7 +84,7 @@ NMEA_PAYLOADS_SET = {
     },
     "PGRMO": {  # output sentence enable
         "msgId": ST,
-        "mode": IN,
+        "tgtmode": IN,
     },
     "PGRMW": {  # additional waypoint information
         "wptId": ST,

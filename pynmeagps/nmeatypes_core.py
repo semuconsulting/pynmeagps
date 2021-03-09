@@ -133,19 +133,19 @@ NMEA_MSGIDS = {
     # ***************************************************************
     # GARMIN Proprietary message types
     # ***************************************************************
+    "PGRMB": "DGPS Beacon Information",
+    "PGRMC": "Set Sensor Configuration information",
+    "PGRMC1": "Set Additional Sensor Configuration Information",
     "PGRME": "Estimated Error Information",
     "PGRMF": "GPS Fix Data sentence",
     "PGRMH": "Aviation Height and VNAV data",
+    "PGRMI": "Set Sensor Initialisation Information",
     "PGRMM": "MapDatum",
+    "PGRMO": "Set Output Sentence Enable",
     "PGRMT": "Sensor Status Information",
     "PGRMV": "3D Velocity Information",
-    "PGRMZ": "Altitude",
-    "PGRMB": "DGPS Beacon Information",
-    "PGRMI": "Set Sensor Initialisation Information",
-    "PGRMC": "Set Sensor Configuration information",
-    "PGRMC1": "Set Additional Sensor Configuration Information",
-    "PGRMO": "Set Output Sentence Enable",
     "PGRMW": "Set Additional Waypoint Information",
+    "PGRMZ": "Altitude",
     # ***************************************************************
     # U-BLOX Proprietary message types
     # ***************************************************************

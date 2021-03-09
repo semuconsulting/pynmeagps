@@ -43,28 +43,28 @@ class NMEAReader:
         stream,
         nmea_only: bool = False,
         validate: int = VALCKSUM,
-        mode: int = 0,
+        msgmode: int = 0,
     ):
         """Constructor.
 
         :param stream stream: input data stream (e.g. Serial or binary File)
         :param bool nmea_only: check for non-NMEA data (False (ignore - default), True (reject))
         :param int validate: parse validation flag (0=None, 1-Checkum (default), 2=MsgID, 3=Both)
-        :param int mode: message mode (0=GET (default), 1=SET, 2=POLL)
+        :param int msgmode: message mode (0=GET (default), 1=SET, 2=POLL)
 
         :raises: NMEAStreamError (if mode is invalid)
 
         """
 
-        if mode not in (0, 1, 2):
+        if msgmode not in (0, 1, 2):
             raise nme.NMEAStreamError(
-                f"Invalid stream mode {mode} - must be 0, 1 or 2."
+                f"Invalid stream mode {msgmode} - must be 0, 1 or 2."
             )
 
         self._stream = stream
         self._nmea_only = nmea_only
         self._validate = validate
-        self._mode = mode
+        self._mode = msgmode
 
     def __iter__(self):
         """Iterator."""
@@ -131,22 +131,24 @@ class NMEAReader:
         return (raw_data, parsed_data)
 
     @staticmethod
-    def parse(message: bytes, validate: int = VALCKSUM, mode: int = 0) -> object:
+    def parse(message: bytes, validate: int = VALCKSUM, msgmode: int = 0) -> object:
         """
         Parse NMEA byte stream to NMEAMessage object.
         Includes option to validate incoming payload checksum.
 
         :param bytes message: bytes message to parse
         :param int validate: 0 - none, 1 = checksum (default), 2 = msgID, 3 = both
-        :param int mode: message mode (0=GET (default), 1=SET, 2=POLL)
+        :param int msgmode: message mode (0=GET (default), 1=SET, 2=POLL)
         :return: NMEAMessage object
         :rtype: NMEAMessage
         :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
 
         """
 
-        if mode not in (0, 1, 2):
-            raise nme.NMEAParseError(f"Invalid parse mode {mode} - must be 0, 1 or 2.")
+        if msgmode not in (0, 1, 2):
+            raise nme.NMEAParseError(
+                f"Invalid parse mode {msgmode} - must be 0, 1 or 2."
+            )
 
         try:
             talker, msgid, payload, checksum = get_parts(message)
@@ -156,11 +158,13 @@ class NMEAReader:
                         f"Message {talker}{msgid} invalid checksum {checksum}"
                         f" - should be {calc_checksum(message)}."
                     )
-            return NMEAMessage(talker, msgid, 0, payload=payload, checksum=checksum)
+            return NMEAMessage(
+                talker, msgid, msgmode, payload=payload, checksum=checksum
+            )
 
         except nme.NMEAMessageError as err:
             if validate & VALMSGID:
-                modestr = ["GET", "SET", "POLL"][mode]
+                modestr = ["GET", "SET", "POLL"][msgmode]
                 raise nme.NMEAParseError(
                     (
                         "Unknown or invalid message definition "
