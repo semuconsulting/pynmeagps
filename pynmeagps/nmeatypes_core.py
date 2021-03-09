@@ -90,7 +90,8 @@ NMEA_TALKERS = {
     "GN": "Global Navigation Satellite System (GNSS)",
     "GP": "Global Positioning System (GPS)",
     "GQ": "QZSS",
-    "PU": "Proprietary UBX",
+    # "PG": "Proprietary GARMIN",
+    # "PU": "Proprietary U-BLOX",
     # ***************************************************************
     # Heading Sensors:
     # ***************************************************************
