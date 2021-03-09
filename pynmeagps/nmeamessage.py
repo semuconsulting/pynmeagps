@@ -52,7 +52,9 @@ class NMEAMessage:
         super().__setattr__("_immutable", False)
 
         if msgmode not in (0, 1, 2):
-            raise nme.NMEAMessageError(f"Invalid mode {msgmode} - must be 0, 1 or 2.")
+            raise nme.NMEAMessageError(
+                f"Invalid msgmode {msgmode} - must be 0, 1 or 2."
+            )
         self._mode = msgmode
 
         self._talker = talker

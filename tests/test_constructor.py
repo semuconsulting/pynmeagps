@@ -34,7 +34,7 @@ class FillTest(unittest.TestCase):
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testFill_BADMODE(self):  # test invalid mode
-        EXPECTED_ERROR = "Invalid mode 4 - must be 0, 1 or 2."
+        EXPECTED_ERROR = "Invalid msgmode 4 - must be 0, 1 or 2."
         with self.assertRaises(NMEAMessageError) as context:
             NMEAMessage('GN', 'GLL', 4, payload=['5327.04319', 'S', '00214.41396', 'E', '223232.00', 'A', 'A'])
         self.assertTrue(EXPECTED_ERROR in str(context.exception))

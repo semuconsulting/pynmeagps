@@ -135,16 +135,16 @@ e.g. the `RMC` message has the following properties:
 ## Generating
 
 ```
-class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, mode: int, **kwargs)
+class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, msgmode: int, **kwargs)
 ```
 
 You can create an `NMEAMessage` object by calling the constructor with the following parameters:
 1. talker (must be a valid talker from `pynmeagps.NMEA_TALKERS`, or blank for proprietary messages)
 1. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS`)
-2. mode (0=GET, 1=SET, 2=POLL)
+2. msgmode (0=GET, 1=SET, 2=POLL)
 3. (optional) a series of keyword parameters representing the message payload
 
-The 'mode' parameter signifies whether the message payload refers to a:
+The 'msgmode' parameter signifies whether the message payload refers to a:
 
 * GET message (i.e. output from the receiver - NB these would normally be generated via the NMEAReader.read() or NMEAReader.parse() methods but can also be created manually)
 * SET message (i.e. command input to the receiver)
