@@ -41,17 +41,10 @@ class NMEAReader:
     def __init__(self, stream, **kwargs):
         """Constructor.
 
-        Accepts the following optional keyword arguments:
-
-        'nmeaonly': True = raise error if stream contains non-NMEA data,
-                    False = ignore non-NMEA data (default)
-        'validate': bitfield validation flags - can be used in combination:
-                    0x01 = validate checksum (default)
-                    0x02 = validate msgId (i.e. raise error if unknown NMEA message is received)
-        'msgmode':  0 = GET (default), 1 = SET, 2 = POLL
-
         :param stream stream: input data stream (e.g. Serial or binary File)
-        :kwargs kwargs: optional keyword arguments
+        :param bool nmeaonly (kwarg): True = raise error if stream contains non-NMEA data, False = ignore non-NMEA data
+        :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID
+        :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
         :raises: NMEAStreamError (if mode is invalid)
 
         """
@@ -139,15 +132,10 @@ class NMEAReader:
     def parse(message: bytes, **kwargs) -> object:
         """
         Parse NMEA byte stream to NMEAMessage object.
-        Accepts the following optional keyword arguments:
-
-        'validate': bitfield validation flags - can be used in combination:
-                    0x01 = validate checksum (default)
-                    0x02 = validate msgId (i.e. raise error if unknown NMEA message is received)
-        'msgmode':  0 = GET (default), 1 = SET, 2 = POLL
 
         :param bytes message: bytes message to parse
-        :param kwargs: optional keyword arguments
+        :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID
+        :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
         :return: NMEAMessage object
         :rtype: NMEAMessage
         :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
