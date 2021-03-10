@@ -62,14 +62,14 @@ class NMEAStreamer:
 
         return self._connected
 
-    def reader(self, nmea_only=False, validate=VALCKSUM, mode=GET):
+    def reader(self, nmea_only=False, validate=VALCKSUM, msgmode=GET):
         """
         Reads and parses NMEA message data from stream
         using NMEAReader iterator method
         """
 
         i = 0
-        self._ubxreader = NMEAReader(self._stream, nmea_only, validate, mode)
+        self._ubxreader = NMEAReader(self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode)
 
         for msg in self._ubxreader:  # invokes iterator method
             try:

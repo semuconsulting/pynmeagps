@@ -56,7 +56,7 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEASTARTUP, False, 1)
+        nmr = NMEAReader(self.streamNMEASTARTUP, nmeaonly=False, validate=1)
         while raw is not None:
             (raw, parsed) = nmr.read()
             if raw is not None:
@@ -98,7 +98,7 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEA4, False, 3)
+        nmr = NMEAReader(self.streamNMEA4, nmeaonly=False, validate=3)
         while raw is not None:
             (raw, parsed) = nmr.read()
             if raw is not None:
@@ -128,7 +128,7 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEA2, False)
+        nmr = NMEAReader(self.streamNMEA2, nmeaonly=False)
         while raw is not None:
             (raw, parsed) = nmr.read()
             if raw is not None:
@@ -156,7 +156,7 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamMIXED, False)
+        nmr = NMEAReader(self.streamMIXED, nmeaonly=False)
         while raw is not None:
             (raw, parsed) = nmr.read()
             if raw is not None:
@@ -168,7 +168,7 @@ class StreamTest(unittest.TestCase):
         with self.assertRaises(NMEAStreamError) as context:
             i = 0
             raw = 0
-            nmr = NMEAReader(self.streamMIXED, True)
+            nmr = NMEAReader(self.streamMIXED, nmeaonly=True)
             while raw is not None:
                 (raw, _) = nmr.read()
                 if raw is not None:
@@ -188,7 +188,7 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEA4SM, False)
+        nmr = NMEAReader(self.streamNMEA4SM, nmeaonly=False)
         for (raw, parsed) in nmr:
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
@@ -199,7 +199,7 @@ class StreamTest(unittest.TestCase):
         with self.assertRaises(NMEATypeError) as context:
             i = 0
             raw = 0
-            nmr = NMEAReader(self.streamNMEAFOO1, False)
+            nmr = NMEAReader(self.streamNMEAFOO1, nmeaonly=False)
             while raw is not None:
                 (raw, _) = nmr.read()
                 if raw is not None:
@@ -211,7 +211,7 @@ class StreamTest(unittest.TestCase):
         with self.assertRaises(NMEATypeError) as context:
             i = 0
             raw = 0
-            nmr = NMEAReader(self.streamNMEAFOO2, False)
+            nmr = NMEAReader(self.streamNMEAFOO2, nmeaonly=False)
             while raw is not None:
                 (raw, _) = nmr.read()
                 if raw is not None:
@@ -221,7 +221,7 @@ class StreamTest(unittest.TestCase):
     def testNMEABADMODE(self):  # invalid stream mode
         EXPECTED_ERROR = "Invalid stream mode 4 - must be 0, 1 or 2."
         with self.assertRaises(NMEAStreamError) as context:
-            NMEAReader(self.streamNMEAFOO1, False, 1, 4)
+            NMEAReader(self.streamNMEAFOO1, nmeaonly=False, validate=1, msgmode=4)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testBADEOF(self):  # stream with premature EOF - should just be tolerated
@@ -234,7 +234,7 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamBADEOF, False)
+        nmr = NMEAReader(self.streamBADEOF, nmeaonly=False)
         for (raw, parsed) in nmr:
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])

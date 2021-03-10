@@ -75,7 +75,7 @@ class NMEATracker:
         """
 
         i = 0
-        self._nmeareader = NMEAReader(self._infile, validate)
+        self._nmeareader = NMEAReader(self._infile, validate=validate)
 
         self.write_gpx_hdr()
 
@@ -93,7 +93,7 @@ class NMEATracker:
                             minute=tim.minute,
                             second=tim.second,
                         ).isoformat()
-                        + "Z"
+                        +"Z"
                     )
                     if msg.quality == 1:
                         fix = "3d"

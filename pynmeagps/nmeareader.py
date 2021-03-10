@@ -38,31 +38,34 @@ class NMEAReader:
     NMEAReader class.
     """
 
-    def __init__(
-        self,
-        stream,
-        nmea_only: bool = False,
-        validate: int = VALCKSUM,
-        msgmode: int = 0,
-    ):
+    def __init__(self, stream, **kwargs):
         """Constructor.
 
-        :param stream stream: input data stream (e.g. Serial or binary File)
-        :param bool nmea_only: check for non-NMEA data (False (ignore - default), True (reject))
-        :param int validate: parse validation flag (0=None, 1-Checkum (default), 2=MsgID, 3=Both)
-        :param int msgmode: message mode (0=GET (default), 1=SET, 2=POLL)
+        Accepts the following optional keyword arguments:
 
+        'nmeaonly': True = raise error if stream contains non-NMEA data,
+                    False = ignore non-NMEA data (default)
+        'validate': bitfield validation flags - can be used in combination:
+                    0x01 = validate checksum (default)
+                    0x02 = validate msgId (i.e. raise error if unknown NMEA message is received)
+        'msgmode':  0 = GET (default), 1 = SET, 2 = POLL
+
+        :param stream stream: input data stream (e.g. Serial or binary File)
+        :kwargs kwargs: optional keyword arguments
         :raises: NMEAStreamError (if mode is invalid)
 
         """
 
+        nmeaonly = kwargs.get("nmeaonly", False)
+        validate = kwargs.get("validate", VALCKSUM)
+        msgmode = kwargs.get("msgmode", 0)
         if msgmode not in (0, 1, 2):
             raise nme.NMEAStreamError(
                 f"Invalid stream mode {msgmode} - must be 0, 1 or 2."
             )
 
         self._stream = stream
-        self._nmea_only = nmea_only
+        self._nmea_only = nmeaonly
         self._validate = validate
         self._mode = msgmode
 
@@ -92,7 +95,7 @@ class NMEAReader:
 
         :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
         :rtype: tuple
-        :raises: NMEAStreamError (if nmea_only=True and stream includes non-UBX data)
+        :raises: NMEAStreamError (if nmeaonly=True and stream includes non-UBX data)
 
         """
 
@@ -118,7 +121,9 @@ class NMEAReader:
             if is_nmeas or is_nmeap:  # it's a NMEA message
                 byten = self._stream.readline()
                 raw_data = byte1 + byte2 + byten
-                parsed_data = self.parse(raw_data, self._validate, self._mode)
+                parsed_data = self.parse(
+                    raw_data, validate=self._validate, msgmode=self._mode
+                )
                 reading = False
             else:  # it's not a NMEA message (UBX or something else)
                 prevbyte = byte1
@@ -131,20 +136,26 @@ class NMEAReader:
         return (raw_data, parsed_data)
 
     @staticmethod
-    def parse(message: bytes, validate: int = VALCKSUM, msgmode: int = 0) -> object:
+    def parse(message: bytes, **kwargs) -> object:
         """
         Parse NMEA byte stream to NMEAMessage object.
-        Includes option to validate incoming payload checksum.
+        Accepts the following optional keyword arguments:
+
+        'validate': bitfield validation flags - can be used in combination:
+                    0x01 = validate checksum (default)
+                    0x02 = validate msgId (i.e. raise error if unknown NMEA message is received)
+        'msgmode':  0 = GET (default), 1 = SET, 2 = POLL
 
         :param bytes message: bytes message to parse
-        :param int validate: 0 - none, 1 = checksum (default), 2 = msgID, 3 = both
-        :param int msgmode: message mode (0=GET (default), 1=SET, 2=POLL)
+        :param kwargs: optional keyword arguments
         :return: NMEAMessage object
         :rtype: NMEAMessage
         :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
 
         """
 
+        validate = kwargs.get("validate", VALCKSUM)
+        msgmode = kwargs.get("msgmode", 0)
         if msgmode not in (0, 1, 2):
             raise nme.NMEAParseError(
                 f"Invalid parse mode {msgmode} - must be 0, 1 or 2."

@@ -66,7 +66,7 @@ deactivate
 ## Reading (Streaming)
 
 ```
-class pynmeagps.nmeareader.NMEAReader(stream, nmea_only: bool = False, validate: int = 1, msgmode: int = 0)
+class pynmeagps.nmeareader.NMEAReader(stream, **kwargs)
 ```
 
 You can create an `NMEAReader` object by calling the constructor with an active stream object. 
@@ -75,11 +75,15 @@ or without a buffer wrapper).
 
 Individual input NMEA messages can then be read using the `NMEAReader.read()` function, which returns both the raw data (as bytes) and the parsed data (as an `NMEAMessage` object, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `NMEAReader` also implements an iterator.
 
-The `NMEAReader` constructor includes an optional `nmea_only` flag which governs behaviour if the stream includes non-NMEA data (e.g. UBX or Garmin binary protocols). If set to 'False' (the default), it will ignore such data and continue with the next valid NMEA message. If set to 'True', it will raise a `NMEAStreamError`. **NB:** if the `nmea_only` flag is set to 'False', the `NMEAReader.read()` function will block until it receives a NMEA message (or the input stream times out).
+The constructor accepts the following optional keyword arguments:
 
-The `NMEAReader` constructor also includes an optional `validate` flag which is passed to the `parse()` function - see **Parsing** below.
 
-A further optional `msgmode` flag signifies the message stream mode (0=GET, 1=SET, 2=POLL). Ordinarily this can be left at the default 0 (GET)).
+* `nmeaonly`: True = raise error if stream contains non-NMEA data, False = ignore non-NMEA data (default)
+* `validate`: bitfield validation flags (can be used in combination):
+- 0x01 = validate checksum (default)
+- 0x02 = validate msgId (i.e. raise error if unknown NMEA message is received)
+* `msgmode`: 0 = GET (default), 1 = SET 2 = POLL
+
 
 Examples:
 
@@ -98,7 +102,7 @@ Examples:
 ```python
 >>> from pynmeagps import NMEAReader
 >>> stream = open('nmeadata.log', 'rb')
->>> nmr = MEAReader(stream, True)
+>>> nmr = MEAReader(stream, nmeaonly=True)
 >>> for (raw_data, parsed_data) in nmr: print(parsed_data)
 ...
 ```
@@ -107,13 +111,18 @@ Examples:
 
 You can parse individual NMEA messages using the static `NMEAReader.parse(message)` function, which takes a string or bytes containing an NMEA message and returns a `NMEAMessage` object.
 
-An optional `validate` flag governs the level of validation applied during message parsing. The options are VALNONE (0 - no validation), VALCKSUM (1 - validate checksum, the default) and/or VALMSGID (2 - validate msgID). If invalid, an `NMEAParseError` is raised.
+Accepts the following optional keyword arguments:
+
+* `validate`: bitfield validation flags (can be used in combination):
+- 0x01 = validate checksum (default)
+- 0x02 = validate msgId (i.e. raise error if unknown NMEA message is received)
+* `msgmode`: 0 = GET (default), 1 = SET 2 = POLL
 
 Example:
 
 ```python
 >>> from pynmeagps import NMEAReader
->>> msg = NMEAReader.parse('$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n', 1)
+>>> msg = NMEAReader.parse('$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n', validate=1)
 >>> print(msg)
 <NMEA(GNGLL, lat=-53.45072, NS=S, lon=2.240233, EW=E, time=22:32:32, status=A, posMode=A)>
 ```
@@ -150,7 +159,7 @@ The 'msgmode' parameter signifies whether the message payload refers to a:
 * SET message (i.e. command input to the receiver)
 * POLL message (i.e. query input to the receiver in anticipation of a response back)
 
-The message payload can be defined via keyword parameters in one of two ways:
+The message payload can be defined via keyword arguments in one of two ways:
 1. A single keyword parameter of `payload` containing the full payload as a list of string values (any other keyword parameters will be ignored).
 2. One or more keyword parameters corresponding to individual message attributes. Any attributes not explicitly provided as keyword
 parameters will be set to a nominal value according to their type.

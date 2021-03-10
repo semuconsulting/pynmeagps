@@ -70,7 +70,7 @@ NMEA_PAYLOADS_GET = {
         "quality": IN,
         "numSV": IN,
         "HDOP": DE,
-        "alt": DE,
+        "alt": DE,  # altitude above sea level in m
         "altUnit": CH,
         "sep": DE,
         "sepUnit": CH,

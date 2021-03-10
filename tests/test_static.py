@@ -23,8 +23,8 @@ class StaticTest(unittest.TestCase):
         self.messageGLL = '$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n'
         self.messagePUBX = '$PUBX,00,103607.00,5327.03942,N,00214.42462,W,104.461,G3,29,31,0.085,39.63,-0.007,,5.88,7.62,8.09,6,0,0*69\r\n'
         self.messageBADCK = '$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*22\r\n'
-        self.msgGLL = NMEAReader.parse(self.messageGLL, True)
-        self.msgPUBX00 = NMEAReader.parse(self.messagePUBX, True)
+        self.msgGLL = NMEAReader.parse(self.messageGLL)
+        self.msgPUBX00 = NMEAReader.parse(self.messagePUBX)
 
     def tearDown(self):
         pass
@@ -104,7 +104,7 @@ class StaticTest(unittest.TestCase):
     def testDate2str(self):
         res = nmh.date2str(datetime.date(2021, 3, 7))
         self.assertEqual(res, '070321')
-        
+
     def testdeg2dms(self):
         res = nmh.deg2dms(53.346, 'LA')
         self.assertEqual(res, ('53°20′45.6″N'))
@@ -122,23 +122,23 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, (""))
 
     def testKnots2spd(self):
-        res = nmh.knots2spd(1.0,'MS')
+        res = nmh.knots2spd(1.0, 'MS')
         self.assertAlmostEqual (res, 0.5144447324, 5)
-        res = nmh.knots2spd(1.0,'FS')
+        res = nmh.knots2spd(1.0, 'FS')
         self.assertAlmostEqual (res, 1.68781084, 5)
-        res = nmh.knots2spd(1.0,'MPH')
+        res = nmh.knots2spd(1.0, 'mph')
         self.assertAlmostEqual (res, 1.15078, 5)
-        res = nmh.knots2spd(1.0,'KMPH')
+        res = nmh.knots2spd(1.0, 'kmph')
         self.assertAlmostEqual (res, 1.852001, 5)
 
     def testKnots2spdBAD(self):
         EXPECTED_ERROR = "Invalid conversion unit CRAP - must be in ['MS', 'FS', 'MPH', 'KMPH']."
         with self.assertRaises(KeyError) as context:
-            nmh.knots2spd(1.0,'CRAP')
+            nmh.knots2spd(1.0, 'CRAP')
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
         EXPECTED_ERROR = "Invalid knots value CRAP - must be float or integer."
         with self.assertRaises(TypeError) as context:
-            nmh.knots2spd('CRAP','MS')
+            nmh.knots2spd('CRAP', 'MS')
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
 #*******************************************

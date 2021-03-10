@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 0.1.5-beta
+
+CHANGES:
+
+1. Optional arguments to NMEARreader constructor and parse() method have been changed to **kwargs rather than args for future flexibility. See docstrings for usage.
+
 ### RELEASE 0.1.4-beta
 
 ENHANCEMENTS:

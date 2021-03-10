@@ -13,7 +13,7 @@ from datetime import datetime
 from pynmeagps.nmeatypes_core import LA, LN
 import pynmeagps.exceptions as nme
 
-SPEEDCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
+KNOTSCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
 
 
 def int2hexstr(val: int) -> str:
@@ -215,7 +215,7 @@ def date2str(dat: datetime.date) -> str:
 def deg2dms(degrees: float, att: str) -> str:
     """
     Convert decimal degrees to degrees minutes seconds string
-    e.g. for display purposes.
+    e.g. '51°20′45.6″N'
 
     :param float degrees: degrees
     :param str att: 'LA' (lat) or 'LN' (lon)
@@ -248,7 +248,7 @@ def deg2dms(degrees: float, att: str) -> str:
 def deg2dmm(degrees: float, att: str) -> str:
     """
     Convert decimal degrees to degrees decimal minutes string
-    e.g. for display purposes.
+    e.g. '51°20.76′S'.
 
     :param float degrees: degrees
     :param str att: 'LA' (lat) or 'LN' (lon)
@@ -281,10 +281,10 @@ def knots2spd(knots: float, unit: str = "MS") -> float:
     """
 
     try:
-        return knots * SPEEDCONV[unit]
+        return knots * KNOTSCONV[unit.upper()]
     except KeyError as err:
         raise KeyError(
-            f"Invalid conversion unit {unit} - must be in {list(SPEEDCONV.keys())}."
+            f"Invalid conversion unit {unit.upper()} - must be in {list(KNOTSCONV.keys())}."
         ) from err
     except TypeError as err:
         raise TypeError(

@@ -1,6 +1,6 @@
 <?xml version = "1.0"?>
 <project name="pynmeagps" default="build">
-	<property name="version" value="0.1.4" />
+	<property name="version" value="0.1.5" />
 	<condition property="python" value="python" else="/Library/Frameworks/Python.framework/Versions/3.9/bin/python3">
 		<os family="windows" />
 	</condition>

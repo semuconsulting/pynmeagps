@@ -27,7 +27,7 @@ from io import BufferedReader
 from threading import Thread
 from time import sleep
 
-from pynmeagps import NMEAReader, NMEAMessage, POLL
+from pynmeagps import NMEAReader, NMEAMessage, POLL, GET
 from serial import Serial, SerialException, SerialTimeoutException
 
 import pynmeagps.exceptions as nme
@@ -72,7 +72,7 @@ class NMEAStreamer:
             self._serial_object = Serial(
                 self._port, self._baudrate, timeout=self._timeout
             )
-            self._nmeareader = NMEAReader(BufferedReader(self._serial_object), self._nmea_only, self._validate, 0)
+            self._nmeareader = NMEAReader(BufferedReader(self._serial_object), nmeaonly=self._nmea_only, validate=self._validate, msgmode=GET)
             self._connected = True
         except (SerialException, SerialTimeoutException) as err:
             print(f"Error connecting to serial port {err}")
@@ -166,8 +166,8 @@ if __name__ == "__main__":
     print("Enter baud rate (9600): ", end="")
     val = input().strip('"') or '9600'
     baud = int(val)
-    print("Enter timeout (0): ", end="")
-    val = input().strip('"') or '0'
+    print("Enter timeout (0.1): ", end="")
+    val = input().strip('"') or '0.1'
     timout = float(val)
     print("Do you want to ignore any non-NMEA data (y/n)? (y) ", end="")
     val = input() or "y"
