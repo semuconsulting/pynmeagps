@@ -80,8 +80,8 @@ The constructor accepts the following optional keyword arguments:
 
 * `nmeaonly`: True = raise error if stream contains non-NMEA data, False = ignore non-NMEA data (default)
 * `validate`: bitfield validation flags (can be used in combination):
-- 0x01 = validate checksum (default)
-- 0x02 = validate msgId (i.e. raise error if unknown NMEA message is received)
+- `VALCKSUM` (0x01) = validate checksum (default)
+- `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `msgmode`: 0 = GET (default), 1 = SET 2 = POLL
 
 
