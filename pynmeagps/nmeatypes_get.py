@@ -145,9 +145,9 @@ NMEA_PAYLOADS_GET = {
             "None",
             {  # repeating group * 1..4
                 "svid": IN,
-                "elv": DE,
-                "az": IN,
-                "cno": IN,
+                "elv": DE,  # elevation
+                "az": IN,  # azimuth
+                "cno": IN,  # signal strength
             },
         ),
         "signalID": IN,  # NMEA >=4.10 only
@@ -165,8 +165,8 @@ NMEA_PAYLOADS_GET = {
         "NS": CH,
         "lon": LN,
         "EW": CH,
-        "spd": DE,
-        "cog": DE,
+        "spd": DE,  # speed in knots
+        "cog": DE,  # course over ground
         "date": DT,
         "mv": DE,
         "mvEW": ST,
@@ -190,13 +190,13 @@ NMEA_PAYLOADS_GET = {
         "gdUnit": CH,  # NMEA >=4.00 only
     },
     "VTG": {
-        "cogT": DE,
+        "cogT": DE,  # course over ground (true)
         "cogtUnit": CH,
-        "cogm": DE,
+        "cogm": DE,  # course over ground (magnetic)
         "cogmUnit": CH,
-        "sogn": DE,
+        "sogn": DE,  # speed over ground knots
         "sognUnit": CH,
-        "sogk": DE,
+        "sogk": DE,  # speed over ground kmph
         "sogkUnit": CH,
         "posMode": CH,  # NMEA >=2.3 only
     },

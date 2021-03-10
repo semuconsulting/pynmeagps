@@ -104,7 +104,7 @@ class StaticTest(unittest.TestCase):
     def testDate2str(self):
         res = nmh.date2str(datetime.date(2021, 3, 7))
         self.assertEqual(res, '070321')
-
+        
     def testdeg2dms(self):
         res = nmh.deg2dms(53.346, 'LA')
         self.assertEqual(res, ('53°20′45.6″N'))
@@ -120,6 +120,26 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, ('2°32.778′E'))
         res = nmh.deg2dmm("", 'LN')
         self.assertEqual(res, (""))
+
+    def testKnots2spd(self):
+        res = nmh.knots2spd(1.0,'MS')
+        self.assertAlmostEqual (res, 0.5144447324, 5)
+        res = nmh.knots2spd(1.0,'FS')
+        self.assertAlmostEqual (res, 1.68781084, 5)
+        res = nmh.knots2spd(1.0,'MPH')
+        self.assertAlmostEqual (res, 1.15078, 5)
+        res = nmh.knots2spd(1.0,'KMPH')
+        self.assertAlmostEqual (res, 1.852001, 5)
+
+    def testKnots2spdBAD(self):
+        EXPECTED_ERROR = "Invalid conversion unit CRAP - must be in ['MS', 'FS', 'MPH', 'KMPH']."
+        with self.assertRaises(KeyError) as context:
+            nmh.knots2spd(1.0,'CRAP')
+        self.assertTrue(EXPECTED_ERROR in str(context.exception))
+        EXPECTED_ERROR = "Invalid knots value CRAP - must be float or integer."
+        with self.assertRaises(TypeError) as context:
+            nmh.knots2spd('CRAP','MS')
+        self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
 #*******************************************
 # NMEAMessage property methods

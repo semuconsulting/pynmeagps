@@ -13,6 +13,8 @@ from datetime import datetime
 from pynmeagps.nmeatypes_core import LA, LN
 import pynmeagps.exceptions as nme
 
+SPEEDCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
+
 
 def int2hexstr(val: int) -> str:
     """
@@ -181,7 +183,7 @@ def time2utc(times: str) -> datetime.time:
 
     if times == "":
         return ""
-    # TODO not quite right should be decimal secs, not microsecs
+    # TODO check this is correct
     utc = datetime.strptime(times, "%H%M%S.%f")
     return utc.time()
 
@@ -265,3 +267,26 @@ def deg2dmm(degrees: float, att: str) -> str:
     else:
         sfx = "N" if att == "LA" else "E"
     return str(int(degrees)) + "\u00b0" + str(round(minutes, 5)) + "\u2032" + sfx
+
+
+def knots2spd(knots: float, unit: str = "MS") -> float:
+    """
+    Convert speed in knots to speed in specified units.
+
+    :param float knots: knots
+    :param unit str: 'MS' (default), 'FS', MPH', 'KMPH'
+    :return: speed in m/s, feet/s, mph or kmph
+    :rtype: float
+
+    """
+
+    try:
+        return knots * SPEEDCONV[unit]
+    except KeyError as err:
+        raise KeyError(
+            f"Invalid conversion unit {unit} - must be in {list(SPEEDCONV.keys())}."
+        ) from err
+    except TypeError as err:
+        raise TypeError(
+            f"Invalid knots value {knots} - must be float or integer."
+        ) from err
