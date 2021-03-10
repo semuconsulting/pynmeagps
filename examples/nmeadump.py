@@ -36,7 +36,7 @@ def stream_ubx(**kwargs):
             f"{'raw' if rawformat else 'parsed'} format...\n",
         )
         stream = Serial(port, baud, timeout=timeout)
-        nmr = NMEAReader(stream, nmea_only, validate, GET)
+        nmr = NMEAReader(stream, nmeaonly=nmea_only, validate=validate, msgmode=GET)
         for (raw, parsed) in nmr:
             if rawformat:
                 print(raw)
