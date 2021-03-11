@@ -63,10 +63,11 @@ class StreamTest(unittest.TestCase):
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
 
-    def testNMEA4(self):  # stream of NMEA v4.10 device (u-blox M9N) (NB RLM message in log is synthetic)
+    def testNMEA4(self):  # stream of NMEA v4.10 device (u-blox M9N) (NB everything after PUBX is synthetic)
         EXPECTED_RESULTS = (
             '<NMEA(GNDTM, datum=W84, subDatum=, latOfset=0.0, NS=N, lonOfset=0.0, EW=E, alt=0.0, refDatum=W84)>',
-            '<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-2.24041, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>',
+            '<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.24041, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>',
+            '<NMEA(GPRTE, numMsg=2, msgNum=1, status=c, active=0, wpt_01=PBRCPK, wpt_02=PBRTO, wpt_03=PTELGR, wpt_04=PPLAND, wpt_05=PYAMBU, wpt_06=PPFAIR, wpt_07=PWARRN, wpt_08=PMORTL, wpt_09=PLISMR)>',
             '<NMEA(GNRLM, beacon=32390494933, time=08:35:59, code=3, body=50267)>',
             '<NMEA(GNVTG, cogT=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.046, sognUnit=N, sogk=0.085, sogkUnit=K, posMode=A)>',
             '<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>',
@@ -95,6 +96,22 @@ class StreamTest(unittest.TestCase):
             '<NMEA(PUBX, msgId=0, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, PDOP=8.09, numSVs=6, reserved=0, DR=0)>',
             '<NMEA(PUBX, msgId=3, numSv=23, svid_01=1, status_01=-, azi_01=14.0, ele_01=6.0, cno_01=8, lck_01=0, svid_02=12, status_02=U, azi_02=207.0, ele_02=43.0, cno_02=28, lck_02=9, svid_03=14, status_03=-, azi_03=49.0, ele_03=6.0, cno_03=, lck_03=0, svid_04=15, status_04=-, azi_04=171.0, ele_04=44.0, cno_04=23, lck_04=0, svid_05=17, status_05=-, azi_05=64.0, ele_05=32.0, cno_05=16, lck_05=0, svid_06=19, status_06=-, azi_06=94.0, ele_06=33.0, cno_06=, lck_06=0, svid_07=20, status_07=U, azi_07=251.0, ele_07=20.0, cno_07=31, lck_07=38, svid_08=21, status_08=-, azi_08=354.0, ele_08=4.0, cno_08=, lck_08=0, svid_09=23, status_09=U, azi_09=251.0, ele_09=27.0, cno_09=31, lck_09=64, svid_10=24, status_10=U, azi_10=268.0, ele_10=89.0, cno_10=26, lck_10=0, svid_11=25, status_11=-, azi_11=223.0, ele_11=5.0, cno_11=, lck_11=0, svid_12=48, status_12=-, azi_12=, ele_12=, cno_12=15, lck_12=0, svid_13=52, status_13=-, azi_13=, ele_13=, cno_13=28, lck_13=13, svid_14=65, status_14=-, azi_14=176.0, ele_14=7.0, cno_14=, lck_14=0, svid_15=66, status_15=U, azi_15=223.0, ele_15=57.0, cno_15=35, lck_15=64, svid_16=67, status_16=-, azi_16=315.0, ele_16=42.0, cno_16=23, lck_16=0, svid_17=68, status_17=-, azi_17=341.0, ele_17=0.0, cno_17=29, lck_17=0, svid_18=75, status_18=-, azi_18=57.0, ele_18=37.0, cno_18=, lck_18=0, svid_19=76, status_19=U, azi_19=303.0, ele_19=78.0, cno_19=18, lck_19=0, svid_20=77, status_20=-, azi_20=253.0, ele_20=27.0, cno_20=21, lck_20=0, svid_21=84, status_21=-, azi_21=18.0, ele_21=19.0, cno_21=, lck_21=0, svid_22=85, status_22=-, azi_22=78.0, ele_22=22.0, cno_22=, lck_22=0, svid_23=86, status_23=-, azi_23=121.0, ele_23=1.0, cno_23=, lck_23=0)>',
             '<NMEA(PUBX, msgId=4, time=10:36:07, date=2021-03-06, utcTow=556567.00, utcWk=2147, leapSec=18, clkBias=-384839.0, clkDrift=-53.623, tpGran=16)>',
+            '<NMEA(GPWPL, lat=49.286, NS=N, lon=-123.177333, EW=W, wpt=003)>',
+            '<NMEA(GPRMA, status=A, lat=53.450657, NS=N, lon=-112.24041, EW=W, reserved1=, reserved2=, sog=23.1, cog=23.0, var=14.8, dirvar=W)>',
+            '<NMEA(GPRMB, status=A, ctrkerr=0.66, dirs=L, wptto=003, wptfr=004, lat=49.287333, NS=N, lon=-123.1595, EW=W, range=1.3, bearing=52.5, velclos=0.5, arrstatus=V)>',
+            '<NMEA(PGRME, HPE=15.0, HPEUnit=M, VPE=45.0, VPEUnit=M, EPE=25.0, EPEUnit=M)>',
+            '<NMEA(PGRMM, dtm=NAD27 Canada)>',
+            '<NMEA(PGRMZ, alt=246.0, altUnit=f, fix=3)>',
+            '<NMEA(GPXTE, warn=A, lock=A, ctrkerr=4.07, dirs=L, disUnit=N)>',
+            '<NMEA(GPVBW, wlspd=12.3, wtspd=0.07, wstatus=A, glspd=11.78, gtspd=0.12, gstatus=A)>',
+            '<NMEA(GPSTN, talkerId=34)>',
+            '<NMEA(GPBWC, fixutc=220516, lat=51.500333, NS=N, lon=-0.772333, EW=W, bearT=213.8, bearTu=T, bearM=218.0, bearMu=M, dist=4.6, distUnit=N, wpt=EGLM)>',
+            '<NMEA(GPBOD, bearT=97.0, bearTu=T, bearM=103.2, bearMu=M, wptD=POINTB, wptO=POINTA)>',
+            '<NMEA(GPBOD, bearT=99.3, bearTu=T, bearM=105.6, bearMu=M, wptD=POINTB, wptO=)>',
+            '<NMEA(GPAAM, arrce=A, perp=A, crad=0.1, cUnit=N, wpt=WPTNME)>',
+            '<NMEA(GPAPB, blnkwarn=A, cycwarn=A, ctrkerr=0.1, dirs=R, ctrkUnit=N, aalmcirc=V, aalmperp=V, bearM=11.0, bearMu=M, wpt=DEST, bearD=11.0, bearDu=M, bearS=11.0, bearSu=M)>',
+            '<NMEA(GPMSK, freq=318.0, fmode=A, beacbps=100, bpsmode=M, MMSfreq=2.0)>',
+            '<NMEA(GPMSS, strength=55, snr=27, freq=318.0, beacbps=100)>',
         )
 
         i = 0

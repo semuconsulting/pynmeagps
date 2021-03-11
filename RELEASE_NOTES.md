@@ -1,5 +1,13 @@
 # pynmeagps Release Notes
 
+### RELEASE 0.1.7-beta
+
+ENHANCEMENTS:
+
+1. following message types added: AAM, APB, BOD, BWC, MSK, MSS, RMA, RMB, STN, VBW, WPL, XTE, GRME, GRMM, GRMZ
+
+Further proprietary types will be added in subsequent releases. Shout if you want yours prioritised.
+
 ### RELEASE 0.1.6-beta
 
 ENHANCEMENTS:

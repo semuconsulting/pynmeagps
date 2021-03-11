@@ -26,7 +26,7 @@ At time of writing the library implements a comprehensive set of GNSS NMEA messa
 
 Sphinx API Documentation in HTML format is available at [http://semuconsulting.com/pynmeagps](http://semuconsulting.com/pynmeagps).
 
-Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pynmeagps/blob/master/CONTRIBUTING.md).
+Contributions welcome, particularly any standard or proprietary NMEA message definitions not yet included - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pynmeagps/blob/master/CONTRIBUTING.md).
 
 [Bug reports](https://github.com/semuconsulting/pynmeagps/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) and [Feature requests](https://github.com/semuconsulting/pynmeagps/blob/master/.github/ISSUE_TEMPLATE/feature_request.md) - please use the templates provided.
 
@@ -227,8 +227,9 @@ can be readily added to the appropriate dictionary. Message payload definitions 
 
 ```
 1. attribute names must be unique within each message class
-2. attribute types must be one of the valid types (IN, DE, CH, etc.)
-3. repeating groups must be defined as a tuple ('numr', {dict}), where:
+2. avoid reserved names 'msgID', 'talker', 'payload', 'checksum'.
+3. attribute types must be one of the valid types (IN, DE, CH, etc.)
+4. repeating groups must be defined as a tuple ('numr', {dict}), where:
    'numr' is either:
      a. an integer representing a fixed number of repeats e.g. 32
      b. a string representing the name of a preceding attribute containing the number of repeats e.g. 'numSv'

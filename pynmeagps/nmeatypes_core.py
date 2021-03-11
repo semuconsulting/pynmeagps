@@ -144,12 +144,12 @@ NMEA_MSGIDS = {
     # ***************************************************************
     # NMEA Standard message types
     # ***************************************************************
-    #     "AAM": "Waypoint Arrival Alarm",
-    #     "ALM": "Almanac Data",
-    #     "APA": "Auto Pilot A sentence",
-    #     "APB": "Auto Pilot B sentence",
-    #     "BOD": "Bearing Origin to Destination",
-    #     "BWC": "Bearing using Great Circle route",
+    "AAM": "Waypoint Arrival Alarm",
+    # "ALM": "Almanac Data",
+    # "APA": "Auto Pilot A sentence",
+    "APB": "Auto Pilot B sentence",
+    "BOD": "Bearing Origin to Destination",
+    "BWC": "Bearing using Great Circle route",
     "DTM": "Datum Reference",
     "GAQ": "Poll Standard Message - Talker ID GA (Galileo)",
     "GBQ": "Poll Standard Message - Talker ID GB (BeiDou)",
@@ -168,26 +168,26 @@ NMEA_MSGIDS = {
     "HDG": "Heading, Magnetic, Deviation, Variation",
     "HDM": "Heading, Magnetic",
     "HDT": "Heating, True",
-    #     "MSK": "Send control for a beacon receiver",
-    #     "MSS": "Beacon receiver status information",
+    "MSK": "Send control for a beacon receiver",
+    "MSS": "Beacon receiver status information",
     "RLM": "Return Link Message",
     "RMA": "Recommended Loran data",
     "RMB": "Recommended Navigation data for GPS",
     "RMC": "Recommended Minimum data",
     "RTE": "Route message",
-    #     "TRF": "Transit Fix Data",
-    #     "STN": "Multiple Data ID",
-    #     "VBW": "Dual Ground / Water Speed",
+    # "TRF": "Transit Fix Data",
+    "STN": "Multiple Data ID",
+    "VBW": "Dual Ground / Water Speed",
     "THS": "TRUE Heading and Status",
     "TXT": "Text Transmission",
     "VLW": "Dual Ground Water Distance",
     "VTG": "Course over ground and Groundspeed",
-    #     "WCV": "Waypoint closure velocity (Velocity Made Good)",
-    #     "WPL": "Waypoint Location information",
-    #     "XTC": "Cross track error",
-    #     "XTE": "Measured cross track error",
+    # "WCV": "Waypoint closure velocity (Velocity Made Good)",
+    "WPL": "Waypoint Location information",
+    # "XTC": "Cross track error",
+    "XTE": "Measured cross track error",
     "ZDA": "Time and Date",
-    #     "ZTG": "Zulu (UTC) time and time to go (to destination)",
+    # "ZTG": "Zulu (UTC) time and time to go (to destination)",
     # ***************************************************************
     # GARMIN Proprietary message types
     # ***************************************************************
@@ -214,6 +214,30 @@ NMEA_MSGIDS = {
     "UBX06": "Lat/Long Position Data",
     "UBX40": "Set NMEA message output rate",
     "UBX41": "PUBX-CONFIG Set Protocols and Baudrate",
+    # ***************************************************************
+    # Magellan Proprietary message types
+    # ***************************************************************
+    # "MGN"
+    # ***************************************************************
+    # Motorola Proprietary message types
+    # ***************************************************************
+    # "MOTG"
+    # ***************************************************************
+    # Rockwell International Proprietary message types
+    # ***************************************************************
+    # "RWI"
+    # ***************************************************************
+    # SiRF Proprietary message types
+    # ***************************************************************
+    # "SRF"
+    # ***************************************************************
+    # Magnavox Proprietary message types
+    # ***************************************************************
+    # "MVX"
+    # ***************************************************************
+    # Sony Proprietary message types
+    # ***************************************************************
+    # "SNY"
     # ***************************************************************
     # Dummy message for testing only
     # ***************************************************************

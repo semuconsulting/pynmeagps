@@ -2,9 +2,10 @@
 NMEA Protocol Set payload definitions
 
 THESE ARE THE PAYLOAD DEFINITIONS FOR _SET_ MESSAGES _TO_ THE RECEIVER
-(i.e. Configuration commands)
+(i.e. Configuration commands).
 
-NB: Attribute names must be unique within each message id
+NB: Attribute names must be unique within each message id.
+NB: Avoid reserved names 'msgID', 'talker', 'payload', 'checksum'.
 
 NB: Repeating groups must be defined as a tuple thus
     'group': ('numr', {dict})

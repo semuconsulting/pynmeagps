@@ -2,9 +2,10 @@
 NMEA Protocol Output payload definitions
 
 THESE ARE THE PAYLOAD DEFINITIONS FOR _GET_ MESSAGES _FROM_ THE RECEIVER
-(i.e. Periodic Navigation Data, Poll Responses, Info messages)
+(i.e. Periodic Navigation Data, Poll Responses, Info messages).
 
-NB: Attribute names must be unique within each message id
+NB: Attribute names must be unique within each message id.
+NB: Avoid reserved names 'msgID', 'talker', 'payload', 'checksum'.
 
 NB: Repeating groups must be defined as a tuple thus
     'group': ('numr', {dict})
@@ -39,6 +40,51 @@ NMEA_PAYLOADS_GET = {
     # *********************************************
     # STANDARD MESSAGES
     # *********************************************
+    "AAM": {
+        "arrce": CH,
+        "perp": CH,
+        "crad": DE,
+        "cUnit": CH,
+        "wpt": ST,
+    },
+    "APB": {
+        "blnkwarn": CH,
+        "cycwarn": CH,
+        "ctrkerr": DE,
+        "dirs": CH,
+        "ctrkUnit": CH,
+        "aalmcirc": CH,
+        "aalmperp": CH,
+        "bearM": DE,
+        "bearMu": CH,
+        "wpt": ST,
+        "bearD": DE,
+        "bearDu": CH,
+        "bearS": DE,
+        "bearSu": CH,
+    },
+    "BOD": {
+        "bearT": DE,
+        "bearTu": CH,
+        "bearM": DE,
+        "bearMu": CH,
+        "wptD": ST,
+        "wptO": ST,
+    },
+    "BWC": {
+        "fixutc": ST,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "bearT": DE,
+        "bearTu": CH,
+        "bearM": DE,
+        "bearMu": CH,
+        "dist": DE,
+        "distUnit": CH,
+        "wpt": ST,
+    },
     "DTM": {
         "datum": ST,
         "subDatum": ST,
@@ -167,6 +213,19 @@ NMEA_PAYLOADS_GET = {
         "heading": DE,
         "MT": CH,  # 'T'
     },
+    "MSK": {
+        "freq": DE,
+        "fmode": CH,
+        "beacbps": IN,
+        "bpsmode": CH,
+        "MMSfreq": DE,
+    },
+    "MSS": {
+        "strength": IN,
+        "snr": IN,
+        "freq": DE,
+        "beacbps": IN,
+    },
     "RLM": {
         "beacon": HX,
         "time": TM,
@@ -182,13 +241,13 @@ NMEA_PAYLOADS_GET = {
         "reserved1": ST,
         "reserved2": ST,
         "sog": DE,
-        "cog": IN,
+        "cog": DE,
         "var": DE,
         "dirvar": CH,
     },
     "RMB": {
         "status": CH,
-        "ctkerr": DE,
+        "ctrkerr": DE,
         "dirs": CH,
         "wptto": CH,
         "wptfr": CH,
@@ -197,7 +256,7 @@ NMEA_PAYLOADS_GET = {
         "lon": LN,  # of to waypoint
         "EW": CH,
         "range": DE,
-        "bearing": IN,
+        "bearing": DE,
         "velclos": DE,
         "arrstatus": CH,
         "valstatus": CH,
@@ -229,11 +288,22 @@ NMEA_PAYLOADS_GET = {
             },
         ),
     },
+    "STN": {
+        "talkerId": ST,
+    },
     "TXT": {
         "numMsg": IN,
         "msgNum": IN,
         "msgType": IN,
         "text": ST,
+    },
+    "VBW": {
+        "wlspd": DE,
+        "wtspd": DE,
+        "wstatus": CH,
+        "glspd": DE,
+        "gtspd": DE,
+        "gstatus": CH,
     },
     "VLW": {
         "twd": DE,
@@ -256,6 +326,20 @@ NMEA_PAYLOADS_GET = {
         "sogkUnit": CH,
         "posMode": CH,  # NMEA >=2.3 only
     },
+    "WPL": {
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "wpt": ST,
+    },
+    "XTE": {
+        "warn": CH,
+        "lock": CH,
+        "ctrkerr": DE,
+        "dirs": CH,
+        "disUnit": CH,
+    },
     "ZDA": {
         "time": TM,
         "day": IN,
@@ -269,8 +353,11 @@ NMEA_PAYLOADS_GET = {
     # *********************************************
     "GRME": {  # estimated error information
         "HPE": DE,
+        "HPEUnit": CH,
         "VPE": DE,
+        "VPEUnit": CH,
         "EPE": DE,
+        "EPEUnit": CH,
     },
     "GRMF": {  # GPS fix data sentence
         "week": IN,
@@ -320,6 +407,7 @@ NMEA_PAYLOADS_GET = {
     },
     "GRMZ": {  # altitude
         "alt": DE,
+        "altUnit": CH,
         "fix": IN,
     },
     "GRMB": {  # DGPS Beacon information
