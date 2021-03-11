@@ -4,7 +4,7 @@
 
 ENHANCEMENTS:
 
-1. Following message types added: AAM, APB, BOD, BWC, MSK, MSS, RMA, RMB, STN, VBW, WPL, XTE, GRME, GRMM, GRMZ
+1. Following message types added: AAM, APA, APB, BOD, BWC, MSK, MSS, RMA, RMB, STN, VBW, WPL, XTE, GRME, GRMM, GRMZ
 
 Further types will be added in subsequent releases. Shout or submit PR if you want yours prioritised.
 

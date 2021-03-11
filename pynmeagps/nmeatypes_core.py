@@ -146,7 +146,7 @@ NMEA_MSGIDS = {
     # ***************************************************************
     "AAM": "Waypoint Arrival Alarm",
     # "ALM": "Almanac Data",
-    # "APA": "Auto Pilot A sentence",
+    "APA": "Auto Pilot A sentence",
     "APB": "Auto Pilot B sentence",
     "BOD": "Bearing Origin to Destination",
     "BWC": "Bearing using Great Circle route",
