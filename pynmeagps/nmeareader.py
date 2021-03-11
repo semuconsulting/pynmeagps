@@ -7,7 +7,7 @@ any stream which supports a read(n) -> bytes method.
 Returns both the raw binary data (as bytes) and the parsed
 data (as a NMEAMessage object).
 
-If the 'nmea_only' parameter is set to 'True', the reader
+If the 'nmeaonly' kwarg is set to 'True', the reader
 will raise a NMEAStreamerError if it encounters any non-NMEA
 data. Otherwise, it will ignore the non-NMEA data and attempt
 to carry on.
@@ -42,7 +42,7 @@ class NMEAReader:
         """Constructor.
 
         :param stream stream: input data stream (e.g. Serial or binary File)
-        :param bool nmeaonly (kwarg): True = raise error if stream contains non-NMEA data, False = ignore non-NMEA data
+        :param bool nmeaonly (kwarg): True = error on non-NMEA data, False = ignore non-NMEA data
         :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID
         :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
         :raises: NMEAStreamError (if mode is invalid)
@@ -88,7 +88,7 @@ class NMEAReader:
 
         :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
         :rtype: tuple
-        :raises: NMEAStreamError (if nmeaonly=True and stream includes non-UBX data)
+        :raises: NMEAStreamError (if nmeaonly=True and stream includes non-NMEA data)
 
         """
 
@@ -136,7 +136,7 @@ class NMEAReader:
         :param bytes message: bytes message to parse
         :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID
         :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
-        :return: NMEAMessage object
+        :return: NMEAMessage object (or None if unknown message and VALMSGID is not set)
         :rtype: NMEAMessage
         :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
 
@@ -170,3 +170,4 @@ class NMEAReader:
                         f"msgID {msgid}, talker {talker}, mode {modestr}."
                     )
                 ) from err
+            return None
