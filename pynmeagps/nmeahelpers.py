@@ -10,7 +10,7 @@ Created on 04 Mar 2021
 """
 
 from datetime import datetime
-from pynmeagps.nmeatypes_core import NMEA_MSGIDS, LA, LN
+from pynmeagps.nmeatypes_core import LA, LN
 import pynmeagps.exceptions as nme
 
 KNOTSCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
@@ -183,6 +183,7 @@ def time2utc(times: str) -> datetime.time:
 
     if times == "":
         return ""
+    # TODO check this is correct
     utc = datetime.strptime(times, "%H%M%S.%f")
     return utc.time()
 
@@ -289,17 +290,3 @@ def knots2spd(knots: float, unit: str = "MS") -> float:
         raise TypeError(
             f"Invalid knots value {knots} - must be float or integer."
         ) from err
-
-
-def msgdesc(msgID: str) -> str:
-    """
-    Return descriptive string for NMEA msgId.
-
-    :param msgID str: message ID e.g. 'GGA'
-    :return: description of message
-    :rtype: str
-
-    """
-    # pylint: disable=invalid-name
-
-    return NMEA_MSGIDS.get(msgID, f"Unknown msgID {msgID}")

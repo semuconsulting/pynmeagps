@@ -114,8 +114,8 @@ You can parse individual NMEA messages using the static `NMEAReader.parse(messag
 Accepts the following optional keyword arguments:
 
 * `validate`: bitfield validation flags (can be used in combination):
-- `VALCKSUM` (0x01) = validate checksum (default)
-- `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
+- 0x01 = validate checksum (default)
+- 0x02 = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `msgmode`: 0 = GET (default), 1 = SET 2 = POLL
 
 Example:

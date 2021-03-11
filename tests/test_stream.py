@@ -63,11 +63,10 @@ class StreamTest(unittest.TestCase):
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
 
-    def testNMEA4(self):  # stream of NMEA v4.10 device (u-blox M9N) (NB RLM message in log is synthetic)
+    def testNMEA4(self):  # stream of NMEA v4.10 device (u-blox M9N)
         EXPECTED_RESULTS = (
             '<NMEA(GNDTM, datum=W84, subDatum=, latOfset=0.0, NS=N, lonOfset=0.0, EW=E, alt=0.0, refDatum=W84)>',
             '<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-2.24041, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>',
-            '<NMEA(GNRLM, beacon=32390494933, time=08:35:59, code=3, body=50267)>',
             '<NMEA(GNVTG, cogT=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.046, sognUnit=N, sogk=0.085, sogkUnit=K, posMode=A)>',
             '<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>',
             '<NMEA(GNGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>',
