@@ -4,11 +4,14 @@
 
 ENHANCEMENTS:
 
-1. msgdesc() helper method added to get description of NMEA message type.
+1. message types HDG, HDM, HDT, RTE added
+2. msgdesc() helper method added to get description of NMEA message type.
+3. construction of proprietary messages (talker = 'P') made more consistent with standard messages.
 
 FIXES:
 
 1. nominal value for HX (hex) attribute type updated to integer rather than string (only currently affects RLM message type).
+
 
 ### RELEASE 0.1.5-beta
 
