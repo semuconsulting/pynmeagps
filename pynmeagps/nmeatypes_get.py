@@ -152,11 +152,55 @@ NMEA_PAYLOADS_GET = {
         ),
         "signalID": IN,  # NMEA >=4.10 only
     },
+    "HDG": {
+        "heading": DE,
+        "MT": CH,  # 'M'
+    },
+    "HDM": {
+        "heading": DE,
+        "devm": DE,
+        "devEW": CH,
+        "varm": DE,
+        "varEW": CH,
+    },
+    "HDT": {
+        "heading": DE,
+        "MT": CH,  # 'T'
+    },
     "RLM": {
         "beacon": HX,
         "time": TM,
         "code": CH,
         "body": HX,
+    },
+    "RMA": {
+        "status": CH,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "reserved1": ST,
+        "reserved2": ST,
+        "sog": DE,
+        "cog": IN,
+        "var": DE,
+        "dirvar": CH,
+    },
+    "RMB": {
+        "status": CH,
+        "ctkerr": DE,
+        "dirs": CH,
+        "wptto": CH,
+        "wptfr": CH,
+        "lat": LA,  # of to waypoint
+        "NS": CH,
+        "lon": LN,  # of to waypoint
+        "EW": CH,
+        "range": DE,
+        "bearing": IN,
+        "velclos": DE,
+        "arrstatus": CH,
+        "valstatus": CH,
     },
     "RMC": {
         "time": TM,
@@ -172,6 +216,18 @@ NMEA_PAYLOADS_GET = {
         "mvEW": ST,
         "posMode": CH,
         "navStatus": CH,  # NMEA >=4.10 only
+    },
+    "RTE": {
+        "numMsg": IN,
+        "msgNum": IN,
+        "status": CH,  # 'c'/'w'
+        "active": ST,
+        "group_wp": (
+            "None",
+            {  # repeating group
+                "wpt": ST,
+            },
+        ),
     },
     "TXT": {
         "numMsg": IN,
@@ -211,12 +267,12 @@ NMEA_PAYLOADS_GET = {
     # *********************************************
     # GARMIN PROPRIETARY MESSAGES
     # *********************************************
-    "PGRME": {  # estimated error information
+    "GRME": {  # estimated error information
         "HPE": DE,
         "VPE": DE,
         "EPE": DE,
     },
-    "PGRMF": {  # GPS fix data sentence
+    "GRMF": {  # GPS fix data sentence
         "week": IN,
         "secs": IN,
         "date": DT,
@@ -233,7 +289,7 @@ NMEA_PAYLOADS_GET = {
         "PDOP": DE,
         "TDOP": DE,
     },
-    "PGRMH": {  # aviation height and VNAV data
+    "GRMH": {  # aviation height and VNAV data
         "status": CH,
         "vspd": DE,
         "verr": DE,
@@ -243,10 +299,10 @@ NMEA_PAYLOADS_GET = {
         "trk": DE,
         "course": DE,
     },
-    "PGRMM": {  # map datum
+    "GRMM": {  # map datum
         "dtm": ST,
     },
-    "PGRMT": {  # sensor status information
+    "GRMT": {  # sensor status information
         "ver": ST,
         "ROMtest": CH,
         "rcvrtest": CH,
@@ -257,16 +313,16 @@ NMEA_PAYLOADS_GET = {
         "temp": DE,
         "cfgdata": CH,
     },
-    "PGRMV": {  # 3D velocity information
+    "GRMV": {  # 3D velocity information
         "velE": DE,
         "velN": DE,
         "velZ": DE,
     },
-    "PGRMZ": {  # altitude
+    "GRMZ": {  # altitude
         "alt": DE,
         "fix": IN,
     },
-    "PGRMB": {  # DGPS Beacon information
+    "GRMB": {  # DGPS Beacon information
         "freq": DE,
         "bps": IN,
         "snr": IN,
@@ -279,7 +335,7 @@ NMEA_PAYLOADS_GET = {
     # *********************************************
     # U-BLOX PROPRIETARY MESSAGES
     # *********************************************
-    "PUBX00": {
+    "UBX00": {
         "msgId": IN,  # 00
         "time": TM,
         "lat": LA,
@@ -301,7 +357,7 @@ NMEA_PAYLOADS_GET = {
         "reserved": IN,
         "DR": IN,
     },
-    "PUBX03": {
+    "UBX03": {
         "msgId": IN,  # 03
         "numSv": IN,
         "groupSV": (
@@ -316,7 +372,7 @@ NMEA_PAYLOADS_GET = {
             },
         ),
     },
-    "PUBX04": {
+    "UBX04": {
         "msgId": IN,  # 04
         "time": TM,
         "date": DT,
@@ -327,7 +383,7 @@ NMEA_PAYLOADS_GET = {
         "clkDrift": DE,
         "tpGran": IN,
     },
-    "PUBX05": {  # deprecated, for backwards compat only
+    "UBX05": {  # deprecated, for backwards compat only
         "msgId": IN,  # 05
         "pulses": IN,
         "period": IN,

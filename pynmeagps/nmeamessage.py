@@ -232,7 +232,7 @@ class NMEAMessage:
 
         try:
             key = self.msgID
-            if key == "PUBX":  # proprietary UBX message
+            if key == "UBX":  # proprietary UBX message
                 if "payload" in kwargs:
                     key += self._payload[0]
                 elif "msgId" in kwargs:
@@ -279,8 +279,7 @@ class NMEAMessage:
         :rtype: str
         """
 
-        talker = "" if self._talker == "P" else self._talker
-        stg = f"<NMEA({talker}{self._msgID}"
+        stg = f"<NMEA({self._talker}{self._msgID}"
         stg += ", "
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
@@ -331,8 +330,7 @@ class NMEAMessage:
         :rtype: bytes
         """
 
-        talker = "" if self._talker == "P" else self._talker
-        output = "$" + talker + self._msgID + ","
+        output = "$" + self._talker + self._msgID + ","
         if len(self._payload) > 0:
             output += list2csv(self._payload)
         output += "*" + self._checksum + "\r\n"

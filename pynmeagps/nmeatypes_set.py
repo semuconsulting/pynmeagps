@@ -43,7 +43,7 @@ NMEA_PAYLOADS_SET = {
     # *********************************************
     # GARMIN PROPRIETARY MESSAGES
     # *********************************************
-    "PGRMI": {  # sensor initialisation information
+    "GRMI": {  # sensor initialisation information
         "lat": LA,
         "NS": CH,
         "lon": LN,
@@ -52,7 +52,7 @@ NMEA_PAYLOADS_SET = {
         "time": TM,
         "rcvr_cmd": CH,
     },
-    "PGRMC": {  # sensor configuration information
+    "GRMC": {  # sensor configuration information
         "fix": CH,
         "alt": DE,
         "dtm": ST,
@@ -68,7 +68,7 @@ NMEA_PAYLOADS_SET = {
         "reserved2": ST,
         "drtime": IN,
     },
-    "PGRMC1": {  # additional sensor configuration information
+    "GRMC1": {  # additional sensor configuration information
         "nmeatim": IN,
         "bphase": IN,
         "autopos": IN,
@@ -82,11 +82,11 @@ NMEA_PAYLOADS_SET = {
         "autopwr": IN,
         "extpwr": IN,
     },
-    "PGRMO": {  # output sentence enable
+    "GRMO": {  # output sentence enable
         "msgId": ST,
         "tgtmode": IN,
     },
-    "PGRMW": {  # additional waypoint information
+    "GRMW": {  # additional waypoint information
         "wptId": ST,
         "alt": DE,
         "symnum": HX,
@@ -95,7 +95,7 @@ NMEA_PAYLOADS_SET = {
     # *********************************************
     # U-BLOX PROPRIETARY MESSAGES
     # *********************************************
-    "PUBX40": {  # set message rates per port
+    "UBX40": {  # set message rates per port
         "msgId": IN,  # 40
         "id": IN,
         "rddc": IN,  # I2C
@@ -105,7 +105,7 @@ NMEA_PAYLOADS_SET = {
         "rspi": IN,  # SPI
         "reserved": IN,
     },
-    "PUBX41": {  # configure port protocols
+    "UBX41": {  # configure port protocols
         "msgId": IN,  # 41
         "portId": IN,
         "inProto": HX,

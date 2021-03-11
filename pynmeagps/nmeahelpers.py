@@ -46,7 +46,7 @@ def get_parts(message: object) -> tuple:
         payload = payload.split(",")
         if hdr[0:1] == "P":  # proprietary
             talker = "P"
-            msgid = hdr
+            msgid = hdr[1:]
         else:  # standard
             talker = hdr[0:2]
             msgid = hdr[2:]
