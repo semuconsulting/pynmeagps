@@ -1,5 +1,15 @@
 # pynmeagps Release Notes
 
+### RELEASE 0.1.6-beta
+
+ENHANCEMENTS:
+
+1. msgdesc() helper method added to get description of NMEA message type.
+
+FIXES:
+
+1. nominal value for HX (hex) attribute type updated to integer rather than string (only currently affects RLM message type).
+
 ### RELEASE 0.1.5-beta
 
 CHANGES:

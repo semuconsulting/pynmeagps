@@ -24,12 +24,15 @@ from pynmeagps.nmeahelpers import (
     dmm2ddd,
     ddd2dmm,
     list2csv,
+    int2hexstr,
     calc_checksum,
 )
 
 
 class NMEAMessage:
     """NMEA GNSS/GPS Message Class."""
+
+    # pylint: disable=too-many-instance-attributes
 
     def __init__(self, talker: str, msgID: str, msgmode: int, **kwargs):
         """Constructor.
@@ -40,7 +43,7 @@ class NMEAMessage:
         Otherwise, any individual attributes passed as keyword args will be set to the
         value provided, all others will be assigned a nominal value according to type.
 
-        :param str talker: message talker e.g. "GP"
+        :param str talker: message talker e.g. "GP" (leave blank for proprietary messages)
         :param str msgID: message ID e.g. "GGA"
         :param int msgmode: mode (0=GET, 1=SET, 2=POLL)
         :param kwargs: keyword arg(s) representing all or some payload attributes
@@ -143,7 +146,7 @@ class NMEAMessage:
         if isinstance(numr, int):  # fixed number of repeats
             rng = numr
         elif numr == "None":  # indeterminate number of repeats
-            pindexend = 0  # TODO some contents have fields before and after group
+            pindexend = 0  # may need tweaking
             rng = self._calc_num_repeats(attd, self._payload, pindex, pindexend)
         else:  # number of repeats is defined in named attribute
             rng = getattr(self, numr)
@@ -190,10 +193,7 @@ class NMEAMessage:
             # some attribute values have been provided,
             # the rest will be set to a nominal value
             else:
-                if keyr in kwargs:
-                    val = kwargs[keyr]
-                else:
-                    val = self.nomval(att)
+                val = kwargs.get(keyr, self.nomval(att))
                 vals = self.val2str(val, att)
                 self._payload.append(vals)
 
@@ -382,10 +382,10 @@ class NMEAMessage:
     @staticmethod
     def str2val(vals: str, att: str) -> object:
         """
-        Convert string to typed value
+        Convert NMEA string to typed value
         (this is the format that will be available to end users).
 
-        :param str vals: attribute value in string format
+        :param str vals: attribute value in NMEA protocol format
         :param str att: attribute type e.g. 'DE'
         :return: attribute value
         :rtype: object
@@ -393,8 +393,14 @@ class NMEAMessage:
         """
 
         val = vals
-        if att in (nmt.CH, nmt.ST, nmt.HX):  # character, string, hex
+        if att in (
+            nmt.CH,
+            nmt.ST,
+        ):  # character, string, hex
             pass
+        elif att == nmt.HX:
+            if vals != "":
+                val = int(vals, 16)
         elif att == nmt.DE:  # decimal
             if vals != "":
                 val = float(vals)
@@ -414,19 +420,21 @@ class NMEAMessage:
     @staticmethod
     def val2str(val, att: str) -> str:
         """
-        Convert typed value to string
+        Convert typed value to NMEA string
         (this is the format used internally by the NMEA protocol).
 
         :param object val: typed attribute value
         :param str att: attribute type e.g. 'IN'
-        :return: attribute value as string
+        :return: attribute value in NMEA protocol format
         :rtype: str
         :raises: NMEATypeError
 
         """
 
-        if att in (nmt.CH, nmt.HX, nmt.ST):
+        if att in (nmt.CH, nmt.ST):
             vals = str(val)
+        elif att == nmt.HX:
+            vals = int2hexstr(val)
         elif att == nmt.DE:
             vals = str(val)
         elif att == nmt.IN:
@@ -452,8 +460,10 @@ class NMEAMessage:
         :raises: NMEATypeError
         """
 
-        if att in (nmt.CH, nmt.HX, nmt.ST, nmt.LA, nmt.LN):
+        if att in (nmt.CH, nmt.ST, nmt.LA, nmt.LN):
             val = ""
+        elif att == nmt.HX:
+            val = 0x00
         elif att == nmt.DE:
             val = 0.0
         elif att == nmt.IN:

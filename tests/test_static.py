@@ -141,6 +141,12 @@ class StaticTest(unittest.TestCase):
             nmh.knots2spd('CRAP', 'MS')
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
+    def testMsgDesc(self):
+        res = nmh.msgdesc('GGA')
+        self.assertEqual(res, "Global positioning system fix data")
+        res = nmh.msgdesc('XXX')
+        self.assertEqual(res, "Unknown msgID XXX")
+
 #*******************************************
 # NMEAMessage property methods
 #*******************************************
@@ -200,9 +206,11 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(str(res1), str(res2))
 
     def testNomVal(self):
-        for att in ('CH', 'HX', 'ST', 'LA', 'LN'):
+        for att in ('CH', 'ST', 'LA', 'LN'):
             res = NMEAMessage.nomval(att)
             self.assertEqual(res, "")
+        res = NMEAMessage.nomval('HX')
+        self.assertEqual(res, 0)
         res = NMEAMessage.nomval('IN')
         self.assertEqual(res, 0)
         res = NMEAMessage.nomval('DE')
@@ -219,9 +227,11 @@ class StaticTest(unittest.TestCase):
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testVal2Str(self):
-        for att in ('CH', 'HX', 'ST'):
+        for att in ('CH', 'ST'):
             res = NMEAMessage.val2str("AB", att)
             self.assertEqual(res, "AB")
+        res = NMEAMessage.val2str(15, 'HX')
+        self.assertEqual(res, '0F')
         res = NMEAMessage.val2str(23, 'IN')
         self.assertEqual(res, '23')
         res = NMEAMessage.val2str(15.286, 'DE')
