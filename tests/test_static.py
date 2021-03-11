@@ -157,7 +157,7 @@ class StaticTest(unittest.TestCase):
 
     def testTalkerP(self):
         res = self.msgPUBX00.talker
-        self.assertEqual(res, '')
+        self.assertEqual(res, 'P')
 
     def testMsgIDS(self):
         res = self.msgGLL.msgID
@@ -261,7 +261,7 @@ class StaticTest(unittest.TestCase):
 
     def testReprP(self):
         res = repr(self.msgPUBX00)
-        self.assertEqual(res, "NMEAMessage('','PUBX', 0, payload=['00', '103607.00', '5327.03942', 'N', '00214.42462', 'W', '104.461', 'G3', '29', '31', '0.085', '39.63', '-0.007', '', '5.88', '7.62', '8.09', '6', '0', '0'])")
+        self.assertEqual(res, "NMEAMessage('P','PUBX', 0, payload=['00', '103607.00', '5327.03942', 'N', '00214.42462', 'W', '104.461', 'G3', '29', '31', '0.085', '39.63', '-0.007', '', '5.88', '7.62', '8.09', '6', '0', '0'])")
 
     def testEvalReprS(self):  # double check that evaluation of repr(message) reproduces original message
         res1 = self.msgGLL

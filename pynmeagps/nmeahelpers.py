@@ -44,12 +44,12 @@ def get_parts(message: object) -> tuple:
         content, cksum = message.strip("$\r\n").split("*", 1)
         hdr, payload = content.split(",", 1)
         payload = payload.split(",")
-        if hdr[0:1] == "G":  # standard
+        if hdr[0:1] == "P":  # proprietary
+            talker = "P"
+            msgid = hdr
+        else:  # standard
             talker = hdr[0:2]
             msgid = hdr[2:]
-        else:
-            talker = ""
-            msgid = hdr
         return talker, msgid, payload, cksum
     except Exception as err:
         raise nme.NMEAMessageError(f"Badly formed message {message}") from err

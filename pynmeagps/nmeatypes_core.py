@@ -40,9 +40,9 @@ TM = "TM"  # Time hhmmss.ss
 
 VALID_TYPES = (CH, DE, DT, HX, IN, LA, LN, ST, TM)
 
-# **************************************
-# THESE ARE THE NMEA PROTOCOL TALKER IDS
-# **************************************
+# *****************************************
+# THESE ARE THE NMEA V4 PROTOCOL TALKER IDS
+# *****************************************
 NMEA_TALKERS = {
     "AB": "Independent AIS Base Station",
     "AD": "Dependent AIS Base Station",
@@ -50,8 +50,8 @@ NMEA_TALKERS = {
     # Heading Track Controller:
     # ***************************************************************
     "AG": "Heading Track Controller (Autopilot): General",
-    "AP": "Heading Track Controller (Autopilot): Magnetic",
     "AI": "Mobile Class A or B AIS Station",
+    "AP": "Heading Track Controller (Autopilot): Magnetic",
     "AN": "AIS Aids to Navigation Station",
     "AR": "AIS Receiving Station",
     "AS": "AIS Station (ITU_R M1371, (“Limited Base Station’)",
@@ -69,9 +69,10 @@ NMEA_TALKERS = {
     "CT": "Radio-Telephone (MF/HF)",
     "CV": "Radio-Telephone (VHF)",
     "CX": "Scanning Receiver",
+    "DE": "DECCA Navigator",
     "DF": "Direction Finder",
-    "DU": "Duplex Repeater Station",
     "DP": "Dynamic Position",
+    "DU": "Duplex Repeater Station",
     "EC": "Electronic Chart System (ECS)",
     "EI": "Electronic Chart Display & Information System (ECDIS)",
     "EP": "Emergency Position Indicating Beacon (EPIRB)",
@@ -90,8 +91,7 @@ NMEA_TALKERS = {
     "GN": "Global Navigation Satellite System (GNSS)",
     "GP": "Global Positioning System (GPS)",
     "GQ": "QZSS",
-    # "PG": "Proprietary GARMIN",
-    # "PU": "Proprietary U-BLOX",
+    "P": "Proprietary",
     # ***************************************************************
     # Heading Sensors:
     # ***************************************************************
@@ -99,6 +99,41 @@ NMEA_TALKERS = {
     "HE": "Gyro, North Seeking",
     "HF": "Fluxgate",
     "HN": "Gyro, Non-North Seeking",
+    # ***************************************************************
+    # Other Maritime Instrumentation:
+    # ***************************************************************
+    "HD": "Hull Door Monitoring",
+    "HS": "Hull Stress Monitoring",
+    "II": "Integrated Instrumentation",
+    "IN": "Integrated Navigation",
+    "LC": "Loran C",
+    "MP": "Microprocessor  Controller",
+    "RA": "Radar and/or Radar Plotting",
+    "SA": "Physical Shore AIS Station",
+    "SC": "Steering Control System/Device",
+    "SD": "Sounder, depth",
+    "SG": "Steering Gear/Steering Engine",
+    "SN": "Electronic Positioning System, other/general",
+    "SS": "Sounder, scanning",
+    "TC": "Track Control System",
+    # ***************************************************************
+    # Velocity Sensors:
+    # ***************************************************************
+    "VD": "VELOCITY SENSORS: Doppler, other/general",
+    "VM": "Speed Log, Water, Magnetic",
+    "VR": "Voyage Data Recorder",
+    "VW": "Speed Log, Water, Mechanical",
+    "WD": "Watertight Door Controller/Monitoring Panel",
+    "WI": "Weather Instruments",
+    "WL": "Water Level Detection Systems",
+    "YX": "Transducer",
+    # ***************************************************************
+    # Timekeepers:
+    # ***************************************************************
+    "ZA": "Atomic Clock",
+    "ZC": "Chronometer",
+    "ZQ": "Quartz",
+    "ZV": "Radio Update",
 }
 
 # ****************************************************************************
@@ -109,6 +144,12 @@ NMEA_MSGIDS = {
     # ***************************************************************
     # NMEA Standard message types
     # ***************************************************************
+    #     "AAM": "Waypoint Arrival Alarm",
+    #     "ALM": "Almanac Data",
+    #     "APA": "Auto Pilot A sentence",
+    #     "APB": "Auto Pilot B sentence",
+    #     "BOD": "Bearing Origin to Destination",
+    #     "BWC": "Bearing using Great Circle route",
     "DTM": "Datum Reference",
     "GAQ": "Poll Standard Message - Talker ID GA (Galileo)",
     "GBQ": "Poll Standard Message - Talker ID GB (BeiDou)",
@@ -124,13 +165,26 @@ NMEA_MSGIDS = {
     "GSA": "GNSS DOP and Active Satellites",
     "GST": "GNSS Pseudo Range Error Statistics",
     "GSV": "GNSS Satellites in View",
+    #     "MSK": "Send control for a beacon receiver",
+    #     "MSS": "Beacon receiver status information",
     "RLM": "Return Link Message",
+    #     "RMA": "Recommended Loran data",
+    #     "RMB": "Recommended Navigation data for GPS",
     "RMC": "Recommended Minimum data",
+    #     "RTE": "Route message",
+    #     "TRF": "Transit Fix Data",
+    #     "STN": "Multiple Data ID",
+    #     "VBW": "Dual Ground / Water Speed",
     "THS": "TRUE Heading and Status",
     "TXT": "Text Transmission",
     "VLW": "Dual Ground Water Distance",
     "VTG": "Course over ground and Groundspeed",
+    #     "WCV": "Waypoint closure velocity (Velocity Made Good)",
+    #     "WPL": "Waypoint Location information",
+    #     "XTC": "Cross track error",
+    #     "XTE": "Measured cross track error",
     "ZDA": "Time and Date",
+    #     "ZTG": "Zulu (UTC) time and time to go (to destination)",
     # ***************************************************************
     # GARMIN Proprietary message types
     # ***************************************************************

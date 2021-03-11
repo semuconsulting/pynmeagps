@@ -43,7 +43,7 @@ class NMEAMessage:
         Otherwise, any individual attributes passed as keyword args will be set to the
         value provided, all others will be assigned a nominal value according to type.
 
-        :param str talker: message talker e.g. "GP" (leave blank for proprietary messages)
+        :param str talker: message talker e.g. "GP" or "P"
         :param str msgID: message ID e.g. "GGA"
         :param int msgmode: mode (0=GET, 1=SET, 2=POLL)
         :param kwargs: keyword arg(s) representing all or some payload attributes
@@ -279,7 +279,8 @@ class NMEAMessage:
         :rtype: str
         """
 
-        stg = f"<NMEA({self._talker}{self._msgID}"
+        talker = "" if self._talker == "P" else self._talker
+        stg = f"<NMEA({talker}{self._msgID}"
         stg += ", "
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
@@ -330,7 +331,8 @@ class NMEAMessage:
         :rtype: bytes
         """
 
-        output = "$" + self._talker + self._msgID + ","
+        talker = "" if self._talker == "P" else self._talker
+        output = "$" + talker + self._msgID + ","
         if len(self._payload) > 0:
             output += list2csv(self._payload)
         output += "*" + self._checksum + "\r\n"

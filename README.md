@@ -148,7 +148,7 @@ class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, msgmode: int, *
 ```
 
 You can create an `NMEAMessage` object by calling the constructor with the following parameters:
-1. talker (must be a valid talker from `pynmeagps.NMEA_TALKERS`, or blank for proprietary messages)
+1. talker (must be a valid talker from `pynmeagps.NMEA_TALKERS`)
 1. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS`)
 2. msgmode (0=GET, 1=SET, 2=POLL)
 3. (optional) a series of keyword parameters representing the message payload
