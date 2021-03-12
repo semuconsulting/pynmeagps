@@ -177,9 +177,9 @@ NMEA_MSGIDS = {
     "RTE": "Route message",
     # "TRF": "Transit Fix Data",
     "STN": "Multiple Data ID",
-    "VBW": "Dual Ground / Water Speed",
     "THS": "TRUE Heading and Status",
     "TXT": "Text Transmission",
+    "VBW": "Dual Ground / Water Speed",
     "VLW": "Dual Ground Water Distance",
     "VTG": "Course over ground and Groundspeed",
     # "WCV": "Waypoint closure velocity (Velocity Made Good)",
@@ -214,30 +214,6 @@ NMEA_MSGIDS = {
     "UBX06": "Lat/Long Position Data",
     "UBX40": "Set NMEA message output rate",
     "UBX41": "PUBX-CONFIG Set Protocols and Baudrate",
-    # ***************************************************************
-    # Magellan Proprietary message types
-    # ***************************************************************
-    # "MGN"
-    # ***************************************************************
-    # Motorola Proprietary message types
-    # ***************************************************************
-    # "MOTG"
-    # ***************************************************************
-    # Rockwell International Proprietary message types
-    # ***************************************************************
-    # "RWI"
-    # ***************************************************************
-    # SiRF Proprietary message types
-    # ***************************************************************
-    # "SRF"
-    # ***************************************************************
-    # Magnavox Proprietary message types
-    # ***************************************************************
-    # "MVX"
-    # ***************************************************************
-    # Sony Proprietary message types
-    # ***************************************************************
-    # "SNY"
     # ***************************************************************
     # Dummy message for testing only
     # ***************************************************************
