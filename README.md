@@ -122,7 +122,7 @@ Example:
 
 ```python
 >>> from pynmeagps import NMEAReader
->>> msg = NMEAReader.parse('$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n', validate=1)
+>>> msg = NMEAReader.parse('$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n')
 >>> print(msg)
 <NMEA(GNGLL, lat=-53.45072, NS=S, lon=2.240233, EW=E, time=22:32:32, status=A, posMode=A)>
 ```
