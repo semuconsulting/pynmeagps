@@ -146,7 +146,7 @@ NMEA_MSGIDS = {
     # ***************************************************************
     "AAM": "Waypoint Arrival Alarm",
     # "ALM": "Almanac Data",
-    "APA": "Auto Pilot A sentence",
+    "APA": "Auto Pilot A sentence",  # deprecated
     "APB": "Auto Pilot B sentence",
     "BOD": "Bearing Origin to Destination",
     "BWC": "Bearing using Great Circle route",
@@ -166,7 +166,7 @@ NMEA_MSGIDS = {
     "GST": "GNSS Pseudo Range Error Statistics",
     "GSV": "GNSS Satellites in View",
     "HDG": "Heading, Magnetic, Deviation, Variation",
-    "HDM": "Heading, Magnetic",
+    "HDM": "Heading, Magnetic",  # deprecated
     "HDT": "Heating, True",
     "MSK": "Send control for a beacon receiver",
     "MSS": "Beacon receiver status information",
@@ -175,7 +175,7 @@ NMEA_MSGIDS = {
     "RMB": "Recommended Navigation data for GPS",
     "RMC": "Recommended Minimum data",
     "RTE": "Route message",
-    # "TRF": "Transit Fix Data",
+    "TRF": "Transit Fix Data",
     "STN": "Multiple Data ID",
     "THS": "TRUE Heading and Status",
     "TXT": "Text Transmission",
@@ -217,5 +217,5 @@ NMEA_MSGIDS = {
     # ***************************************************************
     # Dummy message for testing only
     # ***************************************************************
-    "FOO-BAR": "Dummy message",
+    "FOO": "Dummy message",
 }

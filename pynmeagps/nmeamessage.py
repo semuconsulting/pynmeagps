@@ -58,8 +58,14 @@ class NMEAMessage:
             raise nme.NMEAMessageError(
                 f"Invalid msgmode {msgmode} - must be 0, 1 or 2."
             )
-        self._mode = msgmode
+        if talker not in nmt.NMEA_TALKERS:
+            raise nme.NMEAMessageError(f"Unknown talker {talker}.")
+        if msgID not in (nmt.NMEA_MSGIDS) and msgID != "UBX":
+            raise nme.NMEAMessageError(
+                f"Unknown msgID {msgID} msgmode {('GET','SET','POLL')[msgmode]}."
+            )
 
+        self._mode = msgmode
         self._talker = talker
         self._msgID = msgID
         self._do_attributes(**kwargs)
@@ -247,9 +253,8 @@ class NMEAMessage:
                 return nms.NMEA_PAYLOADS_SET[key]
             return nmg.NMEA_PAYLOADS_GET[key]
         except KeyError as err:
-            modestr = ["GET", "SET", "POLL"][self._mode]
             raise nme.NMEAMessageError(
-                f"Unknown message type msgID {key} msgmode {modestr}."
+                f"Unknown msgID {key} msgmode {('GET', 'SET', 'POLL')[self._mode]}."
             ) from err
 
     def _calc_num_repeats(

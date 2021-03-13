@@ -303,6 +303,19 @@ NMEA_PAYLOADS_GET = {
     "STN": {
         "talkerId": ST,
     },
+    "TRF": {
+        "time": TM,
+        "date": DT,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "elangle": DE,
+        "iter": DE,
+        "Dopint": DE,
+        "dist": DE,
+        "svid": IN,
+    },
     "TXT": {
         "numMsg": IN,
         "msgNum": IN,
@@ -436,7 +449,7 @@ NMEA_PAYLOADS_GET = {
     # U-BLOX PROPRIETARY MESSAGES
     # *********************************************
     "UBX00": {
-        "msgId": IN,  # 00
+        "msgId": ST,  # '00'
         "time": TM,
         "lat": LA,
         "NS": CH,
@@ -458,7 +471,7 @@ NMEA_PAYLOADS_GET = {
         "DR": IN,
     },
     "UBX03": {
-        "msgId": IN,  # 03
+        "msgId": ST,  # '03'
         "numSv": IN,
         "groupSV": (
             "numSv",
@@ -473,7 +486,7 @@ NMEA_PAYLOADS_GET = {
         ),
     },
     "UBX04": {
-        "msgId": IN,  # 04
+        "msgId": ST,  # '04'
         "time": TM,
         "date": DT,
         "utcTow": ST,
@@ -484,7 +497,7 @@ NMEA_PAYLOADS_GET = {
         "tpGran": IN,
     },
     "UBX05": {  # deprecated, for backwards compat only
-        "msgId": IN,  # 05
+        "msgId": ST,  # '05'
         "pulses": IN,
         "period": IN,
         "gyroMean": IN,

@@ -34,7 +34,7 @@ class ParseTest(unittest.TestCase):
 
     def testParsePUBX(self):  # proprietary UBX message
         res = NMEAReader.parse(self.messagePUBX)
-        self.assertEqual(str(res), ("<NMEA(PUBX, msgId=0, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, PDOP=8.09, numSVs=6, reserved=0, DR=0)>"))
+        self.assertEqual(str(res), ("<NMEA(PUBX, msgId=00, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, PDOP=8.09, numSVs=6, reserved=0, DR=0)>"))
 
     def testParsePGRMM(self):  # proprietary GARMIN message
         res = NMEAReader.parse(self.messagePGRMM)

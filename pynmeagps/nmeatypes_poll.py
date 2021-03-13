@@ -43,12 +43,12 @@ NMEA_PAYLOADS_POLL = {
     # PROPRIETARY MESSAGES
     # *********************************************
     "UBX00": {
-        "msgId": IN,  # 00
+        "msgId": ST,  # '00'
     },
     "UBX03": {
-        "msgId": IN,  # 03
+        "msgId": ST,  # '03'
     },
     "UBX04": {
-        "msgId": IN,  # 04
+        "msgId": ST,  # '04'
     },
 }

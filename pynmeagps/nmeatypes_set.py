@@ -97,7 +97,7 @@ NMEA_PAYLOADS_SET = {
     # U-BLOX PROPRIETARY MESSAGES
     # *********************************************
     "UBX40": {  # set message rates per port
-        "msgId": IN,  # 40
+        "msgId": ST,  # '40'
         "id": IN,
         "rddc": IN,  # I2C
         "rus1": IN,  # UART1
@@ -107,7 +107,7 @@ NMEA_PAYLOADS_SET = {
         "reserved": IN,
     },
     "UBX41": {  # configure port protocols
-        "msgId": IN,  # 41
+        "msgId": ST,  # '41'
         "portId": IN,
         "inProto": HX,
         "outProto": HX,
