@@ -1,7 +1,7 @@
 pynmeagps
 =========
 
-`pynmeagps` is an original lightweight Python library aimed *primarily* at the subset of the NMEA 0183 protocol relevant to GNSS/GPS receivers - that is, NMEA 0183 'talkers' 'Gx' (standard) or 'Px' (proprietary).
+`pynmeagps` is an original lightweight Python library aimed *primarily* at the subset of the NMEA 0183 v4 protocol relevant to GNSS/GPS receivers - that is, NMEA 0183 'talkers' 'Gx' (standard) or 'Px' (proprietary).
 
 The intention is to make it as easy as possible to read, parse and utilise NMEA GNSS/GPS messages in Python applications. 
 
@@ -109,9 +109,13 @@ Examples:
 
 ## Parsing
 
-You can parse individual NMEA messages using the static `NMEAReader.parse(message)` function, which takes a string or bytes containing an NMEA message and returns a `NMEAMessage` object.
+You can parse individual NMEA messages using the static `NMEAReader.parse(message)` function, which takes a string or bytes containing an NMEA message and returns an `NMEAMessage` object.
 
-Accepts the following optional keyword arguments:
+Note that latitude and longitude are parsed as signed decimal values for ease of use. Helper methods `deg2dms` and `deg2dmm` are available to convert decimal degrees to d°m′s.s″ or d°m.m′ display format.
+
+Attributes within repeating groups are parsed with a two-digit suffix (svid_01, svid_02, etc.).
+
+The `parse()` function accepts the following optional keyword arguments:
 
 * `validate`: bitfield validation flags (can be used in combination):
 - `VALCKSUM` (0x01) = validate checksum (default)
