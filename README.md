@@ -95,6 +95,7 @@ Examples:
 >>> stream = Serial('/dev/tty.usbmodem14101', 9600, timeout=3)
 >>> nmr = NMEAReader(stream)
 >>> (raw_data, parsed_data) = nmr.read()
+>>> print(parsed_data)
 ```
 
 * File input (using iterator) - this example will produce a `NMEAStreamError` if non-NMEA data is encountered.
@@ -102,7 +103,7 @@ Examples:
 ```python
 >>> from pynmeagps import NMEAReader
 >>> stream = open('nmeadata.log', 'rb')
->>> nmr = MEAReader(stream, nmeaonly=True)
+>>> nmr = NMEAReader(stream, nmeaonly=True)
 >>> for (raw_data, parsed_data) in nmr: print(parsed_data)
 ...
 ```
