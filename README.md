@@ -190,7 +190,7 @@ e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as
 
 ```python
 >>> from pynmeagps import NMEAMessage, POLL
->>> msg = NMEAMessage('GN', 'GNQ', POLL, msgId='RMC')
+>>> msg = NMEAMessage('EI', 'GNQ', POLL, msgId='RMC')
 >>> print(msg)
 <NMEA(GNGNQ, msgId=RMC)>
 ```
