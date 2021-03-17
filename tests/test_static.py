@@ -144,6 +144,8 @@ class StaticTest(unittest.TestCase):
     def testMsgDesc(self):
         res = nmh.msgdesc('GGA')
         self.assertEqual(res, "Global positioning system fix data")
+        res = nmh.msgdesc('UBX03')
+        self.assertEqual(res, "PUBX-SVSTATUS Satellite Status")
         res = nmh.msgdesc('XXX')
         self.assertEqual(res, "Unknown msgID XXX")
 

@@ -36,7 +36,7 @@ Contributions welcome, particularly any standard or proprietary NMEA message def
 
 `pynmeagps` is compatible with Python 3.6+ and has no third-party library dependencies.
 
-In the following, `python` & `pip` refer to the python3 executables. You may need to type 
+In the following, `python` & `pip` refer to the Python 3 executables. You may need to type 
 `python3` or `pip3`, depending on your particular environment.
 
 ![Python version](https://img.shields.io/pypi/pyversions/pynmeagps.svg?style=flat)
@@ -154,7 +154,7 @@ class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, msgmode: int, *
 
 You can create an `NMEAMessage` object by calling the constructor with the following parameters:
 1. talker (must be a valid talker from `pynmeagps.NMEA_TALKERS`)
-1. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS`)
+1. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS` or `pynmeagps.NMEA_MSGIDS_PROP`)
 2. msgmode (0=GET, 1=SET, 2=POLL)
 3. (optional) a series of keyword parameters representing the message payload
 

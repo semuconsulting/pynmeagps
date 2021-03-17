@@ -1,5 +1,16 @@
 # pynmeagps Release Notes
 
+### RELEASE 0.1.8-beta
+
+FIXES:
+
+1. NMEA PUBX msgId parsed as str rather than int.
+
+ENHANCEMENTS:
+
+2. nmeatypes_core.py NMEA_MSGID table split into standard and proprietary dicts. 
+3. nmeapollall.py example added.
+
 ### RELEASE 0.1.7-beta
 
 ENHANCEMENTS:
