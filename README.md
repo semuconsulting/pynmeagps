@@ -192,7 +192,7 @@ e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as
 >>> from pynmeagps import NMEAMessage, POLL
 >>> msg = NMEAMessage('EI', 'GNQ', POLL, msgId='RMC')
 >>> print(msg)
-<NMEA(GNGNQ, msgId=RMC)>
+<NMEA(EIGNQ, msgId=RMC)>
 ```
 
 **NB:** Once instantiated, an `NMEAMessage` object is immutable.
@@ -205,9 +205,9 @@ The `NMEAMessage` class implements a `serialize()` method to convert an `NMEAMes
 >>> from serial import Serial
 >>> from pynmeagps import NMEAMessage, POLL
 >>> stream = Serial('COM6', 38400, timeout=3)
->>> msg = NMEAMessage('GN','GNQ', POLL, msgId='RMC')
+>>> msg = NMEAMessage('EI','GNQ', POLL, msgId='RMC')
 >>> msg.serialize()
-b'$GNGNQ,RMC*21\r\n'
+b'$EIGNQ,RMC*24\r\n'
 >>> stream.write(msg.serialize())
 ```
 
