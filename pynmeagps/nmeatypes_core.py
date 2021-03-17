@@ -188,6 +188,11 @@ NMEA_MSGIDS = {
     "XTE": "Measured cross track error",
     "ZDA": "Time and Date",
     # "ZTG": "Zulu (UTC) time and time to go (to destination)",
+}
+NMEA_MSGIDS_PROP = {
+    # ***************************************************************
+    # NMEA Proprietary message types
+    # ***************************************************************
     # ***************************************************************
     # GARMIN Proprietary message types
     # ***************************************************************

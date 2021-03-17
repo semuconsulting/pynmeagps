@@ -1,36 +1,38 @@
 """
-Example implementation of a threaded NMEAMessage streamer.
+Threaded NMEAMessage streamer which polls for every currently
+recognised standard NMEA message type.
 
 Connects to the receiver's serial port and sets up a
 daemon NMEAReader thread. While the thread is running in the
-background, it sends a series of NMEA RMC POLL requests
-corresponding to different GNSS constellations ('GPQ' = GPS, 
-'GLQ' = GLONASS, etc.).
+background, it sends a GNQ poll request for every currently
+recognised standard NMEA message type.
 
-If the POLL is accepted, you'll see an RMC message in response (mixed
-in with whatever other messages the receiver is sending periodically).
+If the POLL is accepted, you'll see the requested message type in
+response (mixed in with whatever other messages the receiver is
+sending periodically - you might want to turn off periodic messaging
+for the duration of this demo via your paticular receiver's
+configuration facilities).
 
 If the POLL is rejected, you'll typically get a TXT response:
 "<NMEA(GNTXT, numMsg=1, msgNum=1, msgType=1, text=NMEA unknown msg)>"
 
 The example is purely illustrative and the responses will depend
-on your receiver's specific configuration and capabilities. A standard
-domestic GPS receiver may typically only respond to the generic 'GNQ'
-(any GNSS) POLL.
+on your receiver's specific configuration and capabilities.
 
-Created on 7 Mar 2021
+Created on 17 Mar 2021
 
-@author: semuadmin
+:author: semuadmin
 """
 
 from io import BufferedReader
 from threading import Thread
 from time import sleep
 
-from pynmeagps import NMEAReader, NMEAMessage, POLL, GET
+from pynmeagps import NMEAReader, NMEAMessage, POLL, GET, NMEA_MSGIDS, VALCKSUM, VALMSGID
 from serial import Serial, SerialException, SerialTimeoutException
 
 import pynmeagps.exceptions as nme
+from pickle import TRUE
 
 
 class NMEAStreamer:
@@ -160,7 +162,7 @@ if __name__ == "__main__":
 
     YES = ("Y", "y", "YES,", "yes", "True")
     NO = ("N", "n", "NO,", "no", "False")
-    PAUSE = 5
+    PAUSE = 1
 
     print("Enter port: ", end="")
     val = input().strip('"')
@@ -171,16 +173,8 @@ if __name__ == "__main__":
     print("Enter timeout (0.1): ", end="")
     val = input().strip('"') or '0.1'
     timout = float(val)
-    print("Do you want to ignore any non-NMEA data (y/n)? (y) ", end="")
-    val = input() or "y"
-    nmeaonly = val in NO
-    print("Do you want to validate the message checksums ((y/n)? (y) ", end="")
-    val = input() or "y"
-    val1 = val in YES
-    print("Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ", end="")
-    val = input() or "n"
-    val2 = 2 * val in YES
-    vald = val1 + val2
+    nmeaonly = TRUE
+    vald = VALCKSUM + VALMSGID
 
     print(f"Connecting to serial port {prt} at {baud} baud...")
     nms = NMEAStreamer(prt, baud, timout, nmeaonly, vald)
@@ -189,10 +183,9 @@ if __name__ == "__main__":
         nms.start_read_thread()
 
         # DO OTHER STUFF HERE WHILE THREAD RUNS IN BACKGROUND...
-        for mid in ('GAQ', 'GBQ', 'GLQ', 'GNQ', 'GPQ', 'GQQ'):
-            print(f"\nSending a {mid} message to poll for an RMC response.")
-            print("Look out for an RMC (known) or TXT (unknown) message in the input stream...\n")
-            msg = NMEAMessage('EI', mid, POLL, msgId='RMC')
+        for mid in NMEA_MSGIDS:
+            print(f"\nSending a GNQ message to poll for an {mid} response...")
+            msg = NMEAMessage('EI', 'GNQ', POLL, msgId=mid)
             nms.send(msg.serialize())
             sleep(PAUSE)
 

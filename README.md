@@ -22,7 +22,7 @@ The `pynmeagps` homepage is located at [http://github.com/semuconsulting/pynmeag
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pynmeagps.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pynmeagps)
 
-At time of writing the library implements a comprehensive set of GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. Additional NMEA 'talkers' may be added in due course.
+At time of writing the library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. Additional NMEA 'talkers' may be added in due course.
 
 Sphinx API Documentation in HTML format is available at [http://semuconsulting.com/pynmeagps](http://semuconsulting.com/pynmeagps).
 
@@ -82,7 +82,7 @@ The constructor accepts the following optional keyword arguments:
 * `validate`: bitfield validation flags (can be used in combination):
 - `VALCKSUM` (0x01) = validate checksum (default)
 - `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
-* `msgmode`: 0 = GET (default), 1 = SET 2 = POLL
+* `msgmode`: 0 = GET (default), 1 = SET, 2 = POLL
 
 
 Examples:
@@ -121,7 +121,7 @@ The `parse()` function accepts the following optional keyword arguments:
 * `validate`: bitfield validation flags (can be used in combination):
 - `VALCKSUM` (0x01) = validate checksum (default)
 - `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
-* `msgmode`: 0 = GET (default), 1 = SET 2 = POLL
+* `msgmode`: 0 = GET (default), 1 = SET, 2 = POLL
 
 Example:
 

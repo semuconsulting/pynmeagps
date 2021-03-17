@@ -10,7 +10,7 @@ Created on 04 Mar 2021
 """
 
 from datetime import datetime
-from pynmeagps.nmeatypes_core import NMEA_MSGIDS, LA, LN
+from pynmeagps.nmeatypes_core import NMEA_MSGIDS, NMEA_MSGIDS_PROP, LA, LN
 import pynmeagps.exceptions as nme
 
 KNOTSCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
@@ -302,4 +302,8 @@ def msgdesc(msgID: str) -> str:
     """
     # pylint: disable=invalid-name
 
-    return NMEA_MSGIDS.get(msgID, f"Unknown msgID {msgID}")
+    if msgID in NMEA_MSGIDS:
+        return NMEA_MSGIDS[msgID]
+    if msgID in NMEA_MSGIDS_PROP:
+        return NMEA_MSGIDS_PROP[msgID]
+    return f"Unknown msgID {msgID}"

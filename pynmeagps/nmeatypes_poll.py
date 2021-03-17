@@ -12,10 +12,7 @@ Created on 4 Mar Sep 2021
 :author: semuadmin
 """
 
-from pynmeagps.nmeatypes_core import (
-    IN,
-    ST,
-)
+from pynmeagps.nmeatypes_core import ST
 
 NMEA_PAYLOADS_POLL = {
     # *********************************************

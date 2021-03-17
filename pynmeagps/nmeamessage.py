@@ -60,7 +60,11 @@ class NMEAMessage:
             )
         if talker not in nmt.NMEA_TALKERS:
             raise nme.NMEAMessageError(f"Unknown talker {talker}.")
-        if msgID not in (nmt.NMEA_MSGIDS) and msgID != "UBX":
+        if (
+            msgID not in (nmt.NMEA_MSGIDS)
+            and msgID not in (nmt.NMEA_MSGIDS_PROP)
+            and msgID != "UBX"
+        ):
             raise nme.NMEAMessageError(
                 f"Unknown msgID {msgID} msgmode {('GET','SET','POLL')[msgmode]}."
             )
