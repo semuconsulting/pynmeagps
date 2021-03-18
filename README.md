@@ -1,7 +1,7 @@
 pynmeagps
 =========
 
-`pynmeagps` is an original lightweight Python library aimed *primarily* at the subset of the NMEA 0183 v4 protocol relevant to GNSS/GPS receivers - that is, NMEA 0183 'talkers' 'Gx' (standard) or 'Px' (proprietary).
+`pynmeagps` is an original Python library aimed *primarily* at the subset of the NMEA 0183 v4 protocol relevant to GNSS/GPS receivers - that is, NMEA 0183 'talkers' 'Gx' (standard) or 'Px' (proprietary).
 
 The intention is to make it as easy as possible to read, parse and utilise NMEA GNSS/GPS messages in Python applications. 
 
