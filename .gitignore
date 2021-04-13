@@ -3,7 +3,7 @@
 .project
 .coverage
 .pydevproject
-.code-workspace
+*.code-workspace
 .vscode
 Pipfile*.*
 /.settings
