@@ -28,7 +28,15 @@ from io import BufferedReader
 from threading import Thread
 from time import sleep
 
-from pynmeagps import NMEAReader, NMEAMessage, POLL, GET, NMEA_MSGIDS, VALCKSUM, VALMSGID
+from pynmeagps import (
+    NMEAReader,
+    NMEAMessage,
+    POLL,
+    GET,
+    NMEA_MSGIDS,
+    VALCKSUM,
+    VALMSGID,
+)
 from serial import Serial, SerialException, SerialTimeoutException
 
 import pynmeagps.exceptions as nme
@@ -74,9 +82,12 @@ class NMEAStreamer:
             self._serial_object = Serial(
                 self._port, self._baudrate, timeout=self._timeout
             )
-            self._nmeareader = NMEAReader(BufferedReader(self._serial_object),
-                                          nmeaonly=self._nmea_only,
-                                          validate=self._validate, msgmode=GET)
+            self._nmeareader = NMEAReader(
+                BufferedReader(self._serial_object),
+                nmeaonly=self._nmea_only,
+                validate=self._validate,
+                msgmode=GET,
+            )
             self._connected = True
         except (SerialException, SerialTimeoutException) as err:
             print(f"Error connecting to serial port {err}")
@@ -168,10 +179,10 @@ if __name__ == "__main__":
     val = input().strip('"')
     prt = val
     print("Enter baud rate (9600): ", end="")
-    val = input().strip('"') or '9600'
+    val = input().strip('"') or "9600"
     baud = int(val)
     print("Enter timeout (0.1): ", end="")
-    val = input().strip('"') or '0.1'
+    val = input().strip('"') or "0.1"
     timout = float(val)
     nmeaonly = TRUE
     vald = VALCKSUM + VALMSGID
@@ -185,7 +196,7 @@ if __name__ == "__main__":
         # DO OTHER STUFF HERE WHILE THREAD RUNS IN BACKGROUND...
         for mid in NMEA_MSGIDS:
             print(f"\nSending a GNQ message to poll for an {mid} response...")
-            msg = NMEAMessage('EI', 'GNQ', POLL, msgId=mid)
+            msg = NMEAMessage("EI", "GNQ", POLL, msgId=mid)
             nms.send(msg.serialize())
             sleep(PAUSE)
 

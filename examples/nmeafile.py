@@ -69,7 +69,9 @@ class NMEAStreamer:
         """
 
         i = 0
-        self._ubxreader = NMEAReader(self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode)
+        self._ubxreader = NMEAReader(
+            self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode
+        )
 
         for msg in self._ubxreader:  # invokes iterator method
             try:
@@ -99,7 +101,10 @@ if __name__ == "__main__":
     print("Do you want to validate the message checksums ((y/n)? (y) ", end="")
     val = input() or "y"
     val1 = val in YES
-    print("Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ", end="")
+    print(
+        "Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ",
+        end="",
+    )
     val = input() or "n"
     val1 = 2 * val in YES
     vald = val1 + val1

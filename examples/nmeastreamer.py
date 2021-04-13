@@ -72,9 +72,12 @@ class NMEAStreamer:
             self._serial_object = Serial(
                 self._port, self._baudrate, timeout=self._timeout
             )
-            self._nmeareader = NMEAReader(BufferedReader(self._serial_object),
-                                          nmeaonly=self._nmea_only,
-                                          validate=self._validate, msgmode=GET)
+            self._nmeareader = NMEAReader(
+                BufferedReader(self._serial_object),
+                nmeaonly=self._nmea_only,
+                validate=self._validate,
+                msgmode=GET,
+            )
             self._connected = True
         except (SerialException, SerialTimeoutException) as err:
             print(f"Error connecting to serial port {err}")
@@ -166,10 +169,10 @@ if __name__ == "__main__":
     val = input().strip('"')
     prt = val
     print("Enter baud rate (9600): ", end="")
-    val = input().strip('"') or '9600'
+    val = input().strip('"') or "9600"
     baud = int(val)
     print("Enter timeout (0.1): ", end="")
-    val = input().strip('"') or '0.1'
+    val = input().strip('"') or "0.1"
     timout = float(val)
     print("Do you want to ignore any non-NMEA data (y/n)? (y) ", end="")
     val = input() or "y"
@@ -177,7 +180,10 @@ if __name__ == "__main__":
     print("Do you want to validate the message checksums ((y/n)? (y) ", end="")
     val = input() or "y"
     val1 = val in YES
-    print("Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ", end="")
+    print(
+        "Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ",
+        end="",
+    )
     val = input() or "n"
     val2 = 2 * val in YES
     vald = val1 + val2
@@ -189,10 +195,12 @@ if __name__ == "__main__":
         nms.start_read_thread()
 
         # DO OTHER STUFF HERE WHILE THREAD RUNS IN BACKGROUND...
-        for mid in ('GAQ', 'GBQ', 'GLQ', 'GNQ', 'GPQ', 'GQQ'):
+        for mid in ("GAQ", "GBQ", "GLQ", "GNQ", "GPQ", "GQQ"):
             print(f"\nSending a {mid} message to poll for an RMC response.")
-            print("Look out for an RMC (known) or TXT (unknown) message in the input stream...\n")
-            msg = NMEAMessage('EI', mid, POLL, msgId='RMC')
+            print(
+                "Look out for an RMC (known) or TXT (unknown) message in the input stream...\n"
+            )
+            msg = NMEAMessage("EI", mid, POLL, msgId="RMC")
             nms.send(msg.serialize())
             sleep(PAUSE)
 

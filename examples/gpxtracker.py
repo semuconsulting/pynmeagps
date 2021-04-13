@@ -93,7 +93,7 @@ class NMEATracker:
                             minute=tim.minute,
                             second=tim.second,
                         ).isoformat()
-                        +"Z"
+                        + "Z"
                     )
                     if msg.quality == 1:
                         fix = "3d"
