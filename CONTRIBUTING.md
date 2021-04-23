@@ -1,4 +1,4 @@
-# How to contribute
+# pynmeagps How to contribute
 
 **pynmeagps** is a volunteer project and we appreciate any contribution, from fixing a grammar mistake in a comment to extending device test coverage or implementing new functionality. Please read this section if you are contributing your work.
 
@@ -23,7 +23,7 @@ Please help us keep our issue list small by adding fixes: #{$ISSUE_NO} to the co
 
 We use python's native unittest framework for local unit testing, complemented by the GitHub Actions automated build and testing workflow. We endeavour to have 100% code coverage.
 
-Please write unittest examples for new code you create and add them to the /tests folder following the naming convention test_*.py.
+Please write unittest examples for new code you create and add them to the `/tests` folder following the naming convention `test_*.py`.
 
 We test on the following platforms:
 * Windows 10
