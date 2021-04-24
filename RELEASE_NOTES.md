@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.0
+
+CHANGES:
+
+1. Marked to v1.0.0 Production/Stable. No other functional changes.
+
 ### RELEASE 0.1.8-beta
 
 FIXES:
