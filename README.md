@@ -7,7 +7,7 @@ The intention is to make it as easy as possible to read, parse and utilise NMEA 
 
 The `pynmeagps` homepage is located at [http://github.com/semuconsulting/pynmeagps](http://github.com/semuconsulting/pynmeagps).
 
-**FYI** There is a companion library [pyubx2](http://github.com/semuconsulting/pyubx2), which handles u-blox UBX protocol GNSS/GPS messages.
+**FYI** There is a companion library [pyubx2](http://github.com/semuconsulting/pyubx2), which handles u-blox &copy; UBX protocol GNSS/GPS messages.
 
 ---
 
@@ -24,7 +24,7 @@ The `pynmeagps` homepage is located at [http://github.com/semuconsulting/pynmeag
 
 At time of writing the library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. Additional NMEA 'talkers' may be added in due course.
 
-Sphinx API Documentation in HTML format is available at [http://semuconsulting.com/pynmeagps](http://semuconsulting.com/pynmeagps).
+Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pynmeagps](https://www.semuconsulting.com/pynmeagps).
 
 Contributions welcome, particularly any standard or proprietary NMEA message definitions not yet included - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pynmeagps/blob/master/CONTRIBUTING.md).
 

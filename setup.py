@@ -26,7 +26,7 @@ setuptools.setup(
     project_urls={
         "Bug Tracker": "https://github.com/semuconsulting/pynmeagps",
         "Documentation": "https://github.com/semuconsulting/pynmeagps",
-        "Sphinx API Documentation": "http://semuconsulting.com/pynmeagps",
+        "Sphinx API Documentation": "https://www.semuconsulting.com/pynmeagps",
         "Source Code": "https://github.com/semuconsulting/pynmeagps",
     },
     classifiers=[
