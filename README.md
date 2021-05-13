@@ -5,7 +5,7 @@ pynmeagps
 
 The intention is to make it as easy as possible to read, parse and utilise NMEA GNSS/GPS messages in Python applications. 
 
-The `pynmeagps` homepage is located at [http://github.com/semuconsulting/pynmeagps](http://github.com/semuconsulting/pynmeagps).
+The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmeagps](https://github.com/semuconsulting/pynmeagps).
 
 **FYI** There is a companion library [pyubx2](http://github.com/semuconsulting/pyubx2), which handles u-blox &copy; UBX protocol GNSS/GPS messages.
 
