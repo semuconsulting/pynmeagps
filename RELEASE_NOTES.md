@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.1
+
+FIXES:
+
+1. Fixed typo in GBS payload definition - `effLon` is now `errLon`. Test script updated.
+2. Fixed cosmetic typo in nmeafile.py example - functionality not affected.
+
 ### RELEASE 1.0.0
 
 CHANGES:

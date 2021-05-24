@@ -69,11 +69,11 @@ class NMEAStreamer:
         """
 
         i = 0
-        self._ubxreader = NMEAReader(
+        self._nmeareader = NMEAReader(
             self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode
         )
 
-        for msg in self._ubxreader:  # invokes iterator method
+        for msg in self._nmeareader:  # invokes iterator method
             try:
                 (raw_data, parsed_data) = msg
                 #                 if raw_data:

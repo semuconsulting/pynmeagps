@@ -110,7 +110,7 @@ NMEA_PAYLOADS_GET = {
     "GBS": {
         "time": TM,
         "errLat": DE,
-        "effLon": DE,
+        "errLon": DE,
         "errAlt": DE,
         "svid": IN,
         "prob": DE,
