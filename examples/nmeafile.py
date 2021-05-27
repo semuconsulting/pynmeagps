@@ -23,7 +23,7 @@ class NMEAStreamer:
 
         self._filename = filename
         self._stream = None
-        self._ubxreader = None
+        self._nmeareader = None
         self._connected = False
         self._reading = False
 
