@@ -341,7 +341,7 @@ NMEA_PAYLOADS_GET = {
         "gdUnit": CH,  # NMEA >=4.00 only
     },
     "VTG": {
-        "cogT": DE,  # course over ground (true)
+        "cogt": DE,  # course over ground (true)
         "cogtUnit": CH,
         "cogm": DE,  # course over ground (magnetic)
         "cogmUnit": CH,
