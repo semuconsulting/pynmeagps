@@ -140,7 +140,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GPTXT, numMsg=1, msgNum=1, msgType=2, text=ANTSTATUS=OK)>",
             "<NMEA(GPTXT, numMsg=1, msgNum=1, msgType=2, text=LLC FFFFFFFF-FFFFFFFD-FFFFFFFF-FFFFFFFF-FFFFFFF9)>",
             "<NMEA(GPRMC, time=10:29:29, status=A, lat=53.450671, NS=N, lon=-2.24026, EW=W, spd=0.273, cog=, date=2021-03-07, mv=, mvEW=, posMode=A)>",
-            "<NMEA(GPVTG, cogT=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.273, sognUnit=N, sogk=0.506, sogkUnit=K, posMode=A)>",
+            "<NMEA(GPVTG, cogt=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.273, sognUnit=N, sogk=0.506, sogkUnit=K, posMode=A)>",
             "<NMEA(GPGGA, time=10:29:29, lat=53.450671, NS=N, lon=-2.24026, EW=W, quality=1, numSV=8, HDOP=1.16, alt=36.3, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
             "<NMEA(GPGSA, opMode=A, navMode=3, svid_01=17, svid_02=15, svid_03=10, svid_04=24, svid_05=20, svid_06=12, svid_07=19, svid_08=23, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=2.36, HDOP=1.16, VDOP=2.05)>",
             "<NMEA(GPGSV, numMsg=4, msgNum=1, numSV=15, svid_01=1, elv_01=6.0, az_01=15, cno_01=, svid_02=10, elv_02=30.0, az_02=290, cno_02=27, svid_03=12, elv_03=42.0, az_03=207, cno_03=26, svid_04=13, elv_04=19.0, az_04=141, cno_04=23)>",
