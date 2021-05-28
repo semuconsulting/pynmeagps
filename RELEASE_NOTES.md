@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.2 candidate (provisional)
+
+FIXES:
+
+1. Fixed typo in VTG payload definition - `cogT` is now `cogt`. Test script updated.
+
 ### RELEASE 1.0.1
 
 FIXES:
