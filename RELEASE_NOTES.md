@@ -1,6 +1,6 @@
 # pynmeagps Release Notes
 
-### RELEASE 1.0.2 candidate (provisional)
+### RELEASE 1.0.2
 
 FIXES:
 
