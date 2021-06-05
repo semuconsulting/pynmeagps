@@ -50,7 +50,7 @@ The recommended way to install the latest version of `pynmeagps` is with
 python -m pip install --upgrade pynmeagps
 ```
 
-If required, `pynmeagps` can also be installed using virtualenv, e.g.:
+If required, `pynmeagps` can also be installed into a virtual environment, e.g.:
 
 ```shell
 python -m pip install --user --upgrade virtualenv
