@@ -161,7 +161,7 @@ def date2utc(dates: str) -> datetime.date:
     """
     Convert NMEA Date to UTC datetime.
 
-    :param str times: NMEA date ddmmyy
+    :param str dates: NMEA date ddmmyy
     :return: UTC date YYyy:mm:dd
     :rtype: datetime.date
     """
@@ -174,7 +174,7 @@ def date2utc(dates: str) -> datetime.date:
 
 def time2utc(times: str) -> datetime.time:
     """
-    Convert NMEA Date to UTC datetime.
+    Convert NMEA Time to UTC datetime.
 
     :param str times: NMEA time hhmmss.ss
     :return: UTC time hh:mm:ss.ss
