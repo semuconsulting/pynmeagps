@@ -225,6 +225,8 @@ The following examples can be found in the `\examples` folder:
 
 1. `gpxtracker.py` illustrates a simple CLI tool to convert an NMEA data dump to a `*.gpx` track file using pynmeagps.NMEAReader.
 
+1. `/webserver/gpsstreamer.py` illustrates a simple HTTP web server wrapper around a threaded pynmeagps streaming and parsing service. To use, cd to the `/examples/webserver` folder, execute the `gpsstreamer.py` module and direct your browser to http://localhost:8080.
+
 ## <a name="extensibility">Extensibility</a>
 
 The NMEA protocol is principally defined in the modules `nmeatypes_*.py` as a series of dictionaries. Additional message types 

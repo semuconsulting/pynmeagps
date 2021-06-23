@@ -1,44 +1,23 @@
 """
-Threaded NMEAMessage streamer which polls for every currently
-recognised standard NMEA message type.
+This example illustrates a simple HTTP wrapper around pynmneagps.
 
-Connects to the receiver's serial port and sets up a
-daemon NMEAReader thread. While the thread is running in the
-background, it sends a GNQ poll request for every currently
-recognised standard NMEA message type.
+It displays selected GPS data on a dynamically updated web page 
+using the native Python 3 http.server library and a RESTful API
+implemented by the pynmeagps streaming and parsing service.
 
-If the POLL is accepted, you'll see the requested message type in
-response (mixed in with whatever other messages the receiver is
-sending periodically - you might want to turn off periodic messaging
-for the duration of this demo via your paticular receiver's
-configuration facilities).
-
-If the POLL is rejected, you'll typically get a TXT response:
-"<NMEA(GNTXT, numMsg=1, msgNum=1, msgType=1, text=NMEA unknown msg)>"
-
-The example is purely illustrative and the responses will depend
-on your receiver's specific configuration and capabilities.
-
-Created on 17 Mar 2021
+Created on 17 May 2021
 
 :author: semuadmin
+:license: (c) SEMU Consulting 2021 - BSD 3-Clause License
 """
 
 from io import BufferedReader
 from threading import Thread
 from time import sleep
-
-from pynmeagps import (
-    NMEAReader,
-    NMEAMessage,
-    POLL,
-    GET,
-    NMEA_MSGIDS,
-    VALCKSUM,
-    VALMSGID,
-)
+import json
+from gpshttpserver import GPSHTTPServer, GPSHTTPHandler, ADDRESS, TCPPORT
 from serial import Serial, SerialException, SerialTimeoutException
-
+from pynmeagps import NMEAReader, GET
 import pynmeagps.exceptions as nme
 
 
@@ -47,7 +26,7 @@ class NMEAStreamer:
     NMEAStreamer class.
     """
 
-    def __init__(self, port, baudrate, timeout=5, nmea_only=0, validate=1):
+    def __init__(self, port, baudrate, timeout=0.1, nmea_only=0, validate=1):
         """
         Constructor.
         """
@@ -62,6 +41,20 @@ class NMEAStreamer:
         self._timeout = timeout
         self._nmea_only = nmea_only
         self._validate = validate
+        self.gpsdata = {
+            "date": "1900-01-01",
+            "time": "11.11.11",
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "elevation": 0.0,
+            "speed": 0.0,
+            "track": 0.0,
+            "siv": 0,
+            "pdop": 99,
+            "hdop": 99,
+            "vdop": 99,
+            "fix": 0,
+        }
 
     def __del__(self):
         """
@@ -78,6 +71,7 @@ class NMEAStreamer:
 
         self._connected = False
         try:
+            print(f"Connecting to serial port {self._port} at {self._baudrate} baud...")
             self._serial_object = Serial(
                 self._port, self._baudrate, timeout=self._timeout
             )
@@ -99,6 +93,7 @@ class NMEAStreamer:
         """
 
         if self._connected and self._serial_object:
+            print("Disconnecting from serial port...")
             try:
                 self._serial_object.close()
             except (SerialException, SerialTimeoutException) as err:
@@ -113,6 +108,7 @@ class NMEAStreamer:
         """
 
         if self._connected:
+            print("\nStarting reader thread...")
             self._reading = True
             self._serial_thread = Thread(target=self._read_thread, daemon=True)
             self._serial_thread.start()
@@ -123,28 +119,8 @@ class NMEAStreamer:
         """
 
         if self._serial_thread is not None:
+            print("\nStopping web server thread...")
             self._reading = False
-
-    def send(self, data):
-        """
-        Send data to serial connection.
-        """
-
-        self._serial_object.write(data)
-
-    def flush(self):
-        """
-        Flush input buffer
-        """
-
-        self._serial_object.reset_input_buffer()
-
-    def waiting(self):
-        """
-        Check if any messages remaining in the input buffer
-        """
-
-        return self._serial_object.in_waiting
 
     def _read_thread(self):
         """
@@ -157,7 +133,7 @@ class NMEAStreamer:
                 try:
                     (raw_data, parsed_data) = self._nmeareader.read()
                     if parsed_data:
-                        print(parsed_data)
+                        self.set_data(parsed_data)
                 except (
                     nme.NMEAStreamError,
                     nme.NMEAMessageError,
@@ -167,40 +143,65 @@ class NMEAStreamer:
                     print(f"Something went wrong {err}")
                     continue
 
+    def set_data(self, parsed_data):
+        """
+        Set GPS data dictionary.
+        """
+
+        print(parsed_data)
+        if parsed_data.msgID == "RMC":
+            self.gpsdata["date"] = str(parsed_data.date)
+            self.gpsdata["time"] = str(parsed_data.time)
+            self.gpsdata["latitude"] = parsed_data.lat
+            self.gpsdata["longitude"] = parsed_data.lon
+            self.gpsdata["speed"] = parsed_data.spd
+            self.gpsdata["track"] = parsed_data.cog
+        if parsed_data.msgID == "GGA":
+            self.gpsdata["time"] = str(parsed_data.time)
+            self.gpsdata["latitude"] = parsed_data.lat
+            self.gpsdata["longitude"] = parsed_data.lon
+            self.gpsdata["elevation"] = parsed_data.alt
+            self.gpsdata["siv"] = parsed_data.numSV
+            self.gpsdata["hdop"] = parsed_data.HDOP
+        if parsed_data.msgID == "GSA":
+            self.gpsdata["fix"] = parsed_data.navMode
+            self.gpsdata["pdop"] = parsed_data.PDOP
+            self.gpsdata["hdop"] = parsed_data.HDOP
+            self.gpsdata["vdop"] = parsed_data.VDOP
+
+    def get_data(self):
+        """
+        Return GPS data in JSON format.
+
+        This is used by the RESTful API implemented in the
+        GPSHTTPServer class.
+        """
+
+        return json.dumps(self.gpsdata)
+
 
 if __name__ == "__main__":
 
-    YES = ("Y", "y", "YES,", "yes", "True")
-    NO = ("N", "n", "NO,", "no", "False")
-    PAUSE = 1
+    # Edit these for your GPS device
+    SERIALPORT = "/dev/tty.usbmodem142101"
+    BAUD = 38400
 
-    print("Enter port: ", end="")
-    val = input().strip('"')
-    prt = val
-    print("Enter baud rate (9600): ", end="")
-    val = input().strip('"') or "9600"
-    baud = int(val)
-    print("Enter timeout (0.1): ", end="")
-    val = input().strip('"') or "0.1"
-    timout = float(val)
-    nmeaonly = True
-    vald = VALCKSUM + VALMSGID
+    nms = NMEAStreamer(SERIALPORT, BAUD)
+    httpd = GPSHTTPServer((ADDRESS, TCPPORT), GPSHTTPHandler, nms)
 
-    print(f"Connecting to serial port {prt} at {baud} baud...")
-    nms = NMEAStreamer(prt, baud, timout, nmeaonly, vald)
     if nms.connect():
-        print("Starting reader thread...")
         nms.start_read_thread()
+        httpd_thread = Thread(target=httpd.serve_forever, daemon=True)
+        httpd_thread.start()
 
-        # DO OTHER STUFF HERE WHILE THREAD RUNS IN BACKGROUND...
-        for mid in NMEA_MSGIDS:
-            print(f"\nSending a GNQ message to poll for an {mid} response...")
-            msg = NMEAMessage("EI", "GNQ", POLL, msgId=mid)
-            nms.send(msg.serialize())
-            sleep(PAUSE)
+        try:
+            while True:
+                pass
+        except KeyboardInterrupt:
+            print("\n\nInterrupted by user\n\n")
 
-        print("\n\nStopping reader thread...")
+        httpd.shutdown()
         nms.stop_read_thread()
-        print("Disconnecting from serial port...")
+        sleep(2)  # wait for shutdown
         nms.disconnect()
-        print("Test Complete")
+        print("\nTest Complete")
