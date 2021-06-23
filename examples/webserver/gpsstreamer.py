@@ -6,6 +6,11 @@ It displays selected GPS data on a dynamically updated web page
 using the native Python 3 http.server library and a RESTful API
 implemented by the pynmeagps streaming and parsing service.
 
+NB: Must be executed from the root folder i.e. /examples/webserver/.
+
+The web page can be accessed at http://localhost:8080. The parsed 
+data can also be accessed directly via the REST API http://localhost:8080/gps.
+
 Created on 17 May 2021
 
 :author: semuadmin
@@ -184,7 +189,7 @@ class NMEAStreamer:
 if __name__ == "__main__":
 
     # Edit these for your GPS device
-    SERIALPORT = "/dev/tty.usbmodem142101"
+    SERIALPORT = "/dev/ttyACM1"  # "/dev/tty.usbmodem142101"
     BAUD = 38400
 
     nms = NMEAStreamer(SERIALPORT, BAUD)
