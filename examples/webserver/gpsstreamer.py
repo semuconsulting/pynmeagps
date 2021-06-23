@@ -1,5 +1,6 @@
 """
-This example illustrates a simple HTTP wrapper around pynmneagps.
+This illustrates a simple HTTP wrapper around the 
+pynmneagps NMEAStreamer streaming and parsing example.
 
 It displays selected GPS data on a dynamically updated web page 
 using the native Python 3 http.server library and a RESTful API
