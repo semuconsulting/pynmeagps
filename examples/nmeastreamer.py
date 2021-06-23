@@ -1,22 +1,23 @@
 """
-Example implementation of a threaded NMEAMessage streamer.
+Threaded NMEAMessage streamer which polls for every currently
+recognised standard NMEA message type.
 
 Connects to the receiver's serial port and sets up a
 daemon NMEAReader thread. While the thread is running in the
-background, it sends a series of NMEA RMC POLL requests
-corresponding to different GNSS constellations ('GPQ' = GPS, 
-'GLQ' = GLONASS, etc.).
+background, it sends a GNQ poll request for every currently
+documented standard NMEA message type.
 
-If the POLL is accepted, you'll see an RMC message in response (mixed
-in with whatever other messages the receiver is sending periodically).
+If the POLL is accepted, you'll see the requested message type in
+response (mixed in with whatever other messages the receiver is
+sending periodically - you might want to turn off periodic messaging
+for the duration of this demo via your paticular receiver's
+configuration facilities).
 
 If the POLL is rejected, you'll typically get a TXT response:
 "<NMEA(GNTXT, numMsg=1, msgNum=1, msgType=1, text=NMEA unknown msg)>"
 
 The example is purely illustrative and the responses will depend
-on your receiver's specific configuration and capabilities. A standard
-domestic GPS receiver may typically only respond to the generic 'GNQ'
-(any GNSS) POLL.
+on your receiver's specific configuration and capabilities.
 
 Created on 7 Mar 2021
 
@@ -27,7 +28,7 @@ from io import BufferedReader
 from threading import Thread
 from time import sleep
 
-from pynmeagps import NMEAReader, NMEAMessage, POLL, GET
+from pynmeagps import NMEAReader, NMEAMessage, POLL, GET, NMEA_MSGIDS
 from serial import Serial, SerialException, SerialTimeoutException
 
 import pynmeagps.exceptions as nme
@@ -163,7 +164,7 @@ if __name__ == "__main__":
 
     YES = ("Y", "y", "YES,", "yes", "True")
     NO = ("N", "n", "NO,", "no", "False")
-    PAUSE = 5
+    PAUSE = 1
 
     print("Enter port: ", end="")
     val = input().strip('"')
@@ -195,17 +196,15 @@ if __name__ == "__main__":
         nms.start_read_thread()
 
         # DO OTHER STUFF HERE WHILE THREAD RUNS IN BACKGROUND...
-        for mid in ("GAQ", "GBQ", "GLQ", "GNQ", "GPQ", "GQQ"):
-            print(f"\nSending a {mid} message to poll for an RMC response.")
-            print(
-                "Look out for an RMC (known) or TXT (unknown) message in the input stream...\n"
-            )
-            msg = NMEAMessage("EI", mid, POLL, msgId="RMC")
+        for mid in NMEA_MSGIDS:
+            print(f"\n\nSending a GNQ message to poll for an {mid} response...\n\n")
+            msg = NMEAMessage("EI", "GNQ", POLL, msgId=mid)
             nms.send(msg.serialize())
             sleep(PAUSE)
 
         print("\n\nStopping reader thread...")
         nms.stop_read_thread()
+        sleep(2)
         print("Disconnecting from serial port...")
         nms.disconnect()
         print("Test Complete")
