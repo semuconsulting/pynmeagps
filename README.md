@@ -225,7 +225,7 @@ The following examples can be found in the `\examples` folder:
 
 1. `gpxtracker.py` illustrates a simple CLI tool to convert an NMEA data dump to a `*.gpx` track file using pynmeagps.NMEAReader.
 
-1. `/webserver/gpsstreamer.py` illustrates a simple HTTP web server wrapper around a threaded pynmeagps streaming and parsing service. To use, cd to the `/examples/webserver` folder, execute the `gpsstreamer.py` module and direct your browser to http://localhost:8080.
+1. `/webserver/gpsstreamer.py` illustrates a simple HTTP web server wrapper around a threaded pynmeagps streaming and parsing service. To use, cd to the `/examples/webserver` folder, execute the `gpsstreamer.py` module and direct your browser to http://localhost:8080. The web page will update dynamically every 5 seconds. You can also access the parsed data directly via the REST API http://localhost:8080/gps.
 
 ## <a name="extensibility">Extensibility</a>
 
