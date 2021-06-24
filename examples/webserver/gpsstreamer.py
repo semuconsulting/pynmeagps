@@ -7,6 +7,7 @@ using the native Python 3 http.server library and a RESTful API
 implemented by the pynmeagps streaming and parsing service.
 
 NB: Must be executed from the root folder i.e. /examples/webserver/.
+Press CTRL-C to terminate.
 
 The web page can be accessed at http://localhost:8080. The parsed 
 data can also be accessed directly via the REST API http://localhost:8080/gps.
@@ -21,7 +22,7 @@ from io import BufferedReader
 from threading import Thread
 from time import sleep
 import json
-from gpshttpserver import GPSHTTPServer, GPSHTTPHandler, ADDRESS, TCPPORT
+from gpshttpserver import GPSHTTPServer, GPSHTTPHandler
 from serial import Serial, SerialException, SerialTimeoutException
 from pynmeagps import NMEAReader, GET
 import pynmeagps.exceptions as nme
@@ -151,7 +152,7 @@ class NMEAStreamer:
 
     def set_data(self, parsed_data):
         """
-        Set GPS data dictionary.
+        Set GPS data dictionary from RMC, GGA and GSA sentences.
         """
 
         print(parsed_data)
@@ -179,7 +180,7 @@ class NMEAStreamer:
         """
         Return GPS data in JSON format.
 
-        This is used by the RESTful API implemented in the
+        This is used by the REST API /gps implemented in the
         GPSHTTPServer class.
         """
 
@@ -188,15 +189,24 @@ class NMEAStreamer:
 
 if __name__ == "__main__":
 
-    # Edit these for your GPS device
-    SERIALPORT = "/dev/ttyACM1"  # "/dev/tty.usbmodem142101"
+    ADDRESS = "localhost"
+    TCPPORT = 8080
+    # Edit these for your serial GPS device:
+    SERIALPORT = "/dev/tty.usbmodem14101"  # "/dev/ttyACM1"
     BAUD = 38400
 
-    nms = NMEAStreamer(SERIALPORT, BAUD)
-    httpd = GPSHTTPServer((ADDRESS, TCPPORT), GPSHTTPHandler, nms)
+    gps = NMEAStreamer(SERIALPORT, BAUD)
+    httpd = GPSHTTPServer((ADDRESS, TCPPORT), GPSHTTPHandler, gps)
 
-    if nms.connect():
-        nms.start_read_thread()
+    if gps.connect():
+        gps.start_read_thread()
+        print(
+            "\nStarting HTTP Server on http://"
+            + ADDRESS
+            + ":"
+            + str(TCPPORT)
+            + " ...\n"
+        )
         httpd_thread = Thread(target=httpd.serve_forever, daemon=True)
         httpd_thread.start()
 
@@ -207,7 +217,7 @@ if __name__ == "__main__":
             print("\n\nInterrupted by user\n\n")
 
         httpd.shutdown()
-        nms.stop_read_thread()
+        gps.stop_read_thread()
         sleep(2)  # wait for shutdown
-        nms.disconnect()
+        gps.disconnect()
         print("\nTest Complete")

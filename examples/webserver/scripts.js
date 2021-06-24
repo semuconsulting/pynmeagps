@@ -4,7 +4,7 @@ var gInterval = 5000; // 5 seconds
 var gTimer = 0;
 var FIXDESC = ["No Fix", "2D", "3D"]
 
-// Execute REST GET request to retrieve sensor data
+// Execute REST GET request to retrieve latest gps data
 function getGPS() {
     "use strict";
 
