@@ -22,11 +22,6 @@ div.main-container {
   padding-bottom:40px;
   width:50%;
 }
-div.table {
-  margin:0 auto;
-  width:320px;
-  min-width:320px;
-}
 header {
   margin:0 auto;
   text-align:center;
@@ -46,6 +41,7 @@ h1 {
   font-size:3.0em;
 }
 table {
+  margin:0 auto;
   font-size:1.5em;
   padding:10px;
   border-collapse: collapse;
