@@ -367,12 +367,12 @@ class NMEAMessage:
         return self._msgID
 
     @property
-    def msgmode(self) -> str:
+    def msgmode(self) -> int:
         """
         Message mode getter.
 
         :return: message mode
-        :rtype: str
+        :rtype: int
         """
 
         return self._mode
