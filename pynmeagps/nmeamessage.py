@@ -367,6 +367,17 @@ class NMEAMessage:
         return self._msgID
 
     @property
+    def msgmode(self) -> str:
+        """
+        Message mode getter.
+
+        :return: message mode
+        :rtype: str
+        """
+
+        return self._mode
+
+    @property
     def payload(self) -> list:
         """
         Payload getter.
