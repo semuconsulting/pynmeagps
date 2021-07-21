@@ -132,7 +132,7 @@ NMEA_PAYLOADS_GET = {
         "altUnit": CH,
         "sep": DE,
         "sepUnit": CH,
-        "diffAge": IN,
+        "diffAge": DE,
         "diffStation": IN,
     },
     "GLL": {
