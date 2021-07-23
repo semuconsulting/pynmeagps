@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.3 CANDIDATE
+
+FIXES:
+
+1. Fixed diffAge field type in GGA payload definition.
+
 ### RELEASE 1.0.2
 
 FIXES:

@@ -12,5 +12,5 @@
     "python.formatting.provider": "black",
     "editor.formatOnSave": true,
     "modulename": "${workspaceFolderBasename}",
-    "moduleversion": "1.0.2"
+    "moduleversion": "1.0.3"
 }
