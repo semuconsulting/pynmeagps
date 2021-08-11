@@ -4,6 +4,9 @@ NMEA Protocol core globals and constants
 
 Created on 4 Mar 2021
 
+While the NMEA 0183 © protocol is proprietary, the information here
+has been collated from public domain sources.
+
 :author: semuadmin
 """
 

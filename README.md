@@ -1,13 +1,13 @@
 pynmeagps
 =========
 
-`pynmeagps` is an original Python library aimed *primarily* at the subset of the NMEA 0183 v4 protocol relevant to GNSS/GPS receivers - that is, NMEA 0183 'talkers' 'Gx' (standard) or 'Px' (proprietary).
+`pynmeagps` is an original Python library aimed *primarily* at the subset of the NMEA 0183 &copy; v4 protocol relevant to GNSS/GPS receivers - that is, NMEA 0183 'talkers' 'Gx' (standard) or 'Px' (proprietary).
 
 The intention is to make it as easy as possible to read, parse and utilise NMEA GNSS/GPS messages in Python applications. 
 
 The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmeagps](https://github.com/semuconsulting/pynmeagps).
 
-**FYI** There is a companion library [pyubx2](http://github.com/semuconsulting/pyubx2), which handles u-blox &copy; UBX protocol GNSS/GPS messages.
+**FYI** There is a companion library [pyubx2](http://github.com/semuconsulting/pyubx2), which handles u-blox &trade; UBX &copy; protocol GNSS/GPS messages.
 
 ---
 
@@ -22,7 +22,7 @@ The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmea
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pynmeagps.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pynmeagps)
 
-At time of writing the library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. Additional NMEA 'talkers' may be added in due course.
+At time of writing the library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. Additional NMEA 'talkers' may be added in due course. While the NMEA 0183 protocol itself is proprietary, the definitions here have been collated from public domain sources.
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pynmeagps](https://www.semuconsulting.com/pynmeagps).
 

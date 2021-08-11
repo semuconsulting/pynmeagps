@@ -9,6 +9,9 @@ NB: Avoid reserved names 'msgID', 'talker', 'payload', 'checksum'.
 
 Created on 4 Mar Sep 2021
 
+While the NMEA 0183 © protocol is proprietary, the information here
+has been collated from public domain sources.
+
 :author: semuadmin
 """
 
