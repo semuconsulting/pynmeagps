@@ -54,6 +54,6 @@ td {
   border-width: 2px;
   border-color: lightgrey;
 }
-td.data {
+td.right-align {
   text-align:right;
 }

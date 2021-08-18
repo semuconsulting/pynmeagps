@@ -50,7 +50,7 @@ class NMEAStreamer:
         self._validate = validate
         self.gpsdata = {
             "date": "1900-01-01",
-            "time": "11.11.11",
+            "time": "00.00.00",
             "latitude": 0.0,
             "longitude": 0.0,
             "elevation": 0.0,
@@ -192,7 +192,7 @@ if __name__ == "__main__":
     ADDRESS = "localhost"
     TCPPORT = 8080
     # Edit these for your serial GPS device:
-    SERIALPORT = "/dev/tty.usbmodem14101"  # "/dev/ttyACM1"
+    SERIALPORT = "/dev/tty.usbmodem141101"  # "/dev/ttyACM1"
     BAUD = 38400
 
     gps = NMEAStreamer(SERIALPORT, BAUD)

@@ -30,6 +30,7 @@ TCPPORT = 8080
 HTML = "/index.html"
 CSS = "/styles.css"
 JS = "/scripts.js"
+ICON = "/favicon.ico"
 
 
 class GPSDataStub:
@@ -91,7 +92,7 @@ class GPSHTTPHandler(SimpleHTTPRequestHandler):
         mimetype = self.guess_type(self.path)
         rc = 200
 
-        if self.path in (HTML, JS, CSS):
+        if self.path in (HTML, JS, CSS, ICON):
             res = open(self.path[1:]).read()
         elif self.path == "/gps":  # invoke GPS REST API
             res = self.server.gps.get_data()
