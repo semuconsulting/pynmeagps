@@ -250,7 +250,7 @@ can be readily added to the appropriate dictionary. Message payload definitions 
 
 A python/tkinter graphical GPS client which supports both NMEA and UBX protocols is available at: 
 
-[http://github.com/semuconsulting/PyGPSClient](http://github.com/semuconsulting/PyGPSClient)
+[https://github.com/semuconsulting/PyGPSClient](https://github.com/semuconsulting/PyGPSClient)
 
 ---
 
