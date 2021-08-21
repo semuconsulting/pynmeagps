@@ -56,7 +56,7 @@ if __name__ == "__main__":
                 "the parsed NMEA output of an NMEA GNSS device.\n\n",
                 "Usage (all args are optional): nmeadump.py",
                 f"port={PORT} baud={BAUD} timeout={TIMEOUT}",
-                "nmea_only=0 validate=1, raw=0\n\n Type Ctrl-C to terminate.",
+                "nmea_only=0 validate=1 raw=0\n\n Type Ctrl-C to terminate.",
             )
             sys.exit()
 
