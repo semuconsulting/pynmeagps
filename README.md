@@ -246,6 +246,20 @@ can be readily added to the appropriate dictionary. Message payload definitions 
 
 ---
 
+## <a name="cli">Command Line Utility</a>
+
+If `pynmeagps` is installed using pip, a simple command line utility `nmeadump` is automatically installed into the Python 3 scripts (bin) directory. This utility streams the parsed NMEA output of a GNSS/GPS device to the terminal.
+
+Assuming the Python 3 scripts (bin) directory is in your PATH, the utility may be invoked thus (all args are optional):
+
+`nmeadump port=/dev/ttyACM1 baud=9600 timeout=5 nmeaonly=0 validate=1 raw=0`
+
+If `nmeaonly` is set to True (1), streaming will terminate on any non-NMEA data (e.g. UBX).
+
+For help, type:
+
+`nmeadump -h`
+
 ## Graphical Client
 
 A python/tkinter graphical GPS client which supports both NMEA and UBX protocols is available at: 
