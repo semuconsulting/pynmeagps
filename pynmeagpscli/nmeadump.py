@@ -2,7 +2,7 @@
 Simple command line utility to stream the parsed NMEA output of an NMEA GNSS device.
 
 Usage (all args are optional):
-nmeadump.py port="/dev/ttyACM1" baud=9600 timeout=5 nmea_only=0 validate=1 raw=0
+nmeadump port="/dev/ttyACM1" baud=9600 timeout=5 nmea_only=0 validate=1 raw=0
 
 If nmea_only=True (1), streaming will terminate on any non-NMEA data.
 If validate & 1, will check for valid checksum (otherwise will ignore during reading, 
@@ -66,7 +66,7 @@ def main():
     if len(sys.argv) > 1:
         if sys.argv[1] in {"-h", "--h", "help", "-help", "--help", "-H"}:
             print(
-                " nmeadump.py is a simple command line utility to stream",
+                " nmeadump is a simple command line utility to stream",
                 "the parsed NMEA output of an NMEA GNSS device.\n\n",
                 "Usage (all args are optional): nmeadump.py",
                 f"port={PORT} baud={BAUD} timeout={TIMEOUT}",
