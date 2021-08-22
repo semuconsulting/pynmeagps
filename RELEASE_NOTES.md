@@ -1,6 +1,12 @@
 # pynmeagps Release Notes
 
-### RELEASE 1.0.3 CANDIDATE
+### RELEASE 1.0.4
+
+ENHANCEMENTS:
+
+1. The nmeadump.py example has been moved into the pynmeagpscli module and configured as a setup entry point. It is now available as a simple command line utility. See README for usage.
+
+### RELEASE 1.0.3
 
 FIXES:
 

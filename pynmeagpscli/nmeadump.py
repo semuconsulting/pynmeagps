@@ -2,7 +2,7 @@
 Simple command line utility to stream the parsed NMEA output of an NMEA GNSS device.
 
 Usage (all args are optional):
-nmeadump.py port="/dev/ttyACM1" baud=9600 timeout=5 nmea_only=0 validate=1 raw=0
+nmeadump port="/dev/ttyACM1" baud=9600 timeout=5 nmea_only=0 validate=1 raw=0
 
 If nmea_only=True (1), streaming will terminate on any non-NMEA data.
 If validate & 1, will check for valid checksum (otherwise will ignore during reading, 
@@ -20,9 +20,18 @@ BAUD = 9600
 TIMEOUT = 5
 
 
-def stream_ubx(**kwargs):
+def stream_nmea(**kwargs):
     """
-    Stream output to terminal
+    Stream output to terminal.
+
+    :param int port (kwarg): baud rate (/dev/ttyACM1)
+    :param int baud (kwarg): baud rate (9600)
+    :param int timeout (kwarg): timeout in seconds (5)
+    :param int nmea_only (kwarg): set to True to generate error on non-NMEA data (0)
+    :param int validate (kwarg): validate checksum (1)
+    :param int raw (kwarg): set to True to output raw binary data (0)
+    :raises: NMEAStreamError (if nmeaonly flag is 1 and stream contains non-NMEA data)
+
     """
 
     try:
@@ -47,12 +56,17 @@ def stream_ubx(**kwargs):
         print("\nStreaming terminated by user\n")
 
 
-if __name__ == "__main__":
+def main():
+    """
+    CLI Entry point
+
+    args as stream_nmea() method
+    """
 
     if len(sys.argv) > 1:
         if sys.argv[1] in {"-h", "--h", "help", "-help", "--help", "-H"}:
             print(
-                " nmeadump.py is a simple command line utility to stream",
+                " nmeadump is a simple command line utility to stream",
                 "the parsed NMEA output of an NMEA GNSS device.\n\n",
                 "Usage (all args are optional): nmeadump.py",
                 f"port={PORT} baud={BAUD} timeout={TIMEOUT}",
@@ -60,4 +74,9 @@ if __name__ == "__main__":
             )
             sys.exit()
 
-    stream_ubx(**dict(arg.split("=") for arg in sys.argv[1:]))
+    stream_nmea(**dict(arg.split("=") for arg in sys.argv[1:]))
+
+
+if __name__ == "__main__":
+
+    main()
