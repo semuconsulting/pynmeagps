@@ -217,8 +217,6 @@ b'$EIGNQ,RMC*24\r\n'
 
 The following examples can be found in the `\examples` folder:
 
-1. `nmeadump.py` is a simple command line utility to stream the parsed NMEA output of a GNSS/GPS device on a specified port.
-
 1. `nmeastreamer.py` illustrates how to implement a threaded serial reader for NMEA messages using pynmeagps.NMEAReader, and send poll requests for specific NMEA message types. 
 
 1. `nmeafile.py` illustrates how to implement a binary file reader for NMEA messages using the pynmeagps.NMEAReader iterator function. 
