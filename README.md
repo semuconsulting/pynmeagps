@@ -250,9 +250,11 @@ If `pynmeagps` is installed using pip, a simple command line utility `nmeadump` 
 
 Assuming the Python 3 scripts (bin) directory is in your PATH, the utility may be invoked thus (all args are optional):
 
-`nmeadump port=/dev/ttyACM1 baud=9600 timeout=5 nmea_only=0 validate=1 raw=0`
+`nmeadump port=/dev/ttyACM1 baud=9600 timeout=5 nmea_only=0 validate=1 raw=0 filter=*`
 
 If `nmea_only` is set to True (1), streaming will terminate on any non-NMEA data (e.g. UBX).
+
+`filter` is an optional comma-separated list of specific NMEA message identities to display e.g. `filter=GGA,RMC` (defaults to "*" - all NMEA messages).
 
 For help, type:
 
