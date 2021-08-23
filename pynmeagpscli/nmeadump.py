@@ -37,7 +37,7 @@ def stream_nmea(**kwargs):
     :param int nmea_only (kwarg): set to True to generate error on non-NMEA data (0)
     :param int validate (kwarg): validate checksum (1)
     :param int raw (kwarg): set to True to output raw binary data (0)
-    :param str filter (kwarg): comma-separated list of specific NMEAMessage msgIDs to display (*)
+    :param str filter (kwarg): comma-separated list of specific NMEA msgIDs to display (*)
     :raises: NMEAStreamError (if nmeaonly flag is 1 and stream contains non-NMEA data)
 
     """
@@ -53,7 +53,7 @@ def stream_nmea(**kwargs):
         filtertxt = "" if filter == "*" else f", filtered by {filter}"
         print(
             f"\nStreaming from {port} at {baud} baud in",
-            f"{'raw' if rawformat else 'parsed'} format {filtertxt}...\n",
+            f"{'raw' if rawformat else 'parsed'} format{filtertxt}...\n",
         )
         stream = Serial(port, baud, timeout=timeout)
         nmr = NMEAReader(stream, nmeaonly=nmea_only, validate=validate, msgmode=GET)
