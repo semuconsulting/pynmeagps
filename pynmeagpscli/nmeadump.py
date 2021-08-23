@@ -79,7 +79,7 @@ def main():
             print(
                 " nmeadump is a simple command line utility to stream",
                 "the parsed NMEA output of an NMEA GNSS device.\n\n",
-                "Usage (all args are optional): nmeadump.py",
+                "Usage (all args are optional): nmeadump",
                 f"port={PORT} baud={BAUD} timeout={TIMEOUT}",
                 "nmea_only=0 validate=1 raw=0 filter=*\n\n Type Ctrl-C to terminate.",
             )

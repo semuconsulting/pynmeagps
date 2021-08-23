@@ -1,6 +1,6 @@
 # pynmeagps Release Notes
 
-### RELEASE 1.0.4
+### RELEASE 1.0.5
 
 ENHANCEMENTS:
 
