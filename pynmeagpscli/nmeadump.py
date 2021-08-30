@@ -3,12 +3,14 @@ Simple command line utility to stream the parsed NMEA output of an NMEA GNSS dev
 to the terminal.
 
 Usage (all args are optional):
-nmeadump port="/dev/ttyACM1" baud=9600 timeout=5 nmea_only=0 validate=1 raw=0 filter=*
+nmeadump port="/dev/ttyACM1" baud=9600 timeout=5 nmea_only=0 validate=1 output=0 filter=*
+
+output: 0 = parsed format, 1 = binary format, 2 = hexadecimal format
 
 If nmea_only=True (1), streaming will terminate on any non-NMEA data.
 If validate & 1, will check for valid checksum (otherwise will ignore during reading, 
 but possibly fail later during parsing if message is corrupt).
-If validate & 2, will check for valid msgId (otherwise will ignore).
+If validate & 2, will check for known valid msgId (otherwise will ignore).
 
 Created on 22 Aug 2021
 
@@ -20,6 +22,11 @@ Created on 22 Aug 2021
 import sys
 from serial import Serial
 from pynmeagps import NMEAReader, GET, VALCKSUM
+
+# Output formats
+PARSED = 0
+BIN = 1
+HEX = 2
 
 # Default port settings - amend as required
 PORT = "/dev/ttyACM1"
@@ -36,7 +43,7 @@ def stream_nmea(**kwargs):
     :param int timeout (kwarg): timeout in seconds (5)
     :param int nmea_only (kwarg): set to True to generate error on non-NMEA data (0)
     :param int validate (kwarg): validate checksum (1)
-    :param int raw (kwarg): set to True to output raw binary data (0)
+    :param int output (kwarg): 0=Parsed, 1=Binary, 2=Hexadecimal (0)
     :param str filter (kwarg): comma-separated list of specific NMEA msgIDs to display (*)
     :raises: NMEAStreamError (if nmeaonly flag is 1 and stream contains non-NMEA data)
 
@@ -48,19 +55,21 @@ def stream_nmea(**kwargs):
         timeout = int(kwargs.get("timeout", TIMEOUT))
         nmea_only = int(kwargs.get("nmea_only", 0))
         validate = int(kwargs.get("validate", VALCKSUM))
-        rawformat = int(kwargs.get("raw", 0))
+        output = int(kwargs.get("output", PARSED))
         filter = kwargs.get("filter", "*")
         filtertxt = "" if filter == "*" else f", filtered by {filter}"
         print(
             f"\nStreaming from {port} at {baud} baud in",
-            f"{'raw' if rawformat else 'parsed'} format{filtertxt}...\n",
+            f"{['parsed','binary','xexadecimal'][output]} format{filtertxt}...\n",
         )
         stream = Serial(port, baud, timeout=timeout)
         nmr = NMEAReader(stream, nmeaonly=nmea_only, validate=validate, msgmode=GET)
         for (raw, parsed) in nmr:
             if filter == "*" or parsed.msgID in filter:
-                if rawformat:
+                if output == BIN:
                     print(raw)
+                elif output == HEX:
+                    print(raw.hex())
                 else:
                     print(parsed)
     except KeyboardInterrupt:
@@ -81,7 +90,7 @@ def main():
                 "the parsed NMEA output of an NMEA GNSS device.\n\n",
                 "Usage (all args are optional): nmeadump",
                 f"port={PORT} baud={BAUD} timeout={TIMEOUT}",
-                "nmea_only=0 validate=1 raw=0 filter=*\n\n Type Ctrl-C to terminate.",
+                "nmea_only=0 validate=1 output=0 filter=*\n\n Type Ctrl-C to terminate.",
             )
             sys.exit()
 
