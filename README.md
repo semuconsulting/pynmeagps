@@ -82,7 +82,7 @@ The constructor accepts the following optional keyword arguments:
 * `validate`: bitfield validation flags (can be used in combination):
 - `VALCKSUM` (0x01) = validate checksum (default)
 - `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
-* `msgmode`: 0 = GET (default, i.e. output _from_ receiver), 1 = SET (i.e. input _to_ receiver), 2 = POLL (i.e. input _to_ receiver in anticipation of response back)
+* `msgmode`: 0 = GET (default, i.e. output _from_ receiver), 1 = SET (i.e. input _to_ receiver), 2 = POLL (i.e. query _to_ receiver in anticipation of response back)
 
 
 Examples:

@@ -2,7 +2,7 @@
 NMEA Protocol Set payload definitions
 
 THESE ARE THE PAYLOAD DEFINITIONS FOR _SET_ MESSAGES _TO_ THE RECEIVER
-(i.e. Configuration commands).
+(e.g. Configuration commands).
 
 NB: Attribute names must be unique within each message id.
 NB: Avoid reserved names 'msgID', 'talker', 'payload', 'checksum'.

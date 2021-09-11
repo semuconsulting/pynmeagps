@@ -2,7 +2,7 @@
 NMEA Protocol Poll payload definitions
 
 THESE ARE THE PAYLOAD DEFINITIONS FOR _POLL_ MESSAGES _TO_ THE RECEIVER
-(i.e. Message Poll requests).
+(e.g. Message Poll requests).
 
 NB: Attribute names must be unique within each message id.
 NB: Avoid reserved names 'msgID', 'talker', 'payload', 'checksum'.
