@@ -18,14 +18,15 @@
                 "${config:modulename}.egg-info",
             ],
             "windows": {
-                "command": "rd",
+                "command": "Remove-Item",
                 "args": [
-                    "/S /Q",
-                    "build",
-                    "dist",
-                    "htmlcov",
-                    "docs/_build",
+                    "build,",
+                    "dist,",
+                    "htmlcov,",
+                    "docs/_build,",
                     "${config:modulename}.egg-info",
+                    "-Recurse",
+                    "-Force",
                 ],
             },
             "options": {
@@ -150,7 +151,7 @@
             ],
             "dependsOrder": "sequence",
             "dependsOn": [
-                // "Clean",
+                "Clean",
                 "Format",
                 "Analyze",
                 "Build",
