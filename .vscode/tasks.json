@@ -17,6 +17,17 @@
                 "docs/_build",
                 "${config:modulename}.egg-info",
             ],
+            "windows": {
+                "command": "rd",
+                "args": [
+                    "/S /Q",
+                    "build",
+                    "dist",
+                    "htmlcov",
+                    "docs/_build",
+                    "${config:modulename}.egg-info",
+                ],
+            },
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -139,7 +150,7 @@
             ],
             "dependsOrder": "sequence",
             "dependsOn": [
-                "Clean",
+                // "Clean",
                 "Format",
                 "Analyze",
                 "Build",
