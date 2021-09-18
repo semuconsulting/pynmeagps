@@ -130,7 +130,7 @@ def dmm2ddd(pos: str, att: str) -> float:
     else:
         posdeg = float(pos[0:3])
         posmin = float(pos[3:])
-    return round((posdeg + posmin / 60), 6)
+    return round((posdeg + posmin / 60), 8)
 
 
 def ddd2dmm(degrees: float, att: str) -> str:
