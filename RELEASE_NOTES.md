@@ -4,7 +4,8 @@
 
 ENHANCEMENTS:
 
-1. Filter added to nmeadump cli utility to limit output to specified NMEA msgIDs. See README for usage.
+1. Filter added to `nmeadump` cli utility to limit output to specified NMEA msgIDs. See README for usage.
+2. Update `dmm2ddd()` helper method to increase conversion accuracy from 6 to 8 decimal places - thanks for Doradx for the contribution.
 
 ### RELEASE 1.0.4
 
