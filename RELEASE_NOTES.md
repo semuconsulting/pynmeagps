@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.6
+
+ENHANCEMENTS:
+
+1. Python 3.10 compatibility added
+2. Minor pylint code tweaks
+
 ### RELEASE 1.0.5
 
 ENHANCEMENTS:
