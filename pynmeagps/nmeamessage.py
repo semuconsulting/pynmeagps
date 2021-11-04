@@ -193,7 +193,7 @@ class NMEAMessage:
         keyr = key
         for i in gindex:  # one index for each nested level
             if i > 0:
-                keyr += "_{0:0=2d}".format(i)
+                keyr += f"_{i:02d}"
 
         try:
             # all attribute values have been provided
