@@ -274,6 +274,10 @@ A python/tkinter graphical GPS client which supports both NMEA and UBX protocols
 
 ## Author Information
 
+semuadmin@semuconsulting.com
+
 ![License](https://img.shields.io/github/license/semuconsulting/pynmeagps.svg)
 
-semuadmin@semuconsulting.com
+`pynmeagps` is maintained entirely by volunteers. If you find it useful, please consider buying us a coffee!
+
+[![Donations](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=4TG5HGBNAM7YJ)
