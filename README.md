@@ -1,6 +1,18 @@
 pynmeagps
 =========
 
+[Current Status](#currentstatus) |
+[Installation](#installation) |
+[Reading](#reading) |
+[Parsing](#parsing) |
+[Generating](#generating) |
+[Serializing](#serializing) |
+[Examples](#examples) |
+[Extensibility](#extensibility) |
+[Command Line Utility](#cli) |
+[Graphical Client](#gui) |
+[Author & License](#author)
+
 `pynmeagps` is an original Python library aimed *primarily* at the subset of the NMEA 0183 &copy; v4 protocol relevant to GNSS/GPS receivers - that is, NMEA 0183 'talkers' 'Gx' (standard) or 'Px' (proprietary).
 
 The intention is to make it as easy as possible to read, parse and utilise NMEA GNSS/GPS messages in Python applications. 
@@ -11,7 +23,7 @@ The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmea
 
 ---
 
-### Current Status
+## <a name="currentstatus">Current Status</a>
 
 ![Status](https://img.shields.io/pypi/status/pynmeagps)
 ![Release](https://img.shields.io/github/v/release/semuconsulting/pynmeagps?include_prereleases)
@@ -63,7 +75,7 @@ deactivate
 
 ---
 
-## Reading (Streaming)
+## <a name="reading">Reading (Streaming)</a>
 
 ```
 class pynmeagps.nmeareader.NMEAReader(stream, **kwargs)
@@ -108,7 +120,7 @@ Examples:
 ...
 ```
 
-## Parsing
+## <a name="parsing">Parsing</a>
 
 You can parse individual NMEA messages using the static `NMEAReader.parse(message)` function, which takes a string or bytes containing an NMEA message and returns an `NMEAMessage` object.
 
@@ -132,8 +144,8 @@ Example:
 <NMEA(GNGLL, lat=-53.45072, NS=S, lon=2.240233, EW=E, time=22:32:32, status=A, posMode=A)>
 ```
 
-The `NMEAMessage` object exposes different public properties depending on its message ID,
-e.g. the `RMC` message has the following properties:
+The `NMEAMessage` object exposes different public attributes depending on its message ID,
+e.g. the `RMC` message has the following attributes:
 
 ```python
 >>> print(msg)
@@ -146,7 +158,7 @@ e.g. the `RMC` message has the following properties:
 37.84
 ```
 
-## Generating
+## <a name="generating">Generating</a>
 
 ```
 class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, msgmode: int, **kwargs)
@@ -164,10 +176,9 @@ The 'msgmode' parameter signifies whether the message payload refers to a:
 * SET message (i.e. command input to the receiver)
 * POLL message (i.e. query input to the receiver in anticipation of a response back)
 
-The message payload can be defined via keyword arguments in one of two ways:
+The message payload can be defined via keyword arguments in one of two ways: 
 1. A single keyword parameter of `payload` containing the full payload as a list of string values (any other keyword parameters will be ignored).
-2. One or more keyword parameters corresponding to individual message attributes. Any attributes not explicitly provided as keyword
-parameters will be set to a nominal value according to their type.
+2. One or more keyword parameters corresponding to individual message attributes. Any attributes not explicitly provided as keyword parameters will be set to a nominal value according to their type.
 
 e.g. Create a GLL message, passing the entire payload as a list of strings in native NMEA format:
 
@@ -197,7 +208,7 @@ e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as
 
 **NB:** Once instantiated, an `NMEAMessage` object is immutable.
 
-### Serializing
+## <a name="serializing">Serializing</a>
 
 The `NMEAMessage` class implements a `serialize()` method to convert an `NMEAMessage` object to a bytes array suitable for writing to an output stream.
 
@@ -213,7 +224,7 @@ b'$EIGNQ,RMC*24\r\n'
 
 ---
 
-## Examples
+## <a name="examples">Examples</a>
 
 The following examples can be found in the `\examples` folder:
 
@@ -264,7 +275,7 @@ For help, type:
 
 `nmeadump -h`
 
-## Graphical Client
+## <a name="gui">Graphical Client</a>
 
 A python/tkinter graphical GPS client which supports both NMEA and UBX protocols is available at: 
 
@@ -272,12 +283,12 @@ A python/tkinter graphical GPS client which supports both NMEA and UBX protocols
 
 ---
 
-## Author Information
+## <a name="author">Author & License Information</a>
 
 semuadmin@semuconsulting.com
 
 ![License](https://img.shields.io/github/license/semuconsulting/pynmeagps.svg)
 
-`pynmeagps` is maintained entirely by volunteers. If you find it useful, please consider buying us a coffee!
+`pynmeagps` is maintained entirely by volunteers. If you find it useful, a small donation would be greatly appreciated!
 
 [![Donations](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=4TG5HGBNAM7YJ)
