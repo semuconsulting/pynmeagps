@@ -136,6 +136,7 @@ class NMEAReader:
         :param object errorhandler: (kwarg) Optional error handler (None)
         :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
         :rtype: tuple
+        :raises: NMEA...Error (if quitonerror is True and stream is invalid)
 
         """
 
