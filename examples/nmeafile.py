@@ -69,7 +69,7 @@ class NMEAStreamer:
         """
 
         nmr = NMEAReader(
-            self._stream, nmeaonly=nmea_only, validate=vald, msgmode=msgmode
+            self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode
         )
         for (raw_data, parsed_data) in nmr.iterate(True):
             print(parsed_data)

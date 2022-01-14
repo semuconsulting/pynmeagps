@@ -11,7 +11,14 @@ Created on 4 Mar 2021
 import os
 import unittest
 
-from pynmeagps import NMEAReader, NMEATypeError, NMEAStreamError, VALCKSUM, VALMSGID
+from pynmeagps import (
+    NMEAReader,
+    NMEATypeError,
+    NMEAStreamError,
+    NMEAParseError,
+    VALCKSUM,
+    VALMSGID,
+)
 
 
 class StreamTest(unittest.TestCase):
@@ -32,6 +39,9 @@ class StreamTest(unittest.TestCase):
         self.streamNMEAFOO2 = open(
             os.path.join(dirname, "pygpsdata-nmeafoo2.log"), "rb"
         )
+        self.streamNMEABADCK = open(
+            os.path.join(dirname, "pygpsdata-nmeabadck.log"), "rb"
+        )
 
     def tearDown(self):
         self.streamNMEA2.close()
@@ -42,6 +52,7 @@ class StreamTest(unittest.TestCase):
         self.streamNMEASTARTUP.close()
         self.streamNMEAFOO1.close()
         self.streamNMEAFOO2.close()
+        self.streamNMEABADCK.close()
 
     def testNMEASTARTUP(self):  # stream of NMEA device during start up (blank data)
         EXPECTED_RESULTS = (
@@ -223,6 +234,49 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+
+    def testNMEAITERATE(self):  # NMEAReader iterate() helper method
+        EXPECTED_RESULTS = (
+            "<NMEA(GNDTM, datum=W84, subDatum=, latOfset=0.0, NS=N, lonOfset=0.0, EW=E, alt=0.0, refDatum=W84)>",
+            "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-2.24041033, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>",
+            "<NMEA(GNVTG, cogt=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.046, sognUnit=N, sogk=0.085, sogkUnit=K, posMode=A)>",
+            "<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041033, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>",
+            "<NMEA(GNGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041033, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
+            "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=23, svid_02=24, svid_03=20, svid_04=12, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=1)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
+        )
+
+        i = 0
+        raw = 0
+        nmr = NMEAReader(self.streamNMEA4SM, nmeaonly=False)
+        for (raw, parsed) in nmr.iterate(True):
+            if raw is not None:
+                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                i += 1
+
+    def testNMEAITERATE_ERR1(
+        self,
+    ):  # NMEAReader iterate() helper method with bad checksum
+        EXPECTED_ERROR = "Message GNRMC invalid checksum 7A - should be 7B."
+        with self.assertRaises(NMEAParseError) as context:
+            nmr = NMEAReader(
+                self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
+            )
+            for (raw, parsed) in nmr.iterate(True):
+                pass
+        self.assertTrue(EXPECTED_ERROR in str(context.exception))
+
+    def testNMEAITERATE_ERR2(
+        self,
+    ):  # NMEAReader iterate() helper method ignoring bad checksum and continuing
+        EXPECTED_RESULT = "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.24041033, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>"
+        nmr = NMEAReader(
+            self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
+        )
+        res = ""
+        for (raw, parsed) in nmr.iterate(False):
+            res = str(parsed)
+        self.assertEqual(EXPECTED_RESULT, res)
 
     def testNMEAFOO1(self):  # stream containing invalid attribute type
         EXPECTED_ERROR = "Unknown attribute type Z2"
