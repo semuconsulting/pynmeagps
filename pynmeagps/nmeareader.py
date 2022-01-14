@@ -128,15 +128,19 @@ class NMEAReader:
 
         return (raw_data, parsed_data)
 
-    def iterate(self, quitonerror: bool = True) -> tuple:
+    def iterate(self, **kwargs) -> tuple:
         """
         Invoke the iterator within an exception handling framework.
 
-        :param bool quitonerror: Quit on NMEA error True/False (True)
+        :param bool quitonerror (kwarg): Quit on NMEA error True/False (True)
+        :param object errhandler (kwarg): Optional error handler (None)
         :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
         :rtype: tuple
 
         """
+
+        quitonerror = kwargs.get("quitonerror", True)
+        errorhandler = kwargs.get("errorhandler", None)
 
         while True:
             try:
@@ -153,7 +157,10 @@ class NMEAReader:
                     raise (err)
                     break
                 else:
-                    print(err)
+                    if errorhandler is None:
+                        print(err)
+                    else:
+                        errorhandler(err)
                     continue
 
     @staticmethod

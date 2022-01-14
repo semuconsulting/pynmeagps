@@ -249,7 +249,7 @@ class StreamTest(unittest.TestCase):
         i = 0
         raw = 0
         nmr = NMEAReader(self.streamNMEA4SM, nmeaonly=False)
-        for (raw, parsed) in nmr.iterate(True):
+        for (raw, parsed) in nmr.iterate():
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
@@ -262,11 +262,28 @@ class StreamTest(unittest.TestCase):
             nmr = NMEAReader(
                 self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
             )
-            for (raw, parsed) in nmr.iterate(True):
+            for (raw, parsed) in nmr.iterate(
+                quitonerror=True,
+            ):
                 pass
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEAITERATE_ERR2(
+        self,
+    ):  # NMEAReader iterate() helper method ignoring bad checksum and passing error handler
+        EXPECTED_RESULT = "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.24041033, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>"
+        nmr = NMEAReader(
+            self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
+        )
+        res = ""
+        for (raw, parsed) in nmr.iterate(
+            quitonerror=False,
+            errorhandler=lambda e: print(f"I ignored the following error: {e}"),
+        ):
+            res = str(parsed)
+        self.assertEqual(EXPECTED_RESULT, res)
+
+    def testNMEAITERATE_ERR3(
         self,
     ):  # NMEAReader iterate() helper method ignoring bad checksum and continuing
         EXPECTED_RESULT = "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.24041033, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>"
@@ -274,7 +291,9 @@ class StreamTest(unittest.TestCase):
             self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
         )
         res = ""
-        for (raw, parsed) in nmr.iterate(False):
+        for (raw, parsed) in nmr.iterate(
+            quitonerror=False,
+        ):
             res = str(parsed)
         self.assertEqual(EXPECTED_RESULT, res)
 
