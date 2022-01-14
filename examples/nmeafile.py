@@ -68,13 +68,10 @@ class NMEAStreamer:
         Reads and parses NMEA message data from stream.
         """
 
-        # Invoke static iterate() wrapper
-        for (raw_data, parsed_data) in NMEAReader.iterate(
-            NMEAReader(
-                self._stream, nmeaonly=nmea_only, validate=vald, msgmode=msgmode
-            ),
-            True,
-        ):
+        nmr = NMEAReader(
+            self._stream, nmeaonly=nmea_only, validate=vald, msgmode=msgmode
+        )
+        for (raw_data, parsed_data) in nmr.iterate(True):
             print(parsed_data)
             self._count += 1
 
