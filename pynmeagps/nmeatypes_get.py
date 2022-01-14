@@ -211,7 +211,7 @@ NMEA_PAYLOADS_GET = {
                 "cno": IN,  # signal strength
             },
         ),
-        "signalID": IN,  # NMEA >=4.10 only
+        "signalID": HX,  # NMEA >=4.10 only
     },
     "HDG": {
         "heading": DE,
