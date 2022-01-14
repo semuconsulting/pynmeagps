@@ -132,8 +132,8 @@ class NMEAReader:
         """
         Invoke the iterator within an exception handling framework.
 
-        :param bool quitonerror (kwarg): Quit on NMEA error True/False (True)
-        :param object errhandler (kwarg): Optional error handler (None)
+        :param bool quitonerror: (kwarg) Quit on NMEA error True/False (True)
+        :param object errorhandler: (kwarg) Optional error handler (None)
         :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
         :rtype: tuple
 
