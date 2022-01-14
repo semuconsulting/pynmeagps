@@ -71,7 +71,7 @@ class NMEAStreamer:
         nmr = NMEAReader(
             self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode
         )
-        for (raw_data, parsed_data) in nmr.iterate(True):
+        for (raw_data, parsed_data) in nmr.iterate(quitonerror=False):
             print(parsed_data)
             self._count += 1
 
