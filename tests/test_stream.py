@@ -119,6 +119,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GPAPB, LCgwarn=A, LCcwarn=A, ctrkerr=0.1, dirs=R, ctrkUnit=N, aalmcirc=V, aalmperp=V, bearO2D=11.0, bearO2Du=M, wpt=DEST, bearD=11.0, bearDu=M, bearS=11.0, bearSu=M)>",
             "<NMEA(GPMSK, freq=318.0, fmode=A, beacbps=100, bpsmode=M, MMSfreq=2.0)>",
             "<NMEA(GPMSS, strength=55, snr=27, freq=318.0, beacbps=100)>",
+            "<NMEA(GBGSV, numMsg=2, msgNum=2, numSV=6, svid_01=14, elv_01=55.0, az_01=175, cno_01=46, svid_02=40, elv_02=29.0, az_02=43, cno_02=18, signalID=B)>",
         )
 
         i = 0
