@@ -27,7 +27,6 @@ class NMEAStreamer:
         self._connected = False
         self._reading = False
         self._count = 0
-        self._errors = 0
 
     def __del__(self):
         """
@@ -64,39 +63,23 @@ class NMEAStreamer:
 
         return self._connected
 
-    def iterate(self, nmr):
-        """
-        Invoke read iterator.
-        """
-
-        while True:
-            try:
-                yield next(nmr)
-                self._count += 1
-            except StopIteration:
-                break
-            except (
-                ube.NMEAMessageError,
-                ube.NMEATypeError,
-                ube.NMEAParseError,
-                ube.NMEAStreamError,
-            ) as err:
-                print(f"\n\nSomething went wrong {err}\n\n")
-                self._errors += 1
-                continue
-
     def reader(self, nmea_only=False, validate=VALCKSUM, msgmode=GET):
         """
         Reads and parses NMEA message data from stream.
         """
 
-        for (raw_data, parsed_data) in self.iterate(
-            NMEAReader(self._stream, nmeaonly=nmea_only, validate=vald, msgmode=msgmode)
+        # Invoke static iterate() wrapper
+        for (raw_data, parsed_data) in NMEAReader.iterate(
+            NMEAReader(
+                self._stream, nmeaonly=nmea_only, validate=vald, msgmode=msgmode
+            ),
+            True,
         ):
             print(parsed_data)
+            self._count += 1
 
         print(
-            f"\n\n{self._count} message{'' if self._count == 1 else 's'} read from {self._filename} with {self._errors} errors."
+            f"\n\n{self._count} message{'' if self._count == 1 else 's'} read from {self._filename}."
         )
 
 

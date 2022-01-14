@@ -129,6 +129,36 @@ class NMEAReader:
         return (raw_data, parsed_data)
 
     @staticmethod
+    def iterate(nmr: object, quitonerror: bool = False) -> tuple:
+        """
+        Invoke the iterator within an exception handling framework.
+
+        :param NMEAReader nmr: NMEAReader instance
+        :param bool quitonerror: Quit on NMEA error True/False (False)
+        :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
+        :rtype: tuple
+
+        """
+
+        while True:
+            try:
+                yield next(nmr)
+            except StopIteration:
+                break
+            except (
+                nme.NMEAMessageError,
+                nme.NMEATypeError,
+                nme.NMEAParseError,
+                nme.NMEAStreamError,
+            ) as err:
+                if quitonerror:
+                    raise (err)
+                    break
+                else:
+                    print(err)
+                    continue
+
+    @staticmethod
     def parse(message: bytes, **kwargs) -> object:
         """
         Parse NMEA byte stream to NMEAMessage object.
