@@ -7,7 +7,7 @@ Created on 7 Mar 2021
 @author: semuadmin
 """
 
-from pynmeagps import NMEAReader, VALCKSUM, GET
+from pynmeagps import NMEAReader, VALCKSUM, VALMSGID, GET
 import pynmeagps.exceptions as ube
 
 
@@ -26,6 +26,8 @@ class NMEAStreamer:
         self._nmeareader = None
         self._connected = False
         self._reading = False
+        self._count = 0
+        self._errors = 0
 
     def __del__(self):
         """
@@ -62,36 +64,47 @@ class NMEAStreamer:
 
         return self._connected
 
-    def reader(self, nmea_only=False, validate=VALCKSUM, msgmode=GET):
+    def iterate(self, nmr):
         """
-        Reads and parses NMEA message data from stream
-        using NMEAReader iterator method
+        Invoke read iterator.
         """
 
-        i = 0
-        self._nmeareader = NMEAReader(
-            self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode
-        )
-
-        for msg in self._nmeareader:  # invokes iterator method
+        while True:
             try:
-                (raw_data, parsed_data) = msg
-                #                 if raw_data:
-                #                     print(raw_data)
-                if parsed_data:
-                    print(parsed_data)
-                    i += 1
-            except (ube.NMEAMessageError, ube.NMEATypeError, ube.NMEAParseError) as err:
-                print(f"Something went wrong {err}")
+                yield next(nmr)
+                self._count += 1
+            except StopIteration:
+                break
+            except (
+                ube.NMEAMessageError,
+                ube.NMEATypeError,
+                ube.NMEAParseError,
+                ube.NMEAStreamError,
+            ) as err:
+                print(f"\n\nSomething went wrong {err}\n\n")
+                self._errors += 1
                 continue
 
-        print(f"\n\n{i} message{'' if i == 1 else 's'} read from {self._filename}.")
+    def reader(self, nmea_only=False, validate=VALCKSUM, msgmode=GET):
+        """
+        Reads and parses NMEA message data from stream.
+        """
+
+        for (raw_data, parsed_data) in self.iterate(
+            NMEAReader(self._stream, nmeaonly=nmea_only, validate=vald, msgmode=msgmode)
+        ):
+            print(parsed_data)
+
+        print(
+            f"\n\n{self._count} message{'' if self._count == 1 else 's'} read from {self._filename} with {self._errors} errors."
+        )
 
 
 if __name__ == "__main__":
 
     YES = ("Y", "y", "YES,", "yes", "True")
     NO = ("N", "n", "NO,", "no", "False")
+    vald = 0
 
     print("Enter fully qualified name of file containing binary NMEA data: ", end="")
     filefqn = input().strip('"')
@@ -100,14 +113,15 @@ if __name__ == "__main__":
     nmeaonly = val in NO
     print("Do you want to validate the message checksums ((y/n)? (y) ", end="")
     val = input() or "y"
-    val1 = val in YES
+    if val in YES:
+        vald = VALCKSUM
     print(
         "Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ",
         end="",
     )
     val = input() or "n"
-    val1 = 2 * val in YES
-    vald = val1 + val1
+    if val in YES:
+        vald += VALMSGID
     print("Message mode (0=GET (output), 1=SET (input), 2=POLL (poll)? (0) ", end="")
     mode = input() or "0"
     moded = int(mode)
@@ -116,7 +130,7 @@ if __name__ == "__main__":
     ubf = NMEAStreamer(filefqn)
     print(f"Opening file {filefqn}...")
     if ubf.open():
-        print("Starting file reader")
+        print("Starting file reader...")
         ubf.reader(nmeaonly, vald, moded)
         print("\n\nClosing file...")
         ubf.close()

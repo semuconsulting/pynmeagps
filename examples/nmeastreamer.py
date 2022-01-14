@@ -28,7 +28,15 @@ from io import BufferedReader
 from threading import Thread
 from time import sleep
 
-from pynmeagps import NMEAReader, NMEAMessage, POLL, GET, NMEA_MSGIDS
+from pynmeagps import (
+    NMEAReader,
+    NMEAMessage,
+    POLL,
+    GET,
+    NMEA_MSGIDS,
+    VALCKSUM,
+    VALMSGID,
+)
 from serial import Serial, SerialException, SerialTimeoutException
 
 import pynmeagps.exceptions as nme
@@ -165,6 +173,7 @@ if __name__ == "__main__":
     YES = ("Y", "y", "YES,", "yes", "True")
     NO = ("N", "n", "NO,", "no", "False")
     PAUSE = 1
+    vald = 0
 
     print("Enter port: ", end="")
     val = input().strip('"')
@@ -180,14 +189,15 @@ if __name__ == "__main__":
     nmeaonly = val in NO
     print("Do you want to validate the message checksums ((y/n)? (y) ", end="")
     val = input() or "y"
-    val1 = val in YES
+    if val in YES:
+        vald = VALCKSUM
     print(
         "Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ",
         end="",
     )
     val = input() or "n"
-    val2 = 2 * val in YES
-    vald = val1 + val2
+    if val in YES:
+        vald += VALMSGID
 
     print(f"Connecting to serial port {prt} at {baud} baud...")
     nms = NMEAStreamer(prt, baud, timout, nmeaonly, vald)
