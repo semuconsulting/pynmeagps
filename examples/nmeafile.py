@@ -27,6 +27,7 @@ class NMEAStreamer:
         self._connected = False
         self._reading = False
         self._count = 0
+        self._error = 0
 
     def __del__(self):
         """
@@ -63,6 +64,14 @@ class NMEAStreamer:
 
         return self._connected
 
+    def errhandler(self, err):
+        """
+        Handle errors output by iterator.
+        """
+
+        self._error += 1
+        print(f"\nERROR {self._error}: {err}\n")
+
     def reader(self, nmea_only=False, validate=VALCKSUM, msgmode=GET):
         """
         Reads and parses NMEA message data from stream.
@@ -71,12 +80,14 @@ class NMEAStreamer:
         nmr = NMEAReader(
             self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode
         )
-        for (raw_data, parsed_data) in nmr.iterate(quitonerror=False):
+        for (raw_data, parsed_data) in nmr.iterate(
+            quitonerror=False, errorhandler=self.errhandler
+        ):
             print(parsed_data)
             self._count += 1
 
         print(
-            f"\n\n{self._count} message{'' if self._count == 1 else 's'} read from {self._filename}."
+            f"\n\n{self._count} message{'' if self._count == 1 else 's'} read from {self._filename} with {self._error} errors."
         )
 
 
