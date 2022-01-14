@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.7
+
+FIXES:
+
+1. HX attribute type processing corrected - will now parse HX values as hex strings rather than convert to/from integers.
+2. GSV payload corrected - SignalId is now hex.
+
 ### RELEASE 1.0.6
 
 ENHANCEMENTS:

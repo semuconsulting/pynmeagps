@@ -419,8 +419,7 @@ class NMEAMessage:
         ):  # character, string, hex
             pass
         elif att == nmt.HX:
-            if vals != "":
-                val = int(vals, 16)
+            val = vals
         elif att == nmt.DE:  # decimal
             if vals != "":
                 val = float(vals)
@@ -454,7 +453,7 @@ class NMEAMessage:
         if att in (nmt.CH, nmt.ST):
             vals = str(val)
         elif att == nmt.HX:
-            vals = int2hexstr(val)
+            vals = str(val)
         elif att == nmt.DE:
             vals = str(val)
         elif att == nmt.IN:
@@ -483,7 +482,7 @@ class NMEAMessage:
         if att in (nmt.CH, nmt.ST, nmt.LA, nmt.LN):
             val = ""
         elif att == nmt.HX:
-            val = 0x00
+            val = "0"
         elif att == nmt.DE:
             val = 0.0
         elif att == nmt.IN:
