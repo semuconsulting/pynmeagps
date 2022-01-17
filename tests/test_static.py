@@ -169,6 +169,10 @@ class StaticTest(unittest.TestCase):
     # NMEAMessage property methods
     # *******************************************
 
+    def testIdentity(self):
+        res = self.msgGLL.identity
+        self.assertEqual(res, "GNGLL")
+
     def testTalkerS(self):
         res = self.msgGLL.talker
         self.assertEqual(res, "GN")

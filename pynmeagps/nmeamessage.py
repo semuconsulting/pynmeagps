@@ -346,13 +346,25 @@ class NMEAMessage:
         return output.encode("utf-8")  # convert str to bytes
 
     @property
+    def identity(self) -> str:
+        """
+        Identity getter.
+
+        :return: message identity e.g. GNGSA
+        :rtype: str
+        """
+
+        return self._talker + self._msgID
+
+    @property
     def talker(self) -> str:
         """
         Talker getter.
 
-        :return: talker
+        :return: talker e.g. GN
         :rtype: str
         """
+
         return self._talker
 
     @property
@@ -360,7 +372,7 @@ class NMEAMessage:
         """
         Message id getter.
 
-        :return: message id
+        :return: message id e.g. GSA
         :rtype: str
         """
 
