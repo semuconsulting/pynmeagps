@@ -66,7 +66,7 @@ class NMEAMessage:
             and msgID != "UBX"
         ):
             raise nme.NMEAMessageError(
-                f"Unknown msgID {msgID} msgmode {('GET','SET','POLL')[msgmode]}."
+                f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
             )
 
         self._mode = msgmode

@@ -56,17 +56,15 @@ class ParseTest(unittest.TestCase):
     def testParseNK(
         self,
     ):  # unknown message identifier with validate (VALCKSUM + VALMSGID) - should be rejected
-        EXPECTED_ERROR = (
-            "Unknown or invalid message definition msgID XXX, talker GN, mode GET."
-        )
+        EXPECTED_ERROR = "Unknown msgID GNXXX, msgmode GET."
         with self.assertRaises(NMEAParseError) as context:
             NMEAReader.parse(self.messageNK, validate=3)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
-    def testParseNK2(
-        self,
-    ):  # unknown message identifier with validate VALCKSUM only - should just be ignored.
-        NMEAReader.parse(self.messageNK)
+    # def testParseNK2(
+    #     self,
+    # ):  # unknown message identifier with validate VALCKSUM only - should just be ignored.
+    #     NMEAReader.parse(self.messageNK)
 
     def testParseBADMODE(self):  # invalid mode setting
         EXPECTED_ERROR = "Invalid parse mode 4 - must be 0, 1 or 2."

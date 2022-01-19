@@ -85,7 +85,7 @@ class FillTest(unittest.TestCase):
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testFill_UNKNOWN(self):  # test GET constructor with unknown msgId
-        EXPECTED_ERROR = "Unknown msgID XXX msgmode GET."
+        EXPECTED_ERROR = "Unknown msgID GNXXX, msgmode GET."
         with self.assertRaises(NMEAMessageError) as context:
             NMEAMessage("GN", "XXX", GET, payload=[0, 0, 0])
         self.assertTrue(EXPECTED_ERROR in str(context.exception))

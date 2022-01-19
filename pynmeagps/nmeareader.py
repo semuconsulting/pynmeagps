@@ -198,12 +198,13 @@ class NMEAReader:
             )
 
         except nme.NMEAMessageError as err:
-            if validate & VALMSGID:
-                modestr = ["GET", "SET", "POLL"][msgmode]
-                raise nme.NMEAParseError(
-                    (
-                        "Unknown or invalid message definition "
-                        f"msgID {msgid}, talker {talker}, mode {modestr}."
-                    )
-                ) from err
-            return None
+            # if validate & VALMSGID:
+            #     modestr = ["GET", "SET", "POLL"][msgmode]
+            #     raise nme.NMEAParseError(
+            #         (
+            #             "Unknown or invalid message definition "
+            #             f"msgID {msgid}, talker {talker}, mode {modestr}."
+            #         )
+            #     ) from err
+            # return None
+            raise nme.NMEAParseError(err)
