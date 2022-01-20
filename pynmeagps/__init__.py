@@ -10,7 +10,7 @@ Created on 4 Mar 2021
 from ._version import __version__
 from .exceptions import NMEAMessageError, NMEAParseError, NMEATypeError, NMEAStreamError
 from .nmeamessage import NMEAMessage
-from .nmeareader import NMEAReader, VALCKSUM, VALMSGID, VALNONE
+from .nmeareader import NMEAReader
 from .nmeatypes_core import *
 from .nmeatypes_get import *
 from .nmeahelpers import *
