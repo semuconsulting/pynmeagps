@@ -26,11 +26,7 @@ from pynmeagps.nmeahelpers import (
     calc_checksum,
     isvalid_cksum,
 )
-
-# parser validation flag values
-VALNONE = 0
-VALCKSUM = 1
-VALMSGID = 2
+from pynmeagps.nmeatypes_core import NMEA_HDR, VALNONE, VALCKSUM, VALMSGID
 
 
 class NMEAReader:
@@ -96,35 +92,28 @@ class NMEAReader:
         raw_data = None
         parsed_data = None
 
-        byte1 = self._stream.read(1)  # read the first byte
-
-        while reading:
-            is_nmeas = False
-            is_nmeap = False
+        while reading:  # loop until end of valid NMEA message or EOF
+            byte1 = self._stream.read(1)  # read 1st byte
             if len(byte1) < 1:  # EOF
                 break
-            if byte1 == b"\x24":
-                byte2 = self._stream.read(1)
-                if len(byte2) < 1:  # EOF
+            if byte1 != b"\x24":  # not NMEA, discard and continue
+                continue
+            byte2 = self._stream.read(1)  # read 2nd byte to confirm protocol
+            if len(byte2) < 1:  # EOF
+                break
+            bytehdr = byte1 + byte2
+            if bytehdr in NMEA_HDR:  # it's a NMEA message
+                byten = self._stream.readline()  # NMEA protocol is CRLF terminated
+                if byten[-2:] != b"\x0d\x0a":  # EOF
                     break
-                if byte2 == b"\x47":
-                    is_nmeas = True
-                if byte2 == b"\x50":
-                    is_nmeap = True
-            if is_nmeas or is_nmeap:  # it's a NMEA message
-                byten = self._stream.readline()
-                raw_data = byte1 + byte2 + byten
+                raw_data = bytehdr + byten
                 parsed_data = self.parse(
                     raw_data, validate=self._validate, msgmode=self._mode
                 )
                 reading = False
             else:  # it's not a NMEA message (UBX or something else)
-                prevbyte = byte1
-                byte1 = self._stream.read(1)
                 if self._nmea_only:  # raise error and quit
-                    raise nme.NMEAStreamError(
-                        f"Unknown data header {prevbyte + byte1}."
-                    )
+                    raise nme.NMEAStreamError(f"Unknown data header {bytehdr}.")
 
         return (raw_data, parsed_data)
 
@@ -155,14 +144,12 @@ class NMEAReader:
                 nme.NMEAStreamError,
             ) as err:
                 if quitonerror:
-                    raise (err)
-                    break
+                    raise err
+                if errorhandler is None:
+                    print(err)
                 else:
-                    if errorhandler is None:
-                        print(err)
-                    else:
-                        errorhandler(err)
-                    continue
+                    errorhandler(err)
+                continue
 
     @staticmethod
     def parse(message: bytes, **kwargs) -> object:
@@ -198,13 +185,4 @@ class NMEAReader:
             )
 
         except nme.NMEAMessageError as err:
-            # if validate & VALMSGID:
-            #     modestr = ["GET", "SET", "POLL"][msgmode]
-            #     raise nme.NMEAParseError(
-            #         (
-            #             "Unknown or invalid message definition "
-            #             f"msgID {msgid}, talker {talker}, mode {modestr}."
-            #         )
-            #     ) from err
-            # return None
             raise nme.NMEAParseError(err)
