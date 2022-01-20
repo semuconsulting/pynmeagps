@@ -24,7 +24,6 @@ from pynmeagps.nmeahelpers import (
     dmm2ddd,
     ddd2dmm,
     list2csv,
-    int2hexstr,
     calc_checksum,
 )
 
@@ -66,7 +65,7 @@ class NMEAMessage:
             and msgID != "UBX"
         ):
             raise nme.NMEAMessageError(
-                f"Unknown msgID {msgID} msgmode {('GET','SET','POLL')[msgmode]}."
+                f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
             )
 
         self._mode = msgmode

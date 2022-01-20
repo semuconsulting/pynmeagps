@@ -22,7 +22,6 @@ The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmea
 **FYI** There is a companion library [pyubx2](http://github.com/semuconsulting/pyubx2), which handles u-blox &trade; UBX &copy; protocol GNSS/GPS messages.
 
 ---
-
 ## <a name="currentstatus">Current Status</a>
 
 ![Status](https://img.shields.io/pypi/status/pynmeagps)
@@ -43,7 +42,6 @@ Contributions welcome, particularly any standard or proprietary NMEA message def
 [Bug reports](https://github.com/semuconsulting/pynmeagps/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) and [Feature requests](https://github.com/semuconsulting/pynmeagps/blob/master/.github/ISSUE_TEMPLATE/feature_request.md) - please use the templates provided.
 
 ---
-
 ## <a name="installation">Installation</a>
 
 `pynmeagps` is compatible with Python 3.6+ and has no third-party library dependencies.
@@ -73,8 +71,9 @@ source env/bin/activate (or env\Scripts\activate on Windows)
 deactivate
 ```
 
----
+**FYI** since version 1.2.4, installing the companion UBX library `pyubx2` via pip also installs `pynmeagps`.
 
+---
 ## <a name="reading">Reading (Streaming)</a>
 
 ```
@@ -120,6 +119,7 @@ Examples:
 ...
 ```
 
+---
 ## <a name="parsing">Parsing</a>
 
 You can parse individual NMEA messages using the static `NMEAReader.parse(message)` function, which takes a string or bytes containing an NMEA message and returns an `NMEAMessage` object.
@@ -158,6 +158,7 @@ e.g. the `RMC` message has the following attributes:
 37.84
 ```
 
+---
 ## <a name="generating">Generating</a>
 
 ```
@@ -208,6 +209,7 @@ e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as
 
 **NB:** Once instantiated, an `NMEAMessage` object is immutable.
 
+---
 ## <a name="serializing">Serializing</a>
 
 The `NMEAMessage` class implements a `serialize()` method to convert an `NMEAMessage` object to a bytes array suitable for writing to an output stream.
@@ -223,7 +225,6 @@ b'$EIGNQ,RMC*24\r\n'
 ```
 
 ---
-
 ## <a name="examples">Examples</a>
 
 The following examples can be found in the `\examples` folder:
@@ -236,6 +237,7 @@ The following examples can be found in the `\examples` folder:
 
 1. `/webserver/gpsstreamer.py` illustrates a simple HTTP web server wrapper around a threaded pynmeagps streaming and parsing service. To use, cd to the `/examples/webserver` folder, execute the `gpsstreamer.py` module and direct your browser to http://localhost:8080. The web page will update dynamically every 5 seconds. You can also access the parsed NMEA data directly via the REST API http://localhost:8080/gps.
 
+---
 ## <a name="extensibility">Extensibility</a>
 
 The NMEA protocol is principally defined in the modules `nmeatypes_*.py` as a series of dictionaries. Additional message types 
@@ -254,7 +256,6 @@ can be readily added to the appropriate dictionary. Message payload definitions 
 ```
 
 ---
-
 ## <a name="cli">Command Line Utility</a>
 
 If `pynmeagps` is installed using pip, a simple command line utility `nmeadump` is automatically installed into the Python 3 scripts (bin) directory. This utility streams the parsed NMEA output of a GNSS/GPS device to the terminal.
@@ -275,6 +276,9 @@ For help, type:
 
 `nmeadump -h`
 
+**FYI:** As of version 1.2.4, the companion library `pyubx2` incorporates a more fully-featured command line utility `gnssdump` which supports both NMEA and UBX protocols via any stream type (including Serial and File). See https://github.com/semuconsulting/pyubx2#cli for further details.
+
+---
 ## <a name="gui">Graphical Client</a>
 
 A python/tkinter graphical GPS client which supports both NMEA and UBX protocols is available at: 
@@ -282,7 +286,6 @@ A python/tkinter graphical GPS client which supports both NMEA and UBX protocols
 [https://github.com/semuconsulting/PyGPSClient](https://github.com/semuconsulting/PyGPSClient)
 
 ---
-
 ## <a name="author">Author & License Information</a>
 
 semuadmin@semuconsulting.com

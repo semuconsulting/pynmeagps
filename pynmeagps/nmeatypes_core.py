@@ -10,13 +10,15 @@ has been collated from public domain sources.
 :author: semuadmin
 """
 
-NMEAS_HDR = "$G"  # standard NMEA header
-NMEAP_HDR = "$P"  # proprietary NMEA header
+NMEA_HDR = [b"\x24\x47", b"\x24\x50"]  # standard, proprietary
 INPUT = 1
 OUTPUT = 0
 GET = 0
 SET = 1
 POLL = 2
+VALNONE = 0
+VALCKSUM = 1
+VALMSGID = 2
 
 GNSSLIST = {
     0: "GPS",

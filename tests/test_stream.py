@@ -40,7 +40,7 @@ class StreamTest(unittest.TestCase):
             os.path.join(dirname, "pygpsdata-nmeafoo2.log"), "rb"
         )
         self.streamNMEABADCK = open(
-            os.path.join(dirname, "pygpsdata-nmeabadck.log"), "rb"
+            os.path.join(dirname, "pygpsdata-nmeabadck2.log"), "rb"
         )
 
     def tearDown(self):
@@ -205,7 +205,7 @@ class StreamTest(unittest.TestCase):
     def testMIXED2(
         self,
     ):  # stream of mixed NMEA & UBX data with nmea_only set to TRUE - should be rejected
-        EXPECTED_ERROR = "Unknown data header b'\\xb5b'."
+        EXPECTED_ERROR = "Unknown data header b'$\\x11'"
         with self.assertRaises(NMEAStreamError) as context:
             i = 0
             raw = 0
@@ -257,7 +257,7 @@ class StreamTest(unittest.TestCase):
     def testNMEAITERATE_ERR1(
         self,
     ):  # NMEAReader iterate() helper method with bad checksum
-        EXPECTED_ERROR = "Message GNRMC invalid checksum 7A - should be 7B."
+        EXPECTED_ERROR = "Message GNVTG invalid checksum 3) - should be 30"
         with self.assertRaises(NMEAParseError) as context:
             nmr = NMEAReader(
                 self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
@@ -271,7 +271,7 @@ class StreamTest(unittest.TestCase):
     def testNMEAITERATE_ERR2(
         self,
     ):  # NMEAReader iterate() helper method ignoring bad checksum and passing error handler
-        EXPECTED_RESULT = "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.24041033, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>"
+        EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0.0, az_01=32, cno_01=, svid_02=10, elv_02=27.0, az_02=310, cno_02=, svid_03=12, elv_03=19.0, az_03=205, cno_03=19, svid_04=13, elv_04=38.0, az_04=134, cno_04=21, signalID=1)>"
         nmr = NMEAReader(
             self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
         )
@@ -286,7 +286,7 @@ class StreamTest(unittest.TestCase):
     def testNMEAITERATE_ERR3(
         self,
     ):  # NMEAReader iterate() helper method ignoring bad checksum and continuing
-        EXPECTED_RESULT = "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.24041033, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>"
+        EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0.0, az_01=32, cno_01=, svid_02=10, elv_02=27.0, az_02=310, cno_02=, svid_03=12, elv_03=19.0, az_03=205, cno_03=19, svid_04=13, elv_04=38.0, az_04=134, cno_04=21, signalID=1)>"
         nmr = NMEAReader(
             self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
         )
@@ -303,10 +303,8 @@ class StreamTest(unittest.TestCase):
             i = 0
             raw = 0
             nmr = NMEAReader(self.streamNMEAFOO1, nmeaonly=False)
-            while raw is not None:
-                (raw, _) = nmr.read()
-                if raw is not None:
-                    i += 1
+            for (raw, parsed) in nmr:
+                i += 1
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEAFOO2(self):  # stream containing invalid value for attribute type
@@ -315,10 +313,8 @@ class StreamTest(unittest.TestCase):
             i = 0
             raw = 0
             nmr = NMEAReader(self.streamNMEAFOO2, nmeaonly=False)
-            while raw is not None:
-                (raw, _) = nmr.read()
-                if raw is not None:
-                    i += 1
+            for (raw, parsed) in nmr:
+                i += 1
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEABADMODE(self):  # invalid stream mode
