@@ -24,7 +24,6 @@ from pynmeagps.nmeahelpers import (
     dmm2ddd,
     ddd2dmm,
     list2csv,
-    int2hexstr,
     calc_checksum,
 )
 

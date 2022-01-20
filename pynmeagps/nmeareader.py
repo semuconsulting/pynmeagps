@@ -26,7 +26,7 @@ from pynmeagps.nmeahelpers import (
     calc_checksum,
     isvalid_cksum,
 )
-from pynmeagps.nmeatypes_core import NMEA_HDR, VALNONE, VALCKSUM, VALMSGID
+from pynmeagps.nmeatypes_core import NMEA_HDR, VALCKSUM
 
 
 class NMEAReader:
