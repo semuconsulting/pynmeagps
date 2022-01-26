@@ -1,128 +1,49 @@
 """
-Example implementation of a NMEAMessage file reader
-using the NMEAReader iterator functions
+nmeafile.py
+
+This example illustrates a simple implementation of a
+NMEAMessage logfile reader using the
+NMEAReader iterator functions and an external error handler.
 
 Created on 7 Mar 2021
-
 @author: semuadmin
 """
 
-from pynmeagps import NMEAReader, VALCKSUM, VALMSGID, GET
-import pynmeagps.exceptions as ube
+from pynmeagps.nmeareader import NMEAReader
 
 
-class NMEAStreamer:
+def errhandler(err):
     """
-    NMEAStreamer class.
+    Handles errors output by iterator.
     """
 
-    def __init__(self, filename):
-        """
-        Constructor.
-        """
+    print(f"\nERROR: {err}\n")
 
-        self._filename = filename
-        self._stream = None
-        self._nmeareader = None
-        self._connected = False
-        self._reading = False
-        self._count = 0
-        self._error = 0
 
-    def __del__(self):
-        """
-        Destructor.
-        """
+def read(stream, errorhandler):
+    """
+    Reads and parses UBX message data from stream.
+    """
+    # pylint: disable=unused-variable
 
-        self.close()
+    msgcount = 0
 
-    def open(self):
-        """
-        Open file.
-        """
+    nmr = NMEAReader(stream)
+    for (raw, parsed_data) in nmr.iterate(
+        nmeaonly=False, quitonerror=False, errorhandler=errorhandler
+    ):
+        print(parsed_data)
+        msgcount += 1
 
-        self._connected = False
-        try:
-            self._stream = open(self._filename, "rb")
-            self._connected = True
-        except Exception as err:
-            print(f"Error opening file {err}")
-
-        return self._connected
-
-    def close(self):
-        """
-        Close file.
-        """
-
-        if self._connected and self._stream:
-            try:
-                self._stream.close()
-            except Exception as err:
-                print(f"Error closing file {err}")
-        self._connected = False
-
-        return self._connected
-
-    def errhandler(self, err):
-        """
-        Handle errors output by iterator.
-        """
-
-        self._error += 1
-        print(f"\nERROR {self._error}: {err}\n")
-
-    def reader(self, nmea_only=False, validate=VALCKSUM, msgmode=GET):
-        """
-        Reads and parses NMEA message data from stream.
-        """
-
-        nmr = NMEAReader(
-            self._stream, nmeaonly=nmea_only, validate=validate, msgmode=msgmode
-        )
-        for (raw_data, parsed_data) in nmr.iterate(
-            quitonerror=False, errorhandler=self.errhandler
-        ):
-            print(parsed_data)
-            self._count += 1
-
-        print(
-            f"\n\n{self._count} message{'' if self._count == 1 else 's'} read from {self._filename} with {self._error} errors."
-        )
+    print(f"\n{msgcount} messages read.\n")
 
 
 if __name__ == "__main__":
 
-    YES = ("Y", "y", "YES,", "yes", "True")
-    NO = ("N", "n", "NO,", "no", "False")
-    vald = 0
+    print("\nEnter fully qualified name of file containing raw NMEA data: ", end="")
+    filename = input().strip('"')
 
-    print("Enter fully qualified name of file containing binary NMEA data: ", end="")
-    filefqn = input().strip('"')
-    print("Do you want to ignore any non-NMEA data (y/n)? (y) ", end="")
-    val = input() or "y"
-    nmeaonly = val in NO
-    print("Do you want to validate the message checksums ((y/n)? (y) ", end="")
-    val = input() or "y"
-    if val in YES:
-        vald = VALCKSUM
-    print(
-        "Do you want to validate message IDs (i.e. raise an error if message ID is unknown) (y/n)? (n) ",
-        end="",
-    )
-    val = input() or "n"
-    if val in YES:
-        vald += VALMSGID
-    print("Message mode (0=GET (output), 1=SET (input), 2=POLL (poll)? (0) ", end="")
-    mode = input() or "0"
-    moded = int(mode)
-
-    print("Instantiating NMEAStreamer class...")
-    ubf = NMEAStreamer(filefqn)
-    print(f"Opening file {filefqn}...")
-    if ubf.open():
-        print("Starting file reader...")
-        ubf.reader(nmeaonly, vald, moded)
-        print("\n\nClosing file...")
-        ubf.close()
-        print("Test Complete")
+    print(f"\nOpening file {filename}...\n")
+    with open(filename, "rb") as fstream:
+        read(fstream, errhandler)
+    print("\nProcessing Complete")
