@@ -1,4 +1,6 @@
 """
+nmeaserver.py
+
 This illustrates a simple HTTP wrapper around the 
 pynmneagps NMEAStreamer streaming and parsing example.
 
@@ -18,8 +20,9 @@ Created on 17 May 2021
 :license: (c) SEMU Consulting 2021 - BSD 3-Clause License
 """
 
+from sys import platform
 from io import BufferedReader
-from threading import Thread
+from threading import Thread, Event
 from time import sleep
 import json
 from gpshttpserver import GPSHTTPServer, GPSHTTPHandler
@@ -33,7 +36,7 @@ class NMEAStreamer:
     NMEAStreamer class.
     """
 
-    def __init__(self, port, baudrate, timeout=0.1, nmea_only=0, validate=1):
+    def __init__(self, port, baudrate, timeout, nmea_only=0, validate=1):
         """
         Constructor.
         """
@@ -42,12 +45,12 @@ class NMEAStreamer:
         self._serial_thread = None
         self._nmeareader = None
         self._connected = False
-        self._reading = False
         self._port = port
         self._baudrate = baudrate
         self._timeout = timeout
         self._nmea_only = nmea_only
         self._validate = validate
+        self._stopevent = Event()
         self.gpsdata = {
             "date": "1900-01-01",
             "time": "00.00.00",
@@ -55,7 +58,7 @@ class NMEAStreamer:
             "longitude": 0.0,
             "elevation": 0.0,
             "speed": 0.0,
-            "track": 0.0,
+            "track": 0,
             "siv": 0,
             "pdop": 99,
             "hdop": 99,
@@ -115,9 +118,10 @@ class NMEAStreamer:
         """
 
         if self._connected:
-            print("\nStarting reader thread...")
-            self._reading = True
-            self._serial_thread = Thread(target=self._read_thread, daemon=True)
+            print("\nStarting reader thread...\n")
+            self._serial_thread = Thread(
+                target=self._read_thread, args=(self._stopevent,)
+            )
             self._serial_thread.start()
 
     def stop_read_thread(self):
@@ -127,15 +131,15 @@ class NMEAStreamer:
 
         if self._serial_thread is not None:
             print("\nStopping web server thread...")
-            self._reading = False
+            self._stopevent.set()
 
-    def _read_thread(self):
+    def _read_thread(self, stopevent):
         """
         THREADED PROCESS
         Reads and parses NMEA message data from stream
         """
 
-        while self._reading and self._serial_object:
+        while not stopevent.is_set():
             if self._serial_object.in_waiting:
                 try:
                     (raw_data, parsed_data) = self._nmeareader.read()
@@ -155,7 +159,7 @@ class NMEAStreamer:
         Set GPS data dictionary from RMC, GGA and GSA sentences.
         """
 
-        print(parsed_data)
+        # print(parsed_data)
         if parsed_data.msgID == "RMC":
             self.gpsdata["date"] = str(parsed_data.date)
             self.gpsdata["time"] = str(parsed_data.time)
@@ -191,11 +195,17 @@ if __name__ == "__main__":
 
     ADDRESS = "localhost"
     TCPPORT = 8080
-    # Edit these for your serial GPS device:
-    SERIALPORT = "/dev/tty.usbmodem141101"  # "/dev/ttyACM1"
-    BAUD = 38400
+    # set port, baudrate and timeout to suit your device configuration
+    if platform == "win32":  # Windows
+        port = "COM13"
+    elif platform == "darwin":  # MacOS
+        port = "/dev/tty.usbmodem14101"
+    else:  # Linux
+        port = "/dev/ttyACM1"
+    baudrate = 9600
+    timeout = 0.1
 
-    gps = NMEAStreamer(SERIALPORT, BAUD)
+    gps = NMEAStreamer(port, baudrate, timeout)
     httpd = GPSHTTPServer((ADDRESS, TCPPORT), GPSHTTPHandler, gps)
 
     if gps.connect():
@@ -205,7 +215,7 @@ if __name__ == "__main__":
             + ADDRESS
             + ":"
             + str(TCPPORT)
-            + " ...\n"
+            + " ...\nPress Ctrl-C to terminate.\n"
         )
         httpd_thread = Thread(target=httpd.serve_forever, daemon=True)
         httpd_thread.start()
@@ -214,10 +224,10 @@ if __name__ == "__main__":
             while True:
                 pass
         except KeyboardInterrupt:
-            print("\n\nInterrupted by user\n\n")
+            print("\n\nTerminated by user\n\n")
 
         httpd.shutdown()
         gps.stop_read_thread()
         sleep(2)  # wait for shutdown
         gps.disconnect()
-        print("\nTest Complete")
+        print("\nProcessing Complete")

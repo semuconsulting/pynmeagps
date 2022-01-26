@@ -227,7 +227,7 @@ b'$EIGNQ,RMC*24\r\n'
 ---
 ## <a name="examples">Examples</a>
 
-The following command line examples can be found in the `\examples` folder:
+The following command line examples can be found in the `/examples` folder:
 
 1. `nmeapoller.py` illustrates how to implement a threaded serial reader for NMEA messages using `pynmeagps.NMEAReader` and send poll requests for a variety of NMEA message types. 
 
@@ -235,7 +235,7 @@ The following command line examples can be found in the `\examples` folder:
 
 1. `gpxtracker.py` illustrates a simple utility to convert an NMEA datalog file to a `*.gpx` track file using `pynmeagps.NMEAReader`.
 
-1. `/webserver/gpsstreamer.py` illustrates a simple HTTP web server wrapper around a threaded pynmeagps streaming and parsing service. To use, cd to the `/examples/webserver` folder, execute the `gpsstreamer.py` module and direct your browser to http://localhost:8080. The web page will update dynamically every 5 seconds. You can also access the parsed NMEA data directly via the REST API http://localhost:8080/gps.
+1. `/webserver/nmeaserver.py` illustrates a simple HTTP web server wrapper around `pynmeagps.NMEAReader`; it presents data from selected NMEA messages as a web page http://localhost:8080 or a RESTful API http://localhost:8080/gps.
 
 ---
 ## <a name="extensibility">Extensibility</a>
