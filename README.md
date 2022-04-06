@@ -44,7 +44,7 @@ Contributions welcome, particularly any standard or proprietary NMEA message def
 ---
 ## <a name="installation">Installation</a>
 
-`pynmeagps` is compatible with Python 3.6+ and has no third-party library dependencies.
+`pynmeagps` is compatible with Python >=3.7 and has no third-party library dependencies.
 
 In the following, `python` & `pip` refer to the Python 3 executables. You may need to type 
 `python3` or `pip3`, depending on your particular environment.
