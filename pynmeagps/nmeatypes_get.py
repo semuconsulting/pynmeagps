@@ -171,8 +171,8 @@ NMEA_PAYLOADS_GET = {
                 "residual": DE,
             },
         ),
-        "systemId": IN,  # NMEA >=4.10 only
-        "signalId": IN,  # NMEA >=4.10 only
+        "systemId": HX,  # NMEA >=4.10 only
+        "signalId": HX,  # NMEA >=4.10 only
     },
     "GSA": {
         "opMode": CH,
