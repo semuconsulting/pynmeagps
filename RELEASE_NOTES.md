@@ -1,6 +1,14 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.9
+
+FIXES:
+
+1. GRS message definition updated - `systemId` and `signalId` now correctly defined as HX rather than IN.
+
 ### RELEASE 1.0.8
+
+ENHANCEMENTS:
 
 1. `identity` property added to NMEAMessage for consistency with companion `pyubx2` library - identity = (talker+msgID)
 2. internal refactoring of error handling in `NMEAReader.read()` method to make it more consistent with `pyubx2` when processing corrupted data streams.
