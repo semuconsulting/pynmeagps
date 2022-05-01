@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.10
+
+FIXES:
+
+1. GBS and GSA message definitions updated - `systemId` and `signalId` now correctly defined as HX rather than IN.
+
 ### RELEASE 1.0.9
 
 FIXES:
