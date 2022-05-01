@@ -119,8 +119,8 @@ NMEA_PAYLOADS_GET = {
         "prob": DE,
         "bias": DE,
         "stddev": DE,
-        "systemId": IN,  # NMEA >=4.10 only
-        "signalId": IN,  # NMEA >=4.10 only
+        "systemId": HX,  # NMEA >=4.10 only
+        "signalId": HX,  # NMEA >=4.10 only
     },
     "GGA": {
         "time": TM,
@@ -186,7 +186,7 @@ NMEA_PAYLOADS_GET = {
         "PDOP": DE,
         "HDOP": DE,
         "VDOP": DE,
-        "systemId": IN,  # NMEA >=4.10 only
+        "systemId": HX,  # NMEA >=4.10 only
     },
     "GST": {
         "time": TM,
