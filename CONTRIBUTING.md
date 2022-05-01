@@ -16,8 +16,8 @@ Please help us keep our issue list small by adding fixes: #{$ISSUE_NO} to the co
   * We endeavour to keep the core code as generic and reusable as possible, and limit the amount of exceptional processing dedicated to specific NMEA message types (though this is sometimes unavoidable).
   * We use Visual Studio Code for development and testing, but you are at liberty to use your preferred IDE.
   * We document the code in accordance with [Sphinx](https://www.sphinx-doc.org/en/master/) docstring conventions.
-  * We use [pylint](https://pypi.org/project/pylint/) (>=2.6.0) for code analysis.
-  * We use [black](https://pypi.org/project/black/) (>= 20.8) for code formatting.
+  * We use [pylint](https://pypi.org/project/pylint/) (>=2.12) for code analysis.
+  * We use [black](https://pypi.org/project/black/) (>= 22.0) for code formatting.
 
 ## Testing
 
@@ -26,9 +26,9 @@ We use python's native unittest framework for local unit testing, complemented b
 Please write unittest examples for new code you create and add them to the `/tests` folder following the naming convention `test_*.py`.
 
 We test on the following platforms:
-* Windows 10
-* MacOS (Big Sur)
-* Linux (Ubuntu Bionic)
+* Windows 10 & 11
+* MacOS (12 Monterey)
+* Linux (22.04 LTS Jammy Jellyfish)
 * Raspberry Pi OS (32-bit)
 
 ## Submitting changes

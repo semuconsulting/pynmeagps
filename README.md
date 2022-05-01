@@ -19,7 +19,10 @@ The intention is to make it as easy as possible to read, parse and utilise NMEA 
 
 The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmeagps](https://github.com/semuconsulting/pynmeagps).
 
-**FYI** There is a companion library [pyubx2](http://github.com/semuconsulting/pyubx2), which handles u-blox &trade; UBX &copy; protocol GNSS/GPS messages.
+**FYI** There are companion libraries which handle UBX &copy; and RTCM3 &copy; messages:
+
+- [pyubx2](http://github.com/semuconsulting/pyubx2)
+- [pyrtcm](http:/github.com/semuconsulting/pyrtcm)
 
 ---
 ## <a name="currentstatus">Current Status</a>
@@ -33,11 +36,11 @@ The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmea
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pynmeagps.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pynmeagps)
 
-At time of writing the library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. Additional NMEA 'talkers' may be added in due course. While the NMEA 0183 protocol itself is proprietary, the definitions here have been collated from public domain sources.
+The library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. While the NMEA 0183 protocol itself is proprietary, the definitions here have been collated from public domain sources.
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pynmeagps](https://www.semuconsulting.com/pynmeagps).
 
-Contributions welcome, particularly any standard or proprietary NMEA message definitions not yet included - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pynmeagps/blob/master/CONTRIBUTING.md).
+Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pynmeagps/blob/master/CONTRIBUTING.md).
 
 [Bug reports](https://github.com/semuconsulting/pynmeagps/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) and [Feature requests](https://github.com/semuconsulting/pynmeagps/blob/master/.github/ISSUE_TEMPLATE/feature_request.md) - please use the templates provided.
 
