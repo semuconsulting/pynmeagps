@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.11
+
+ENHANCEMENTS:
+
+1. Add capability to read from TCP/UDP socket as well as serial stream. Utilises a SocketStream utility class to allow sockets to be read using standard stream-like read(bytes) and readline() methods.
+
+
 ### RELEASE 1.0.10
 
 FIXES:

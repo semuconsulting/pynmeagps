@@ -7,12 +7,18 @@ Created on 4 Mar 2021
 """
 # pylint: disable=wrong-import-position, invalid-name
 
-from ._version import __version__
-from .exceptions import NMEAMessageError, NMEAParseError, NMEATypeError, NMEAStreamError
-from .nmeamessage import NMEAMessage
-from .nmeareader import NMEAReader
-from .nmeatypes_core import *
-from .nmeatypes_get import *
-from .nmeahelpers import *
+from pynmeagps._version import __version__
+from pynmeagps.exceptions import (
+    NMEAMessageError,
+    NMEAParseError,
+    NMEATypeError,
+    NMEAStreamError,
+)
+from pynmeagps.nmeamessage import NMEAMessage
+from pynmeagps.nmeareader import NMEAReader
+from pynmeagps.socket_stream import SocketStream
+from pynmeagps.nmeatypes_core import *
+from pynmeagps.nmeatypes_get import *
+from pynmeagps.nmeahelpers import *
 
 version = __version__
