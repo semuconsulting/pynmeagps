@@ -2,7 +2,7 @@
 nmeasocket.py
 
 A simple example implementation of a GNSS socket reader
-using the pynmeagps.UBXReader iterator functions.
+using the pynmeagps.NMEAReader iterator functions.
 
 Created on 05 May 2022
 @author: semuadmin
