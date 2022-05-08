@@ -21,7 +21,7 @@ The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmea
 
 **FYI** There are companion libraries which handle UBX &copy; and RTCM3 &copy; messages:
 
-- [pyubx2](http://github.com/semuconsulting/pyubx2)
+- [pyubx2](http://github.com/semuconsulting/pyubx2) (**FYI** installing `pyubx2` via pip also installs `pynmeagps` and `pyrtcm`)
 - [pyrtcm](http:/github.com/semuconsulting/pyrtcm)
 
 ---
@@ -74,8 +74,6 @@ source env/bin/activate (or env\Scripts\activate on Windows)
 deactivate
 ```
 
-**FYI** since version 1.2.4, installing the companion UBX library `pyubx2` via pip also installs `pynmeagps`.
-
 ---
 ## <a name="reading">Reading (Streaming)</a>
 
@@ -85,7 +83,7 @@ class pynmeagps.nmeareader.NMEAReader(stream, **kwargs)
 
 You can create an `NMEAReader` object by calling the constructor with an active stream object. 
 The stream object can be any data stream which supports a `read(n) -> bytes` method (e.g. File or Serial, with 
-or without a buffer wrapper).
+or without a buffer wrapper). `pynmeagps` implements an internal `SocketStream` class to allow sockets to be read in the same way as other streams (see example below).
 
 Individual input NMEA messages can then be read using the `NMEAReader.read()` function, which returns both the raw data (as bytes) and the parsed data (as an `NMEAMessage` object, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `NMEAReader` also implements an iterator.
 
@@ -120,6 +118,17 @@ Examples:
 >>> nmr = NMEAReader(stream, nmeaonly=True)
 >>> for (raw_data, parsed_data) in nmr: print(parsed_data)
 ...
+```
+
+Example - Socket input (using enhanced iterator):
+
+```python
+>>> import socket
+>>> from pynmeagps import NMEAReader
+>>> stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
+>>> stream.connect(("localhost", 50007))
+>>> nmr = NMEAReader(stream)
+>>> for (raw_data, parsed_data) in nmr.iterate(): print(parsed_data)
 ```
 
 ---
@@ -234,7 +243,9 @@ The following command line examples can be found in the `/examples` folder:
 
 1. `nmeapoller.py` illustrates how to implement a threaded serial reader for NMEA messages using `pynmeagps.NMEAReader` and send poll requests for a variety of NMEA message types. 
 
-1. `nmeafile.py` illustrates how to implement an NMEA datalog file reader using `pynmeagps.NMEAReader` iterator functionality. 
+1. `nmeafile.py` illustrates how to implement an NMEA datalog file reader using `pynmeagps.NMEAReader` iterator functionality.
+
+1. `nmeasocket.py` illustrates how to implement a TCP Socket reader for NMEA messages using NMEAReader iterator functionality.
 
 1. `gpxtracker.py` illustrates a simple utility to convert an NMEA datalog file to a `*.gpx` track file using `pynmeagps.NMEAReader`.
 

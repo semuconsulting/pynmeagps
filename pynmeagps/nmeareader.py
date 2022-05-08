@@ -4,6 +4,8 @@ NMEAReader class.
 Reads and parses individual NMEA GNSS/GPS messages from
 any stream which supports a read(n) -> bytes method.
 
+Can also read from socket via SocketStream wrapper.
+
 Returns both the raw binary data (as bytes) and the parsed
 data (as a NMEAMessage object).
 
@@ -19,6 +21,8 @@ Created on 4 Mar 2021
 :license: BSD 3-Clause
 """
 
+from socket import socket
+from pynmeagps.socket_stream import SocketStream
 from pynmeagps.nmeamessage import NMEAMessage
 import pynmeagps.exceptions as nme
 from pynmeagps.nmeahelpers import (
@@ -41,10 +45,16 @@ class NMEAReader:
         :param bool nmeaonly (kwarg): True = error on non-NMEA data, False = ignore non-NMEA data
         :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID
         :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
+        :param int bufsize: (kwarg) socket recv buffer size (4096)
         :raises: NMEAStreamError (if mode is invalid)
 
         """
 
+        bufsize = int(kwargs.get("bufsize", 4096))
+        if isinstance(stream, socket):
+            self._stream = SocketStream(stream, bufsize=bufsize)
+        else:
+            self._stream = stream
         nmeaonly = kwargs.get("nmeaonly", False)
         validate = kwargs.get("validate", VALCKSUM)
         msgmode = kwargs.get("msgmode", 0)
@@ -52,8 +62,6 @@ class NMEAReader:
             raise nme.NMEAStreamError(
                 f"Invalid stream mode {msgmode} - must be 0, 1 or 2."
             )
-
-        self._stream = stream
         self._nmea_only = nmeaonly
         self._validate = validate
         self._mode = msgmode
