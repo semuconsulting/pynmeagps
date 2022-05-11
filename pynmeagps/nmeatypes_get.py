@@ -306,6 +306,10 @@ NMEA_PAYLOADS_GET = {
     "STN": {
         "talkerId": ST,
     },
+    "THS": {
+        "headt": DE,
+        "mi": CH,
+    },
     "TRF": {
         "time": TM,
         "date": DT,

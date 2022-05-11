@@ -225,6 +225,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GNGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041033, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=23, svid_02=24, svid_03=20, svid_04=12, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=1)>",
             "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
+            "<NMEA(GPTHS, headt=23.34, mi=A)>",
         )
 
         i = 0
@@ -244,6 +245,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GNGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041033, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=23, svid_02=24, svid_03=20, svid_04=12, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=1)>",
             "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
+            "<NMEA(GPTHS, headt=23.34, mi=A)>",
         )
 
         i = 0
@@ -251,6 +253,7 @@ class StreamTest(unittest.TestCase):
         nmr = NMEAReader(self.streamNMEA4SM, nmeaonly=False)
         for (raw, parsed) in nmr.iterate():
             if raw is not None:
+                print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
 
