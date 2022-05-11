@@ -253,7 +253,6 @@ class StreamTest(unittest.TestCase):
         nmr = NMEAReader(self.streamNMEA4SM, nmeaonly=False)
         for (raw, parsed) in nmr.iterate():
             if raw is not None:
-                print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
 
