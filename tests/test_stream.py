@@ -78,6 +78,9 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+        self.assertEqual(
+            i, 12
+        )  # if this fails, may be because log file terminators = LF rather than CRLF
 
     def testNMEA4(
         self,
@@ -141,6 +144,7 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+        self.assertEqual(i, 48)
 
     def testNMEA2(self):  # stream of NMEA v2.30 device (u-blox M6N)
         EXPECTED_RESULTS = (
@@ -171,6 +175,7 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+        self.assertEqual(i, 17)
 
     def testMIXED(
         self,
@@ -201,6 +206,7 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+        self.assertEqual(i, 15)
 
     def testMIXED2(
         self,
@@ -235,6 +241,7 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+        self.assertEqual(i, 8)
 
     def testNMEAITERATE(self):  # NMEAReader iterate() helper method
         EXPECTED_RESULTS = (
@@ -255,6 +262,7 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+        self.assertEqual(i, 8)
 
     def testNMEAITERATE_ERR1(
         self,
