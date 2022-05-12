@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.12
+
+CHANGES:
+
+1. Add support for THS message type.
+1. Extend test coverage for socket handler.
+
 ### RELEASE 1.0.11
 
 ENHANCEMENTS:
