@@ -122,15 +122,16 @@ def dmm2ddd(pos: str, att: str) -> float:
 
     """
 
-    if pos == "" or att not in (LA, LN):
+    try:
+        if att == LA:
+            posdeg = float(pos[0:2])
+            posmin = float(pos[2:])
+        else:
+            posdeg = float(pos[0:3])
+            posmin = float(pos[3:])
+        return round((posdeg + posmin / 60), 8)
+    except (TypeError, ValueError):
         return ""
-    if att == LA:
-        posdeg = float(pos[0:2])
-        posmin = float(pos[2:])
-    else:
-        posdeg = float(pos[0:3])
-        posmin = float(pos[3:])
-    return round((posdeg + posmin / 60), 8)
 
 
 def ddd2dmm(degrees: float, att: str) -> str:
@@ -145,16 +146,17 @@ def ddd2dmm(degrees: float, att: str) -> str:
 
     """
 
-    if not isinstance(degrees, (float, int)) or att not in (LA, LN):
+    try:
+        degrees = abs(degrees)
+        degrees, minutes = divmod(degrees * 60, 60)
+        degrees = int(degrees * 100)
+        if att == "LA":
+            dmm = format(degrees + minutes, "011f")[0:10]
+        else:  # LN
+            dmm = format(degrees + minutes, "012f")[0:11]
+        return dmm
+    except (TypeError, ValueError):
         return ""
-    degrees = abs(degrees)
-    degrees, minutes = divmod(degrees * 60, 60)
-    degrees = int(degrees * 100)
-    if att == "LA":
-        dmm = format(degrees + minutes, "011f")[0:10]
-    else:  # LN
-        dmm = format(degrees + minutes, "012f")[0:11]
-    return dmm
 
 
 def date2utc(dates: str) -> datetime.date:
@@ -166,10 +168,11 @@ def date2utc(dates: str) -> datetime.date:
     :rtype: datetime.date
     """
 
-    if dates == "":
+    try:
+        utc = datetime.strptime(dates, "%d%m%y")
+        return utc.date()
+    except (TypeError, ValueError):
         return ""
-    utc = datetime.strptime(dates, "%d%m%y")
-    return utc.date()
 
 
 def time2utc(times: str) -> datetime.time:
@@ -181,10 +184,11 @@ def time2utc(times: str) -> datetime.time:
     :rtype: datetime.time
     """
 
-    if times == "":
+    try:
+        utc = datetime.strptime(times, "%H%M%S.%f")
+        return utc.time()
+    except (TypeError, ValueError):
         return ""
-    utc = datetime.strptime(times, "%H%M%S.%f")
-    return utc.time()
 
 
 def time2str(tim: datetime.time) -> str:
@@ -196,7 +200,10 @@ def time2str(tim: datetime.time) -> str:
     :rtype: str
     """
 
-    return tim.strftime("%H%M%S.%f")[0:9]
+    try:
+        return tim.strftime("%H%M%S.%f")[0:9]
+    except (TypeError, ValueError):
+        return ""
 
 
 def date2str(dat: datetime.date) -> str:
@@ -208,7 +215,10 @@ def date2str(dat: datetime.date) -> str:
     :rtype: str
     """
 
-    return dat.strftime("%d%m%y")
+    try:
+        return dat.strftime("%d%m%y")
+    except (TypeError, ValueError):
+        return ""
 
 
 def deg2dms(degrees: float, att: str) -> str:
@@ -223,25 +233,26 @@ def deg2dms(degrees: float, att: str) -> str:
 
     """
 
-    if not isinstance(degrees, (float, int)):
+    try:
+        negative = degrees < 0
+        degrees = abs(degrees)
+        minutes, seconds = divmod(degrees * 3600, 60)
+        degrees, minutes = divmod(minutes, 60)
+        if negative:
+            sfx = "S" if att == "LA" else "W"
+        else:
+            sfx = "N" if att == "LA" else "E"
+        return (
+            str(int(degrees))
+            + "\u00b0"
+            + str(int(minutes))
+            + "\u2032"
+            + str(round(seconds, 3))
+            + "\u2033"
+            + sfx
+        )
+    except (TypeError, ValueError):
         return ""
-    negative = degrees < 0
-    degrees = abs(degrees)
-    minutes, seconds = divmod(degrees * 3600, 60)
-    degrees, minutes = divmod(minutes, 60)
-    if negative:
-        sfx = "S" if att == "LA" else "W"
-    else:
-        sfx = "N" if att == "LA" else "E"
-    return (
-        str(int(degrees))
-        + "\u00b0"
-        + str(int(minutes))
-        + "\u2032"
-        + str(round(seconds, 3))
-        + "\u2033"
-        + sfx
-    )
 
 
 def deg2dmm(degrees: float, att: str) -> str:
@@ -256,16 +267,17 @@ def deg2dmm(degrees: float, att: str) -> str:
 
     """
 
-    if not isinstance(degrees, (float, int)):
+    try:
+        negative = degrees < 0
+        degrees = abs(degrees)
+        degrees, minutes = divmod(degrees * 60, 60)
+        if negative:
+            sfx = "S" if att == "LA" else "W"
+        else:
+            sfx = "N" if att == "LA" else "E"
+        return str(int(degrees)) + "\u00b0" + str(round(minutes, 5)) + "\u2032" + sfx
+    except (TypeError, ValueError):
         return ""
-    negative = degrees < 0
-    degrees = abs(degrees)
-    degrees, minutes = divmod(degrees * 60, 60)
-    if negative:
-        sfx = "S" if att == "LA" else "W"
-    else:
-        sfx = "N" if att == "LA" else "E"
-    return str(int(degrees)) + "\u00b0" + str(round(minutes, 5)) + "\u2032" + sfx
 
 
 def knots2spd(knots: float, unit: str = "MS") -> float:
