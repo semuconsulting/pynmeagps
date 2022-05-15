@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.13
+
+FIXES:
+
+1. When manually creating NMEA Messages, the nominal (default) value of time and date fields is now set to UTC time rather than local time. This is relevant, for example, when constructing NMEA GGA messages to send to NTRIP casters.
+
 ### RELEASE 1.0.12
 
 CHANGES:
