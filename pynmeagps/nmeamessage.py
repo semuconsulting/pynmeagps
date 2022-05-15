@@ -10,7 +10,7 @@ Created on 04 Mar 2021
 # pylint: disable=invalid-name
 
 import struct
-import datetime
+from datetime import datetime, timezone
 import pynmeagps.exceptions as nme
 import pynmeagps.nmeatypes_core as nmt
 import pynmeagps.nmeatypes_get as nmg
@@ -499,9 +499,9 @@ class NMEAMessage:
         elif att == nmt.IN:
             val = 0
         elif att == nmt.TM:
-            val = datetime.datetime.now().time()
+            val = datetime.now(timezone.utc).time()
         elif att == nmt.DT:
-            val = datetime.datetime.now().date()
+            val = datetime.now(timezone.utc).date()
         else:
             raise nme.NMEATypeError(f"Unknown attribute type {att}.")
         return val
