@@ -202,7 +202,7 @@ def time2str(tim: datetime.time) -> str:
 
     try:
         return tim.strftime("%H%M%S.%f")[0:9]
-    except (TypeError, ValueError):
+    except (AttributeError, TypeError, ValueError):
         return ""
 
 
@@ -217,7 +217,7 @@ def date2str(dat: datetime.date) -> str:
 
     try:
         return dat.strftime("%d%m%y")
-    except (TypeError, ValueError):
+    except (AttributeError, TypeError, ValueError):
         return ""
 
 

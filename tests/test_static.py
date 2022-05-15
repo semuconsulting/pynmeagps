@@ -114,10 +114,14 @@ class StaticTest(unittest.TestCase):
     def testTime2str(self):
         res = nmh.time2str(datetime.time(8, 11, 23))
         self.assertEqual(res, "081123.00")
+        res = nmh.time2str("wsdfasdf")
+        self.assertEqual(res, "")
 
     def testDate2str(self):
         res = nmh.date2str(datetime.date(2021, 3, 7))
         self.assertEqual(res, "070321")
+        res = nmh.date2str("wsdfasdf")
+        self.assertEqual(res, "")
 
     def testdeg2dms(self):
         res = nmh.deg2dms(53.346, "LA")
