@@ -273,7 +273,6 @@ class NMEAMessage:
         :return: number of repeats
         :rtype: int
         """
-        # pylint: disable=no-self-use
 
         lenpayload = len(payload) - pindex - pindexend
         lengroup = len(attd)

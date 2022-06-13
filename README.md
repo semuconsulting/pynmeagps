@@ -272,6 +272,8 @@ can be readily added to the appropriate dictionary. Message payload definitions 
 ---
 ## <a name="cli">Command Line Utility</a>
 
+**DEPRECATION NOTICE:** The `nmeadump` and `gnssdump` CLI utilities will be moving to the `pygnssutils` library in subsequent versions, along with a range of other GNSS and RTK utilities.
+
 If `pynmeagps` is installed using pip, a simple command line utility `nmeadump` is automatically installed into the Python 3 scripts (bin) directory. This utility streams the parsed NMEA output of a GNSS/GPS device to the terminal.
 
 Assuming the Python 3 scripts (bin) directory is in your PATH, the utility may be invoked thus (all args are optional):
@@ -289,8 +291,6 @@ Args:
 For help, type:
 
 `nmeadump -h`
-
-**FYI:** As of version 1.2.4, the companion library `pyubx2` incorporates a more fully-featured command line utility `gnssdump` which supports both NMEA and UBX protocols via any stream type (including Serial and File). See https://github.com/semuconsulting/pyubx2#cli for further details.
 
 ---
 ## <a name="gui">Graphical Client</a>
