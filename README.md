@@ -272,25 +272,17 @@ can be readily added to the appropriate dictionary. Message payload definitions 
 ---
 ## <a name="cli">Command Line Utility</a>
 
-**DEPRECATION NOTICE:** The `nmeadump` and `gnssdump` CLI utilities will be moving to the `pygnssutils` library in subsequent versions, along with a range of other GNSS and RTK utilities.
+A command line utility `gnssdump` is available via the `pygnssutils` package. This is capable of reading and parsing NMEA, UBX and RTCM3 data from a variety of input sources (e.g. serial, socket and file) and outputting to a variety of media in a variety of formats. See https://github.com/semuconsulting/pygnssutils for further details.
 
-If `pynmeagps` is installed using pip, a simple command line utility `nmeadump` is automatically installed into the Python 3 scripts (bin) directory. This utility streams the parsed NMEA output of a GNSS/GPS device to the terminal.
+To install `pygnssutils`:
+```
+python3 -m pip install --upgrade pygnssutils
+```
 
-Assuming the Python 3 scripts (bin) directory is in your PATH, the utility may be invoked thus (all args are optional):
-
-`nmeadump port=/dev/ttyACM1 baud=9600 timeout=5 output=0 nmea_only=0 validate=1 filter=*`
-
-Args:
-
-`output`: 0 = parsed (default), 1 = binary, 2 = hexadecimal
-
-`nmea_only`: 0 = ignore any non-NMEA data (default), 1 = terminate on any non-NMEA data (e.g. UBX).
-
-`filter`: optional comma-separated list of specific NMEA message identities to display e.g. `filter=GGA,RMC` (defaults to "*" - all NMEA messages).
-
-For help, type:
-
-`nmeadump -h`
+For help with the `gnssdump` utility, type:
+```
+gnssdump -h
+```
 
 ---
 ## <a name="gui">Graphical Client</a>
