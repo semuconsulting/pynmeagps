@@ -1,6 +1,13 @@
 # pynmeagps Release Notes
 
-### RELEASE 1.0.13
+### RELEASE 1.0.14
+
+CHANGES:
+
+1. `nmeadump` CLI utility has been removed and replaced by the `gnssdump` utility available via the `pygnssutils` PyPi package.
+2. Python 3.11 classifier added to setup.
+
+### RELEASE 1.0.13.
 
 FIXES:
 
