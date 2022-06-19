@@ -21,7 +21,7 @@ class FillTest(unittest.TestCase):
         pass
 
     def testFill_GNGLL(self):  # test GET constructor with full payload keyword
-        EXPECTED_RESULT = "<NMEA(GNGLL, lat=-53.45071983, NS=S, lon=2.24023267, EW=E, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=-53.4507198333, NS=S, lon=2.2402326667, EW=E, time=22:32:32, status=A, posMode=A)>"
         res = NMEAMessage(
             "GN",
             "GLL",

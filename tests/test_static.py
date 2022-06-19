@@ -83,9 +83,9 @@ class StaticTest(unittest.TestCase):
 
     def testDMM2DDD(self):
         res = nmh.dmm2ddd("5314.12345", "LA")
-        self.assertEqual(res, 53.23539083)
+        self.assertEqual(res, 53.2353908333)
         res = nmh.dmm2ddd("00214.12345", "LN")
-        self.assertEqual(res, 2.23539083)
+        self.assertEqual(res, 2.2353908333)
         res = nmh.dmm2ddd("12825.12344", "LN")
         self.assertEqual(res, 128.418724)
 

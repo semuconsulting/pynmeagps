@@ -115,7 +115,7 @@ def dmm2ddd(pos: str, att: str) -> float:
     """
     Convert NMEA lat/lon string to (unsigned) decimal degrees.
 
-    :param str pos: (d)ddmm.mmmm
+    :param str pos: (d)ddmm.mmmmm
     :param str att: 'LA' (lat) or 'LN' (lon)
     :return: pos as decimal degrees
     :rtype: float
@@ -129,15 +129,16 @@ def dmm2ddd(pos: str, att: str) -> float:
         else:
             posdeg = float(pos[0:3])
             posmin = float(pos[3:])
-        return round((posdeg + posmin / 60), 8)
+        return round((posdeg + posmin / 60), 10)
     except (TypeError, ValueError):
         return ""
 
 
 def ddd2dmm(degrees: float, att: str) -> str:
     """
-    Convert decimal degrees to degrees decimal minutes string
-    (i.e. the native NMEA format).
+    Convert decimal degrees to native NMEA degrees decimal
+    minutes string (NB: standard NMEA only supports 5dp
+    minutes precision).
 
     :param float degrees: degrees
     :param str att: 'LA' (lat) or 'LN' (lon)
@@ -247,7 +248,7 @@ def deg2dms(degrees: float, att: str) -> str:
             + "\u00b0"
             + str(int(minutes))
             + "\u2032"
-            + str(round(seconds, 3))
+            + str(round(seconds, 5))
             + "\u2033"
             + sfx
         )
@@ -275,7 +276,7 @@ def deg2dmm(degrees: float, att: str) -> str:
             sfx = "S" if att == "LA" else "W"
         else:
             sfx = "N" if att == "LA" else "E"
-        return str(int(degrees)) + "\u00b0" + str(round(minutes, 5)) + "\u2032" + sfx
+        return str(int(degrees)) + "\u00b0" + str(round(minutes, 7)) + "\u2032" + sfx
     except (TypeError, ValueError):
         return ""
 

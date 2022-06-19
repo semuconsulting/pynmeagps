@@ -32,7 +32,7 @@ class ParseTest(unittest.TestCase):
         self.assertEqual(
             str(res),
             (
-                "<NMEA(GNGLL, lat=-53.45071983, NS=S, lon=2.24023267, EW=E, time=22:32:32, status=A, posMode=A)>"
+                "<NMEA(GNGLL, lat=-53.4507198333, NS=S, lon=2.2402326667, EW=E, time=22:32:32, status=A, posMode=A)>"
             ),
         )
 
@@ -41,7 +41,7 @@ class ParseTest(unittest.TestCase):
         self.assertEqual(
             str(res),
             (
-                "<NMEA(PUBX, msgId=00, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041033, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, PDOP=8.09, numSVs=6, reserved=0, DR=0)>"
+                "<NMEA(PUBX, msgId=00, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, PDOP=8.09, numSVs=6, reserved=0, DR=0)>"
             ),
         )
 
