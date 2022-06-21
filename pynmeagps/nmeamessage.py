@@ -45,6 +45,7 @@ class NMEAMessage:
         :param str talker: message talker e.g. "GP" or "P"
         :param str msgID: message ID e.g. "GGA"
         :param int msgmode: mode (0=GET, 1=SET, 2=POLL)
+        :param bool hpnmeamode: (kwarg) high precision lat/lon mode (7dp rather than 5dp)
         :param kwargs: keyword arg(s) representing all or some payload attributes
         :raises: NMEAMessageError
 
@@ -69,6 +70,8 @@ class NMEAMessage:
             )
 
         self._mode = msgmode
+        # high precision NMEA mode returns NMEA lat/lon to 7dp rather than 5dp
+        self._hpnmeamode = kwargs.get("hpnmeamode", False)
         self._talker = talker
         self._msgID = msgID
         self._do_attributes(**kwargs)
@@ -188,9 +191,6 @@ class NMEAMessage:
         """
         # pylint: disable=no-member
 
-        # high precision NMEA mode returns NMEA lat/lon to 7dp rather than 5dp
-        hpnmeamode = kwargs.get("hpnmeamode", False)
-
         # if attribute is part of a (nested) repeating group, suffix name with group index
         keyr = key
         for i in gindex:  # one index for each nested level
@@ -206,7 +206,7 @@ class NMEAMessage:
             # the rest will be set to a nominal value
             else:
                 val = kwargs.get(keyr, self.nomval(att))
-                vals = self.val2str(val, att, hpnmeamode)
+                vals = self.val2str(val, att, self._hpnmeamode)
                 self._payload.append(vals)
 
         except IndexError:  # probably just an older device missing NMEA <=4.10 dict attributes

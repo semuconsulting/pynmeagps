@@ -30,6 +30,44 @@ class FillTest(unittest.TestCase):
         )
         self.assertEqual(str(res), EXPECTED_RESULT)
 
+    def testFill_GNGLL_HP(self):  # test GET constructor in high precision mode
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = ["4307.4074073", "N", "00259.2592593", "W", "", "A", "A"]
+        res = NMEAMessage(
+            "GN",
+            "GLL",
+            GET,
+            lat=43.123456789,
+            NS="N",
+            lon=2.987654321,
+            EW="W",
+            time="22:32:32",
+            status="A",
+            posMode="A",
+            hpnmeamode=1,
+        )
+        self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.payload, EXPECTED_PAYLOAD)
+
+    def testFill_GNGLL_SP(self):  # test GET constructor in standard precision mode
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "W", "", "A", "A"]
+        res = NMEAMessage(
+            "GN",
+            "GLL",
+            GET,
+            lat=43.123456789,
+            NS="N",
+            lon=2.987654321,
+            EW="W",
+            time="22:32:32",
+            status="A",
+            posMode="A",
+            hpnmeamode=0,
+        )
+        self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.payload, EXPECTED_PAYLOAD)
+
     def testFill_GNGLLUPD(self):  # test that NMEAMessage is immutable after init
         EXPECTED_ERROR = (
             "Object is immutable. Updates to lon not permitted after initialisation."
