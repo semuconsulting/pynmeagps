@@ -134,15 +134,17 @@ def dmm2ddd(pos: str, att: str) -> float:
         return ""
 
 
-def ddd2dmm(degrees: float, att: str) -> str:
+def ddd2dmm(degrees: float, att: str, hpmode: bool = False) -> str:
     """
     Convert decimal degrees to native NMEA degrees decimal
     minutes string (NB: standard NMEA only supports 5dp
-    minutes precision).
+    minutes precision - a high precision mode offers 7dp
+    precision but this may not be accepted by all NMEA parsers).
 
     :param float degrees: degrees
     :param str att: 'LA' (lat) or 'LN' (lon)
-    :return: degrees as dm.m formatted string
+    :param bool hpmode: high precision mode (7dp rather than 5dp)
+    :return: degrees as (d)ddmm.mmmmm(mm) formatted string
     :rtype: str
 
     """
@@ -151,10 +153,16 @@ def ddd2dmm(degrees: float, att: str) -> str:
         degrees = abs(degrees)
         degrees, minutes = divmod(degrees * 60, 60)
         degrees = int(degrees * 100)
-        if att == "LA":
-            dmm = format(degrees + minutes, "011f")[0:10]
-        else:  # LN
-            dmm = format(degrees + minutes, "012f")[0:11]
+        if hpmode:
+            if att == "LA":
+                dmm = f"{degrees + minutes:.7f}".zfill(12)
+            else:  # LN
+                dmm = f"{degrees + minutes:.7f}".zfill(13)
+        else:
+            if att == "LA":
+                dmm = f"{degrees + minutes:.5f}".zfill(10)
+            else:  # LN
+                dmm = f"{degrees + minutes:.5f}".zfill(11)
         return dmm
     except (TypeError, ValueError):
         return ""
@@ -243,15 +251,7 @@ def deg2dms(degrees: float, att: str) -> str:
             sfx = "S" if att == "LA" else "W"
         else:
             sfx = "N" if att == "LA" else "E"
-        return (
-            str(int(degrees))
-            + "\u00b0"
-            + str(int(minutes))
-            + "\u2032"
-            + str(round(seconds, 5))
-            + "\u2033"
-            + sfx
-        )
+        return f"{int(degrees)}\u00b0{int(minutes)}\u2032{round(seconds,5)}\u2033{sfx}"
     except (TypeError, ValueError):
         return ""
 
@@ -276,7 +276,7 @@ def deg2dmm(degrees: float, att: str) -> str:
             sfx = "S" if att == "LA" else "W"
         else:
             sfx = "N" if att == "LA" else "E"
-        return str(int(degrees)) + "\u00b0" + str(round(minutes, 7)) + "\u2032" + sfx
+        return f"{int(degrees)}\u00b0{round(minutes,7)}\u2032{sfx}"
     except (TypeError, ValueError):
         return ""
 

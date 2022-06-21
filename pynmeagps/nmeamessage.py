@@ -188,6 +188,9 @@ class NMEAMessage:
         """
         # pylint: disable=no-member
 
+        # high precision NMEA mode returns NMEA lat/lon to 7dp rather than 5dp
+        hpnmeamode = kwargs.get("hpnmeamode", False)
+
         # if attribute is part of a (nested) repeating group, suffix name with group index
         keyr = key
         for i in gindex:  # one index for each nested level
@@ -203,7 +206,7 @@ class NMEAMessage:
             # the rest will be set to a nominal value
             else:
                 val = kwargs.get(keyr, self.nomval(att))
-                vals = self.val2str(val, att)
+                vals = self.val2str(val, att, hpnmeamode)
                 self._payload.append(vals)
 
         except IndexError:  # probably just an older device missing NMEA <=4.10 dict attributes
@@ -438,7 +441,7 @@ class NMEAMessage:
         elif att == nmt.IN:  # integer
             if vals != "":
                 val = int(vals)
-        elif att in (nmt.LA, nmt.LN):  # lat/lon (d)ddmm.mmmmm
+        elif att in (nmt.LA, nmt.LN):  # lat/lon (d)ddmm.mmmmm(mm)
             val = dmm2ddd(vals, att)
         elif att == nmt.TM:  # time hhmmss.ss
             val = time2utc(vals)
@@ -447,13 +450,14 @@ class NMEAMessage:
         return val
 
     @staticmethod
-    def val2str(val, att: str) -> str:
+    def val2str(val, att: str, hpmode: bool = False) -> str:
         """
         Convert typed value to NMEA string
         (this is the format used internally by the NMEA protocol).
 
         :param object val: typed attribute value
         :param str att: attribute type e.g. 'IN'
+        :param bool hpmode: high precision lat/lon mode (7dp rather than 5dp)
         :return: attribute value in NMEA protocol format
         :rtype: str
         :raises: NMEATypeError
@@ -469,7 +473,7 @@ class NMEAMessage:
         elif att == nmt.IN:
             vals = str(val)
         elif att in (nmt.LA, nmt.LN):
-            vals = ddd2dmm(val, att)
+            vals = ddd2dmm(val, att, hpmode)
         elif att == nmt.TM:
             vals = time2str(val)
         elif att == nmt.DT:
