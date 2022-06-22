@@ -95,6 +95,16 @@ class NMEAMessage:
             self._payload = kwargs.get("payload", [])
             self._checksum = kwargs.get("checksum", "00")
 
+            # derive NS and EW values if not provided explicitly
+            # (explicit NS or EW values take precedence over lat/lon sign)
+            if "payload" not in kwargs:
+                if "lat" in kwargs and "NS" not in kwargs:
+                    if kwargs["lat"] != "":
+                        kwargs["NS"] = "N" if kwargs["lat"] > 0 else "S"
+                if "lon" in kwargs and "EW" not in kwargs:
+                    if kwargs["lon"] != "":
+                        kwargs["EW"] = "E" if kwargs["lon"] > 0 else "W"
+
             pdict = self._get_dict(**kwargs)  # get payload definition dict
             for key in pdict.keys():  # process each attribute in dict
                 (pindex, gindex) = self._set_attribute(
@@ -223,16 +233,18 @@ class NMEAMessage:
         """
         # pylint: disable=no-member, E0203
 
-        if (
-            hasattr(self, "lat")
-            and hasattr(self, "lon")
-            and hasattr(self, "NS")
-            and hasattr(self, "EW")
-        ):
-            if self.NS == "S" and self.lat > 0:
-                self.lat = self.lat * -1
-            if self.EW == "W" and self.lon > 0:
-                self.lon = self.lon * -1
+        if hasattr(self, "lat") and hasattr(self, "NS"):
+            if self.lat != "":
+                if (self.NS == "N" and self.lat < 0) or (
+                    self.NS == "S" and self.lat > 0
+                ):
+                    self.lat = self.lat * -1
+        if hasattr(self, "lon") and hasattr(self, "EW"):
+            if self.lon != "":
+                if (self.EW == "E" and self.lon < 0) or (
+                    self.EW == "W" and self.lon > 0
+                ):
+                    self.lon = self.lon * -1
 
     def _get_dict(self, **kwargs) -> dict:
         """
