@@ -18,6 +18,9 @@ class ParseTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
         self.messageGLL = "$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n"
+        self.messageGLL_HP = (
+            "$GNGLL,5327.0431923,S,00214.4139641,E,223232.00,A,A*6C\r\n"
+        )
         self.messagePUBX = "$PUBX,00,103607.00,5327.03942,N,00214.42462,W,104.461,G3,29,31,0.085,39.63,-0.007,,5.88,7.62,8.09,6,0,0*69\r\n"
         self.messagePGRMM = "$PGRMM,WGS84*26\r\n"
         self.messagePGRMO = "$PGRMO,PGRMM,2*30\r\n"
@@ -32,16 +35,26 @@ class ParseTest(unittest.TestCase):
         self.assertEqual(
             str(res),
             (
-                "<NMEA(GNGLL, lat=-53.45071983, NS=S, lon=2.24023267, EW=E, time=22:32:32, status=A, posMode=A)>"
+                "<NMEA(GNGLL, lat=-53.4507198333, NS=S, lon=2.2402326667, EW=E, time=22:32:32, status=A, posMode=A)>"
             ),
         )
+
+    def testParseGLL_HPMODE(self):  # standard message, HP mode
+        res = NMEAReader.parse(self.messageGLL_HP)
+        self.assertEqual(
+            str(res),
+            (
+                "<NMEA(GNGLL, lat=-53.4507198717, NS=S, lon=2.240232735, EW=E, time=22:32:32, status=A, posMode=A)>"
+            ),
+        )
+        print(res.serialize())
 
     def testParsePUBX(self):  # proprietary UBX message
         res = NMEAReader.parse(self.messagePUBX)
         self.assertEqual(
             str(res),
             (
-                "<NMEA(PUBX, msgId=00, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041033, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, PDOP=8.09, numSVs=6, reserved=0, DR=0)>"
+                "<NMEA(PUBX, msgId=00, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, PDOP=8.09, numSVs=6, reserved=0, DR=0)>"
             ),
         )
 

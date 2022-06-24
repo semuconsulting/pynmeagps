@@ -21,7 +21,7 @@ class FillTest(unittest.TestCase):
         pass
 
     def testFill_GNGLL(self):  # test GET constructor with full payload keyword
-        EXPECTED_RESULT = "<NMEA(GNGLL, lat=-53.45071983, NS=S, lon=2.24023267, EW=E, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=-53.4507198333, NS=S, lon=2.2402326667, EW=E, time=22:32:32, status=A, posMode=A)>"
         res = NMEAMessage(
             "GN",
             "GLL",
@@ -29,6 +29,83 @@ class FillTest(unittest.TestCase):
             payload=["5327.04319", "S", "00214.41396", "E", "223232.00", "A", "A"],
         )
         self.assertEqual(str(res), EXPECTED_RESULT)
+
+    def testFill_GNGLL_HP(self):  # test GET constructor in high precision mode
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = ["4307.4074073", "N", "00259.2592593", "W", "", "A", "A"]
+        res = NMEAMessage(
+            "GN",
+            "GLL",
+            GET,
+            lat=43.123456789,
+            NS="N",
+            lon=2.987654321,
+            EW="W",
+            time="22:32:32",
+            status="A",
+            posMode="A",
+            hpnmeamode=1,
+        )
+        self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.payload, EXPECTED_PAYLOAD)
+
+    def testFill_GNGLL_SP(self):  # test GET constructor in standard precision mode
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "W", "", "A", "A"]
+        res = NMEAMessage(
+            "GN",
+            "GLL",
+            GET,
+            lat=43.123456789,
+            NS="N",
+            lon=2.987654321,
+            EW="W",
+            time="22:32:32",
+            status="A",
+            posMode="A",
+            hpnmeamode=0,
+        )
+        self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.payload, EXPECTED_PAYLOAD)
+
+    def testFill_GNGLL_NSEW1(
+        self,
+    ):  # derive NS or EW values
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "W", "", "A", "A"]
+        res = NMEAMessage(
+            "GN",
+            "GLL",
+            GET,
+            lat=43.123456789,
+            lon=-2.987654321,
+            time="22:32:32",
+            status="A",
+            posMode="A",
+            hpnmeamode=0,
+        )
+        self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.payload, EXPECTED_PAYLOAD)
+
+    def testFill_GNGLL_NSEW2(
+        self,
+    ):  # derive NS or EW values
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=-43.123456789, NS=S, lon=2.987654321, EW=E, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = ["4307.40741", "S", "00259.25926", "E", "", "A", "A"]
+        res = NMEAMessage(
+            "GN",
+            "GLL",
+            GET,
+            lat=43.123456789,
+            NS="S",
+            lon=2.987654321,
+            time="22:32:32",
+            status="A",
+            posMode="A",
+            hpnmeamode=0,
+        )
+        self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.payload, EXPECTED_PAYLOAD)
 
     def testFill_GNGLLUPD(self):  # test that NMEAMessage is immutable after init
         EXPECTED_ERROR = (

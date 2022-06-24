@@ -83,13 +83,15 @@ class StaticTest(unittest.TestCase):
 
     def testDMM2DDD(self):
         res = nmh.dmm2ddd("5314.12345", "LA")
-        self.assertEqual(res, 53.23539083)
+        self.assertEqual(res, 53.2353908333)
         res = nmh.dmm2ddd("00214.12345", "LN")
-        self.assertEqual(res, 2.23539083)
+        self.assertEqual(res, 2.2353908333)
         res = nmh.dmm2ddd("12825.12344", "LN")
         self.assertEqual(res, 128.418724)
 
     def testDDD2DMM(self):
+        res = nmh.ddd2dmm(3.75000, "LA")
+        self.assertEqual(res, "0345.00000")
         res = nmh.ddd2dmm(53.75000, "LA")
         self.assertEqual(res, "5345.00000")
         res = nmh.ddd2dmm(-2.75000, "LN")
@@ -97,6 +99,18 @@ class StaticTest(unittest.TestCase):
         res = nmh.ddd2dmm(128.418724, "LN")
         self.assertEqual(res, "12825.12344")
         res = nmh.ddd2dmm("", "LN")
+        self.assertEqual(res, "")
+
+    def testDDD2DMM_HPMode(self):  # high precision mode
+        res = nmh.ddd2dmm(3.123456789, "LA", True)
+        self.assertEqual(res, "0307.4074073")
+        res = nmh.ddd2dmm(53.123456789, "LA", True)
+        self.assertEqual(res, "5307.4074073")
+        res = nmh.ddd2dmm(-2.123456789, "LN", True)
+        self.assertEqual(res, "00207.4074073")
+        res = nmh.ddd2dmm(128.123456789, "LN", True)
+        self.assertEqual(res, "12807.4074073")
+        res = nmh.ddd2dmm("", "LN", True)
         self.assertEqual(res, "")
 
     def testDate2UTC(self):

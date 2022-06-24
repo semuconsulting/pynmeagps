@@ -219,6 +219,8 @@ e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as
 <NMEA(EIGNQ, msgId=RMC)>
 ```
 
+**NB:** For position messages, if the values of `lat` and `lon` are provided but the corresponding `NS` or `EW` values are omitted, their values will be derived from the sign of `lat` or `lon` (e.g. `lon` < 0 => `EW` = "W"). If the `NS` or `EW` values are provided explicitly, they will take precedence and the sign of the `lat` or `lon` attributes will be adjusted accordingly.
+
 **NB:** Once instantiated, an `NMEAMessage` object is immutable.
 
 ---

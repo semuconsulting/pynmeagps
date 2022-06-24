@@ -45,6 +45,7 @@ class NMEAMessage:
         :param str talker: message talker e.g. "GP" or "P"
         :param str msgID: message ID e.g. "GGA"
         :param int msgmode: mode (0=GET, 1=SET, 2=POLL)
+        :param bool hpnmeamode: (kwarg) high precision lat/lon mode (7dp rather than 5dp)
         :param kwargs: keyword arg(s) representing all or some payload attributes
         :raises: NMEAMessageError
 
@@ -69,6 +70,8 @@ class NMEAMessage:
             )
 
         self._mode = msgmode
+        # high precision NMEA mode returns NMEA lat/lon to 7dp rather than 5dp
+        self._hpnmeamode = kwargs.get("hpnmeamode", False)
         self._talker = talker
         self._msgID = msgID
         self._do_attributes(**kwargs)
@@ -91,6 +94,16 @@ class NMEAMessage:
 
             self._payload = kwargs.get("payload", [])
             self._checksum = kwargs.get("checksum", "00")
+
+            # derive NS and EW values if not provided explicitly
+            # (explicit NS or EW values take precedence over lat/lon sign)
+            if "payload" not in kwargs:
+                if "lat" in kwargs and "NS" not in kwargs:
+                    if kwargs["lat"] != "":
+                        kwargs["NS"] = "N" if kwargs["lat"] > 0 else "S"
+                if "lon" in kwargs and "EW" not in kwargs:
+                    if kwargs["lon"] != "":
+                        kwargs["EW"] = "E" if kwargs["lon"] > 0 else "W"
 
             pdict = self._get_dict(**kwargs)  # get payload definition dict
             for key in pdict.keys():  # process each attribute in dict
@@ -203,7 +216,7 @@ class NMEAMessage:
             # the rest will be set to a nominal value
             else:
                 val = kwargs.get(keyr, self.nomval(att))
-                vals = self.val2str(val, att)
+                vals = self.val2str(val, att, self._hpnmeamode)
                 self._payload.append(vals)
 
         except IndexError:  # probably just an older device missing NMEA <=4.10 dict attributes
@@ -220,16 +233,18 @@ class NMEAMessage:
         """
         # pylint: disable=no-member, E0203
 
-        if (
-            hasattr(self, "lat")
-            and hasattr(self, "lon")
-            and hasattr(self, "NS")
-            and hasattr(self, "EW")
-        ):
-            if self.NS == "S" and self.lat > 0:
-                self.lat = self.lat * -1
-            if self.EW == "W" and self.lon > 0:
-                self.lon = self.lon * -1
+        if hasattr(self, "lat") and hasattr(self, "NS"):
+            if self.lat != "":
+                if (self.NS == "N" and self.lat < 0) or (
+                    self.NS == "S" and self.lat > 0
+                ):
+                    self.lat = self.lat * -1
+        if hasattr(self, "lon") and hasattr(self, "EW"):
+            if self.lon != "":
+                if (self.EW == "E" and self.lon < 0) or (
+                    self.EW == "W" and self.lon > 0
+                ):
+                    self.lon = self.lon * -1
 
     def _get_dict(self, **kwargs) -> dict:
         """
@@ -438,7 +453,7 @@ class NMEAMessage:
         elif att == nmt.IN:  # integer
             if vals != "":
                 val = int(vals)
-        elif att in (nmt.LA, nmt.LN):  # lat/lon (d)ddmm.mmmmm
+        elif att in (nmt.LA, nmt.LN):  # lat/lon (d)ddmm.mmmmm(mm)
             val = dmm2ddd(vals, att)
         elif att == nmt.TM:  # time hhmmss.ss
             val = time2utc(vals)
@@ -447,13 +462,14 @@ class NMEAMessage:
         return val
 
     @staticmethod
-    def val2str(val, att: str) -> str:
+    def val2str(val, att: str, hpmode: bool = False) -> str:
         """
         Convert typed value to NMEA string
         (this is the format used internally by the NMEA protocol).
 
         :param object val: typed attribute value
         :param str att: attribute type e.g. 'IN'
+        :param bool hpmode: high precision lat/lon mode (7dp rather than 5dp)
         :return: attribute value in NMEA protocol format
         :rtype: str
         :raises: NMEATypeError
@@ -469,7 +485,7 @@ class NMEAMessage:
         elif att == nmt.IN:
             vals = str(val)
         elif att in (nmt.LA, nmt.LN):
-            vals = ddd2dmm(val, att)
+            vals = ddd2dmm(val, att, hpmode)
         elif att == nmt.TM:
             vals = time2str(val)
         elif att == nmt.DT:
