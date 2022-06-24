@@ -1,5 +1,13 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.15
+
+ENHANCEMENTS:
+
+1. Enhancement to NMEAMessage constructor - will now automatically derive value of `NS` or `EW` attributes from provided lat/lon e.g. `lon` < 0 => `EW` = "W"
+2. Enhancement to NMEAMessage constructor - optional keyword argument `hpnmeamode` added which allows NMEA position
+message payloads to be constructed to 7dp decimal minutes rather than the standard 5dp (i.e. (d)ddmm.mmmmmmm rather than (d)ddmm.mmmm). **NB:** this is primarily for manually constructed messages. Messages parsed from a GNSS receiver data stream retain whatever level of precision is output by the receiver to a maximum 10dp of decimal degrees.
+
 ### RELEASE 1.0.14
 
 CHANGES:
