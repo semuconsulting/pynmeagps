@@ -215,6 +215,10 @@ NMEA_MSGIDS_PROP = {
     "GRMW": "Set Additional Waypoint Information",
     "GRMZ": "Altitude",
     # ***************************************************************
+    # JVCKenwood Proprietary message types
+    # ***************************************************************
+    "KLSH": "FleetSync GNSS sentence",
+    # ***************************************************************
     # U-BLOX Proprietary message types
     # ***************************************************************
     "UBX00": "PUBX-POSITION Lat/Long Position Data",

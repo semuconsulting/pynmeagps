@@ -381,6 +381,19 @@ NMEA_PAYLOADS_GET = {
         "ltzn": ST,
     },
     # *********************************************
+    # JVCKENWOOD PROPRIETARY MESSAGES
+    # *********************************************
+    "KLSH": {
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "time": TM,
+        "status": CH,
+        "fleetId": ST,
+        "deviceId": ST,
+    },
+    # *********************************************
     # GARMIN PROPRIETARY MESSAGES
     # *********************************************
     "GRME": {  # estimated error information
