@@ -194,6 +194,8 @@ def time2utc(times: str) -> datetime.time:
     """
 
     try:
+        if len(times) == 6:  # decimal seconds is omitted
+            times = times + ".00"
         utc = datetime.strptime(times, "%H%M%S.%f")
         return utc.time()
     except (TypeError, ValueError):

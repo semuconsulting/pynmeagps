@@ -54,7 +54,7 @@ class ParseTest(unittest.TestCase):
         res = NMEAReader.parse(self.messagePKLSH)
         self.assertEqual(
             str(res),
-            "<NMEA(PKLSH, lat=38.85555, NS=N, lon=-94.7990283333, EW=W, time=, status=V, fleetId=100, deviceId=1202)>",
+            "<NMEA(PKLSH, lat=38.85555, NS=N, lon=-94.7990283333, EW=W, time=01:22:12, status=V, fleetId=100, deviceId=1202)>",
         )
 
     def testParsePUBX(self):  # proprietary UBX message
