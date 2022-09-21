@@ -21,6 +21,7 @@ class ParseTest(unittest.TestCase):
         self.messageGLL_HP = (
             "$GNGLL,5327.0431923,S,00214.4139641,E,223232.00,A,A*6C\r\n"
         )
+        self.messagePKLSH = "$PKLSH,3851.3330,N,09447.9417,W,012212,V,100,1202,*24\r\n"
         self.messagePUBX = "$PUBX,00,103607.00,5327.03942,N,00214.42462,W,104.461,G3,29,31,0.085,39.63,-0.007,,5.88,7.62,8.09,6,0,0*69\r\n"
         self.messagePGRMM = "$PGRMM,WGS84*26\r\n"
         self.messagePGRMO = "$PGRMO,PGRMM,2*30\r\n"
@@ -48,6 +49,13 @@ class ParseTest(unittest.TestCase):
             ),
         )
         print(res.serialize())
+
+    def testParsePKLSH(self):  # Proprietary JVCKenwood message
+        res = NMEAReader.parse(self.messagePKLSH)
+        self.assertEqual(
+            str(res),
+            "<NMEA(PKLSH, lat=38.85555, NS=N, lon=-94.7990283333, EW=W, time=01:22:12, status=V, fleetId=100, deviceId=1202)>",
+        )
 
     def testParsePUBX(self):  # proprietary UBX message
         res = NMEAReader.parse(self.messagePUBX)
