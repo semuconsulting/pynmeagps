@@ -301,7 +301,7 @@ class NMEAMessage:
         :rtype: str
         """
 
-        stg = f"<NMEA({self._talker}{self._msgID}"
+        stg = f"<NMEA({self.identity}"
         stg += ", "
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
@@ -367,6 +367,8 @@ class NMEAMessage:
         :rtype: str
         """
 
+        if self.talker == "P" and self._msgID == "UBX":
+            return self._talker + self._msgID + self.msgId
         return self._talker + self._msgID
 
     @property
