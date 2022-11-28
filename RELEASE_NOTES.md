@@ -4,7 +4,7 @@
 
 ENHANCEMENTS:
 
-1. `time2utc` helper method enhanced to cater for proprietary NMEA messages containing timestamps in format dd.mm.ss rather than dd.mm.ss.ss (i.e. missing decimal seconds). Addresses PR #19.
+1. `time2utc` helper method enhanced to cater for proprietary NMEA messages containing timestamps in format hh.mm.ss rather than hh.mm.ss.ss (i.e. missing decimal seconds). Addresses PR #19.
 
 ### RELEASE 1.0.15
 
