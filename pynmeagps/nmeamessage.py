@@ -368,7 +368,7 @@ class NMEAMessage:
         """
 
         if self.talker == "P" and self._msgID == "UBX":
-            return self._talker + self._msgID + self.msgId
+            return self._talker + self._msgID + self.msgId  # pylint: disable=no-member
         return self._talker + self._msgID
 
     @property
