@@ -29,7 +29,7 @@ The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmea
 
 ![Status](https://img.shields.io/pypi/status/pynmeagps)
 ![Release](https://img.shields.io/github/v/release/semuconsulting/pynmeagps?include_prereleases)
-![Build](https://img.shields.io/github/workflow/status/semuconsulting/pynmeagps/pynmeagps)
+![Build](https://img.shields.io/github/actions/workflow/status/semuconsulting/pynmeagps/main.yml?branch=master)
 ![Codecov](https://img.shields.io/codecov/c/github/semuconsulting/pynmeagps)
 ![Release Date](https://img.shields.io/github/release-date-pre/semuconsulting/pynmeagps)
 ![Last Commit](https://img.shields.io/github/last-commit/semuconsulting/pynmeagps)
