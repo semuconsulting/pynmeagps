@@ -1,5 +1,13 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.17
+
+CHANGES:
+
+1. shields.io build status badge URL updated.
+
+No other functional changes.
+
 ### RELEASE 1.0.16
 
 ENHANCEMENTS:
