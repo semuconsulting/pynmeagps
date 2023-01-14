@@ -232,6 +232,36 @@ def date2str(dat: datetime.date) -> str:
         return ""
 
 
+def latlon2dms(latlon: tuple) -> tuple:
+    """
+    Converts decimal lat/lon tuple to degrees minutes seconds.
+
+    :param tuple latlon: tuple of (lat, lon) as floats
+    :return: (lat,lon) in d.m.s. format
+    :rtype: tuple
+    """
+
+    lat, lon = latlon
+    lat = deg2dms(lat, LA)
+    lon = deg2dms(lon, LN)
+    return lat, lon
+
+
+def latlon2dmm(latlon: tuple) -> tuple:
+    """
+    Converts decimal lat/lon tuple to degrees decimal minutes.
+
+    :param tuple latlon: tuple of (lat, lon) as floats
+    :return: (lat,lon) in d.mm.m format
+    :rtype: tuple
+    """
+
+    lat, lon = latlon
+    lat = deg2dmm(lat, LA)
+    lon = deg2dmm(lon, LN)
+    return lat, lon
+
+
 def deg2dms(degrees: float, att: str) -> str:
     """
     Convert decimal degrees to degrees minutes seconds string

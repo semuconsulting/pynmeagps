@@ -153,6 +153,18 @@ class StaticTest(unittest.TestCase):
         res = nmh.deg2dmm("", "LN")
         self.assertEqual(res, (""))
 
+    def testlatlon2dms(self):
+        res = nmh.latlon2dms((53.346, -2.5463))
+        self.assertEqual(res, ("53°20′45.6″N", "2°32′46.68″W"))
+
+    def testlatlon2dmm(self):
+        res = nmh.latlon2dmm((53.346, -2.5463))
+        self.assertEqual(res, ("53°20.76′N", "2°32.778′W"))
+
+    def testlatlon2dmm(self):
+        res = nmh.latlon2dmm((53.346, -2.5463))
+        self.assertEqual(res, ("53°20.76′N", "2°32.778′W"))
+
     def testKnots2spd(self):
         res = nmh.knots2spd(1.0, "MS")
         self.assertAlmostEqual(res, 0.5144447324, 5)
