@@ -7,6 +7,7 @@ pynmeagps
 [Parsing](#parsing) |
 [Generating](#generating) |
 [Serializing](#serializing) |
+[Utilities](#utilities) |
 [Examples](#examples) |
 [Extensibility](#extensibility) |
 [Command Line Utility](#cli) |
@@ -255,6 +256,20 @@ b'$EIGNQ,RMC*24\r\n'
 ```
 
 ---
+## <a name="utilities">Utility Methods</a>
+ 
+ `pynmeagps` provides the following utility methods:
+
+ - `latlon2dms` - converts decimal lat/lon to degrees, minutes, decimal seconds format e.g. "53°20′45.6″N", "2°32′46.68″W"
+ - `latlon2dmm` - converts decimal lat/lon to degrees, decimal minutes format e.g. "53°20.76′N", "2°32.778′W"
+ - `llh2iso6709` - converts lat/lon and altitude (hMSL) to ISO6709 format e.g. "+27.5916+086.5640+8850CRSWGS_84/"
+ - `ecef2llh` - converts ECEF (X, Y, Z) coordinates to geodetic (lat, lon, ellipsoidal height) coordinates
+ - `llh2ecef` - converts geodetic (lat, lon, ellipsoidal height) coordinates to ECEF (X, Y, Z) coordinates
+ - `haversine` - finds spherical distance in km between two sets of (lat, lon) coordinates
+
+See [Sphinx documentation](https://www.semuconsulting.com/pynmeagps/pynmeagps.html#module-pynmeagaps.nmeahelpers) for details.
+
+---
 ## <a name="examples">Examples</a>
 
 The following command line examples can be found in the `/examples` folder:
@@ -269,6 +284,7 @@ The following command line examples can be found in the `/examples` folder:
 
 1. `/webserver/nmeaserver.py` illustrates a simple HTTP web server wrapper around `pynmeagps.NMEAReader`; it presents data from selected NMEA messages as a web page http://localhost:8080 or a RESTful API http://localhost:8080/gps.
 
+1. `utilities.py` illustrates how to use various `pynmeagps` utility methods.
 ---
 ## <a name="extensibility">Extensibility</a>
 

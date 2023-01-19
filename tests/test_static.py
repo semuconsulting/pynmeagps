@@ -17,7 +17,29 @@ from pynmeagps import (
     NMEATypeError,
 )  # pylint: disable=unused-import
 from pynmeagps.nmeatypes_core import GET, POLL
-import pynmeagps.nmeahelpers as nmh
+from pynmeagps.nmeahelpers import (
+    int2hexstr,
+    get_parts,
+    get_content,
+    calc_checksum,
+    isvalid_cksum,
+    deg2dmm,
+    deg2dms,
+    dmm2ddd,
+    ddd2dmm,
+    date2utc,
+    date2str,
+    time2str,
+    time2utc,
+    knots2spd,
+    msgdesc,
+    haversine,
+    ecef2llh,
+    llh2ecef,
+    latlon2dmm,
+    latlon2dms,
+    llh2iso6709,
+)
 
 
 class StaticTest(unittest.TestCase):
@@ -40,13 +62,13 @@ class StaticTest(unittest.TestCase):
     # *******************************************
 
     def testInt2Hex(self):
-        res = nmh.int2hexstr(15)
+        res = int2hexstr(15)
         self.assertEqual(res, "0F")
-        res = nmh.int2hexstr(104)
+        res = int2hexstr(104)
         self.assertEqual(res, "68")
 
     def testGetParts(self):
-        res = nmh.get_parts(self.messageGLL)
+        res = get_parts(self.messageGLL)
         self.assertEqual(
             res,
             (
@@ -60,119 +82,91 @@ class StaticTest(unittest.TestCase):
     def testGetPartsCRAP(self):  # test badly formed NMEA message
         EXPECTED_ERROR = "Badly formed message $GNRMC,,%$£"
         with self.assertRaises(NMEAMessageError) as context:
-            nmh.get_parts(self.messageCRAP)
+            get_parts(self.messageCRAP)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testGetContent(self):
-        res = nmh.get_content(self.messageGLL)
+        res = get_content(self.messageGLL)
         self.assertEqual(res, "GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A")
 
     def testCalcChecksum(self):
-        res = nmh.calc_checksum(self.messageGLL)
+        res = calc_checksum(self.messageGLL)
         self.assertEqual(res, "68")
-        res = nmh.calc_checksum(self.messagePUBX)
+        res = calc_checksum(self.messagePUBX)
         self.assertEqual(res, "69")
 
     def testGoodChecksum(self):
-        res = nmh.isvalid_cksum(self.messageGLL)
+        res = isvalid_cksum(self.messageGLL)
         self.assertEqual(res, True)
 
     def testBadChecksum(self):
-        res = nmh.isvalid_cksum(self.messageBADCK)
+        res = isvalid_cksum(self.messageBADCK)
         self.assertEqual(res, False)
 
     def testDMM2DDD(self):
-        res = nmh.dmm2ddd("5314.12345", "LA")
+        res = dmm2ddd("5314.12345", "LA")
         self.assertEqual(res, 53.2353908333)
-        res = nmh.dmm2ddd("00214.12345", "LN")
+        res = dmm2ddd("00214.12345", "LN")
         self.assertEqual(res, 2.2353908333)
-        res = nmh.dmm2ddd("12825.12344", "LN")
+        res = dmm2ddd("12825.12344", "LN")
         self.assertEqual(res, 128.418724)
 
     def testDDD2DMM(self):
-        res = nmh.ddd2dmm(3.75000, "LA")
+        res = ddd2dmm(3.75000, "LA")
         self.assertEqual(res, "0345.00000")
-        res = nmh.ddd2dmm(53.75000, "LA")
+        res = ddd2dmm(53.75000, "LA")
         self.assertEqual(res, "5345.00000")
-        res = nmh.ddd2dmm(-2.75000, "LN")
+        res = ddd2dmm(-2.75000, "LN")
         self.assertEqual(res, "00245.00000")
-        res = nmh.ddd2dmm(128.418724, "LN")
+        res = ddd2dmm(128.418724, "LN")
         self.assertEqual(res, "12825.12344")
-        res = nmh.ddd2dmm("", "LN")
+        res = ddd2dmm("", "LN")
         self.assertEqual(res, "")
 
     def testDDD2DMM_HPMode(self):  # high precision mode
-        res = nmh.ddd2dmm(3.123456789, "LA", True)
+        res = ddd2dmm(3.123456789, "LA", True)
         self.assertEqual(res, "0307.4074073")
-        res = nmh.ddd2dmm(53.123456789, "LA", True)
+        res = ddd2dmm(53.123456789, "LA", True)
         self.assertEqual(res, "5307.4074073")
-        res = nmh.ddd2dmm(-2.123456789, "LN", True)
+        res = ddd2dmm(-2.123456789, "LN", True)
         self.assertEqual(res, "00207.4074073")
-        res = nmh.ddd2dmm(128.123456789, "LN", True)
+        res = ddd2dmm(128.123456789, "LN", True)
         self.assertEqual(res, "12807.4074073")
-        res = nmh.ddd2dmm("", "LN", True)
+        res = ddd2dmm("", "LN", True)
         self.assertEqual(res, "")
 
     def testDate2UTC(self):
-        res = nmh.date2utc("")
+        res = date2utc("")
         self.assertEqual(res, "")
-        res = nmh.date2utc("120320")
+        res = date2utc("120320")
         self.assertEqual(res, datetime.date(2020, 3, 12))
 
     def testTime2UTC(self):
-        res = nmh.time2utc("")
+        res = time2utc("")
         self.assertEqual(res, "")
-        res = nmh.time2utc("081123.000")
+        res = time2utc("081123.000")
         self.assertEqual(res, datetime.time(8, 11, 23))
 
     def testTime2str(self):
-        res = nmh.time2str(datetime.time(8, 11, 23))
+        res = time2str(datetime.time(8, 11, 23))
         self.assertEqual(res, "081123.00")
-        res = nmh.time2str("wsdfasdf")
+        res = time2str("wsdfasdf")
         self.assertEqual(res, "")
 
     def testDate2str(self):
-        res = nmh.date2str(datetime.date(2021, 3, 7))
+        res = date2str(datetime.date(2021, 3, 7))
         self.assertEqual(res, "070321")
-        res = nmh.date2str("wsdfasdf")
+        res = date2str("wsdfasdf")
         self.assertEqual(res, "")
 
-    def testdeg2dms(self):
-        res = nmh.deg2dms(53.346, "LA")
-        self.assertEqual(res, ("53°20′45.6″N"))
-        res = nmh.deg2dms(-2.5463, "LN")
-        self.assertEqual(res, ("2°32′46.68″W"))
-        res = nmh.deg2dms("", "LN")
-        self.assertEqual(res, (""))
-
-    def testdeg2dmm(self):
-        res = nmh.deg2dmm(-53.346, "LA")
-        self.assertEqual(res, ("53°20.76′S"))
-        res = nmh.deg2dmm(2.5463, "LN")
-        self.assertEqual(res, ("2°32.778′E"))
-        res = nmh.deg2dmm("", "LN")
-        self.assertEqual(res, (""))
-
-    def testlatlon2dms(self):
-        res = nmh.latlon2dms((53.346, -2.5463))
-        self.assertEqual(res, ("53°20′45.6″N", "2°32′46.68″W"))
-
-    def testlatlon2dmm(self):
-        res = nmh.latlon2dmm((53.346, -2.5463))
-        self.assertEqual(res, ("53°20.76′N", "2°32.778′W"))
-
-    def testlatlon2dmm(self):
-        res = nmh.latlon2dmm((53.346, -2.5463))
-        self.assertEqual(res, ("53°20.76′N", "2°32.778′W"))
-
     def testKnots2spd(self):
-        res = nmh.knots2spd(1.0, "MS")
+        res = knots2spd(1.0, "MS")
         self.assertAlmostEqual(res, 0.5144447324, 5)
-        res = nmh.knots2spd(1.0, "FS")
+        res = knots2spd(1.0, "FS")
         self.assertAlmostEqual(res, 1.68781084, 5)
-        res = nmh.knots2spd(1.0, "mph")
+        res = knots2spd(1.0, "mph")
         self.assertAlmostEqual(res, 1.15078, 5)
-        res = nmh.knots2spd(1.0, "kmph")
+        res = knots2spd(1.0, "kmph")
         self.assertAlmostEqual(res, 1.852001, 5)
 
     def testKnots2spdBAD(self):
@@ -180,19 +174,19 @@ class StaticTest(unittest.TestCase):
             "Invalid conversion unit CRAP - must be in ['MS', 'FS', 'MPH', 'KMPH']."
         )
         with self.assertRaises(KeyError) as context:
-            nmh.knots2spd(1.0, "CRAP")
+            knots2spd(1.0, "CRAP")
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
         EXPECTED_ERROR = "Invalid knots value CRAP - must be float or integer."
         with self.assertRaises(TypeError) as context:
-            nmh.knots2spd("CRAP", "MS")
+            knots2spd("CRAP", "MS")
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testMsgDesc(self):
-        res = nmh.msgdesc("GGA")
+        res = msgdesc("GGA")
         self.assertEqual(res, "Global positioning system fix data")
-        res = nmh.msgdesc("UBX03")
+        res = msgdesc("UBX03")
         self.assertEqual(res, "PUBX-SVSTATUS Satellite Status")
-        res = nmh.msgdesc("XXX")
+        res = msgdesc("XXX")
         self.assertEqual(res, "Unknown msgID XXX")
 
     # *******************************************
@@ -371,6 +365,95 @@ class StaticTest(unittest.TestCase):
         res1 = self.msgPUBX00
         res2 = eval(repr(self.msgPUBX00))
         self.assertEqual(str(res1), str(res2))
+
+    # *******************************************
+    # NMEAMessage helpers
+    # *******************************************
+
+    def testdeg2dms(self):
+        res = deg2dms(53.346, "LA")
+        self.assertEqual(res, ("53°20′45.6″N"))
+        res = deg2dms("xxx", "LA")
+        self.assertEqual(res, "")
+
+    def testdeg2dmm(self):
+        res = deg2dmm(-2.5463, "LN")
+        self.assertEqual(res, ("2°32.778′W"))
+        res = deg2dmm("xxx", "LN")
+        self.assertEqual(res, "")
+
+    def testlatlon2dms(self):
+        res = latlon2dms(53.346, -2.5463)
+        self.assertEqual(res, ("53°20′45.6″N", "2°32′46.68″W"))
+
+    def testlatlon2dmm(self):
+        res = latlon2dmm(53.346, -2.5463)
+        self.assertEqual(res, ("53°20.76′N", "2°32.778′W"))
+
+    def testlatlon2dmm(self):
+        res = latlon2dmm(53.346, -2.5463)
+        self.assertEqual(res, ("53°20.76′N", "2°32.778′W"))
+
+    def testllh2iso6709(self):
+        res = llh2iso6709(53.12, -2.165, 35)
+        self.assertEqual(res, "+53.12-2.165+35CRSWGS_84/")
+        res = llh2iso6709(-53.12, +2.165, 68.45)
+        self.assertEqual(res, "-53.12+2.165+68.45CRSWGS_84/")
+
+    def testecef2llh(self):
+        vals = [
+            (3822566.3113, -144427.5123, 5086857.1208),
+            (3980570.0700029507, 0.0, 4966833.391498124),
+            (10000, 10000, 10000),
+        ]
+        res = [
+            (53.24168283407136, -2.1637695489854565, 214.9785466667861),
+            (51.4779280000001, 0, 5.8584775974986524e-09),
+            (0, 0, -1.0e7),
+        ]
+        for i, val in enumerate(vals):
+            lat, lon, alt = ecef2llh(val[0], val[1], val[2])
+            self.assertAlmostEqual(lat, res[i][0], 5)
+            self.assertAlmostEqual(lon, res[i][1], 5)
+            self.assertAlmostEqual(alt, res[i][2], 5)
+
+    def testllh2ecef(self):
+        vals = [
+            (53.24168283407126, -2.1637695489854565, 214.97854665775156),
+            (51.477928, 0, 0),
+        ]
+        res = [
+            (3822566.311300003, -144427.51230000015, 5086857.120799987),
+            (3980570.0700029545, 0.0, 4966833.3914981127),
+        ]
+        for i, val in enumerate(vals):
+            x, y, z = llh2ecef(val[0], val[1], val[2])
+            self.assertAlmostEqual(x, res[i][0], 5)
+            self.assertAlmostEqual(y, res[i][1], 5)
+            self.assertAlmostEqual(z, res[i][2], 5)
+
+    def testllh2eceftab(self):  # test conversion there and back
+        vals = [
+            (53.24, -2.16, 214.98),
+            (-7.48, 67.87, 43.12),
+            (-34.51, -56.09, 1745.98),
+            (90, 90, -435184.65),
+            (0, 0, 0),
+        ]
+        for i, val in enumerate(vals):
+            x, y, z = llh2ecef(val[0], val[1], val[2])
+            lat, lon, alt = ecef2llh(x, y, z)
+            self.assertAlmostEqual(lat, val[0], 2)
+            self.assertAlmostEqual(lon, val[1], 2)
+            self.assertAlmostEqual(alt, val[2], 2)
+
+    def testhaversine(self):
+        res = haversine(51.23, -2.41, 34.205, 56.34)
+        self.assertAlmostEqual(res, 5010.722, 3)
+        res = haversine(-12.645, 34.867, 145.1745, -56.27846)
+        self.assertAlmostEqual(res, 10715.371, 3)
+        res = haversine(53.45, -2.14, 53.451, -2.141)
+        self.assertAlmostEqual(res, 0.1296, 3)
 
 
 if __name__ == "__main__":

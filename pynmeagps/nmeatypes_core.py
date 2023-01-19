@@ -30,6 +30,11 @@ GNSSLIST = {
     6: "GLONASS",
 }
 
+# Geodetic datum spheroid values:
+# WGS84, ETRS89, EPSG4326
+WGS84_SMAJ_AXIS = 6378137.0  # semi-major axis
+WGS84_FLATTENING = 298.257223563  # flattening
+
 # ***************************************************
 # THESE ARE THE NMEA PROTOCOL PAYLOAD ATTRIBUTE TYPES
 # ***************************************************
