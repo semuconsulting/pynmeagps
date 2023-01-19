@@ -1,7 +1,7 @@
 <?xml version = "1.0"?>
 <project name="pynmeagps" default="build">
 	<property name="module.name" value="pynmeagps" />
-	<property name="version" value="1.0.17" />
+	<property name="version" value="1.0.18" />
 	<condition property="python" value="python">
 		<os family="windows" />
 	</condition>

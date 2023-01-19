@@ -1,5 +1,19 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.18
+
+ENHANCEMENTS:
+
+1. Following utility methods added to nmeahelpers.py:
+
+- `latlon2dms` - converts decimal lat/lon to degrees, minutes, decimal seconds format e.g. "53°20′45.6″N", "2°32′46.68″W"
+- `latlon2dmm` - converts decimal lat/lon to degrees, decimal minutes format e.g. "53°20.76′N", "2°32.778′W"
+- `llh2iso6709` - converts lat/lon and altitude (hMSL) to ISO6709 format e.g. "+27.5916+086.5640+8850CRSWGS_84/"
+- `ecef2llh` - converts ECEF (X, Y, Z) coordinates to geodetic (lat, lon, ellipsoidal height) coordinates
+- `llh2ecef` - converts geodetic (lat, lon, ellipsoidal height) coordinates to ECEF (X, Y, Z) coordinates
+- `haversine` - finds spherical distance in km between two sets of (lat, lon) coordinates
+
+
 ### RELEASE 1.0.17
 
 CHANGES:
