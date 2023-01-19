@@ -7,6 +7,7 @@ pynmeagps
 [Parsing](#parsing) |
 [Generating](#generating) |
 [Serializing](#serializing) |
+[Utilities](#utilities) |
 [Examples](#examples) |
 [Extensibility](#extensibility) |
 [Command Line Utility](#cli) |
@@ -19,9 +20,9 @@ The intention is to make it as easy as possible to read, parse and utilise NMEA 
 
 The `pynmeagps` homepage is located at [https://github.com/semuconsulting/pynmeagps](https://github.com/semuconsulting/pynmeagps).
 
-**FYI** There are companion libraries which handle UBX &copy; and RTCM3 &copy; messages:
+Companion libraries are available which handle UBX &copy; and RTCM3 &copy; messages:
 
-- [pyubx2](http://github.com/semuconsulting/pyubx2) (**FYI** installing `pyubx2` via pip also installs `pynmeagps` and `pyrtcm`)
+- [pyubx2](http://github.com/semuconsulting/pyubx2) (installing `pyubx2` via pip also installs `pynmeagps` and `pyrtcm`)
 - [pyrtcm](http:/github.com/semuconsulting/pyrtcm)
 
 ---
@@ -136,7 +137,7 @@ Example - Socket input (using enhanced iterator):
 
 You can parse individual NMEA messages using the static `NMEAReader.parse(message)` function, which takes a string or bytes containing an NMEA message and returns an `NMEAMessage` object.
 
-Note that latitude and longitude are parsed as signed decimal values for ease of use. Helper methods `deg2dms` and `deg2dmm` are available to convert decimal degrees to d°m′s.s″ or d°m.m′ display format.
+Note that latitude and longitude are parsed as signed decimal values for ease of use. Helper methods `latlon2dms` and `latlon2dmm` are available to convert decimal degrees to d°m′s.s″ or d°m.m′ display format.
 
 Attributes within repeating groups are parsed with a two-digit suffix (svid_01, svid_02, etc.).
 
@@ -160,6 +161,8 @@ The `NMEAMessage` object exposes different public attributes depending on its me
 e.g. the `RMC` message has the following attributes:
 
 ```python
+from pynmeagps import latlon2dms, latlon2dmm
+...
 >>> print(msg)
 <NMEA(GNRMC, time=22:18:38, status=A, lat=52.62063, NS=N, lon=-2.16012, EW=W, spd=37.84, cog=, date=2021-03-05, mv=, mvEW=, posMode=A)>
 >>> msg.msgID
@@ -168,6 +171,10 @@ e.g. the `RMC` message has the following attributes:
 (52.62063, -2.16012)
 >>> msg.spd
 37.84
+>>> latlon2dms((msg.lat, msg.lon))
+('52°37′14.268″N', '2°9′36.432″W')
+>>> latlon2dmm((msg.lat, msg.lon))
+('52°37.2378′N', '2°9.6072′W')
 ```
 
 ---
@@ -249,6 +256,20 @@ b'$EIGNQ,RMC*24\r\n'
 ```
 
 ---
+## <a name="utilities">Utility Methods</a>
+ 
+ `pynmeagps` provides the following utility methods:
+
+ - `latlon2dms` - converts decimal lat/lon to degrees, minutes, decimal seconds format e.g. "53°20′45.6″N", "2°32′46.68″W"
+ - `latlon2dmm` - converts decimal lat/lon to degrees, decimal minutes format e.g. "53°20.76′N", "2°32.778′W"
+ - `llh2iso6709` - converts lat/lon and altitude (hMSL) to ISO6709 format e.g. "+27.5916+086.5640+8850CRSWGS_84/"
+ - `ecef2llh` - converts ECEF (X, Y, Z) coordinates to geodetic (lat, lon, ellipsoidal height) coordinates
+ - `llh2ecef` - converts geodetic (lat, lon, ellipsoidal height) coordinates to ECEF (X, Y, Z) coordinates
+ - `haversine` - finds spherical distance in km between two sets of (lat, lon) coordinates
+
+See [Sphinx documentation](https://www.semuconsulting.com/pynmeagps/pynmeagps.html#module-pynmeagaps.nmeahelpers) for details.
+
+---
 ## <a name="examples">Examples</a>
 
 The following command line examples can be found in the `/examples` folder:
@@ -263,6 +284,7 @@ The following command line examples can be found in the `/examples` folder:
 
 1. `/webserver/nmeaserver.py` illustrates a simple HTTP web server wrapper around `pynmeagps.NMEAReader`; it presents data from selected NMEA messages as a web page http://localhost:8080 or a RESTful API http://localhost:8080/gps.
 
+1. `utilities.py` illustrates how to use various `pynmeagps` utility methods.
 ---
 ## <a name="extensibility">Extensibility</a>
 
@@ -299,7 +321,7 @@ gnssdump -h
 ---
 ## <a name="gui">Graphical Client</a>
 
-A python/tkinter graphical GPS client which supports both NMEA and UBX protocols is available at: 
+A python/tkinter graphical GPS client which supports NMEA, UBX and RTCM3 protocols is available at: 
 
 [https://github.com/semuconsulting/PyGPSClient](https://github.com/semuconsulting/PyGPSClient)
 
