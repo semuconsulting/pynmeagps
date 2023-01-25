@@ -39,6 +39,7 @@ from pynmeagps.nmeahelpers import (
     latlon2dmm,
     latlon2dms,
     llh2iso6709,
+    get_gpswnotow,
 )
 
 
@@ -454,6 +455,27 @@ class StaticTest(unittest.TestCase):
         self.assertAlmostEqual(res, 10715.371, 3)
         res = haversine(53.45, -2.14, 53.451, -2.141)
         self.assertAlmostEqual(res, 0.1296, 3)
+
+    def testgpsweek(self):
+        dats = [
+            (2023, 1, 1),
+            (2005, 11, 5),
+            (2020, 8, 20),
+            (2014, 3, 16),
+            (2023, 5, 21),
+            (2023, 5, 27),
+        ]
+        vals = [
+            (2243, 0),
+            (1347, 518400),
+            (2119, 345600),
+            (1784, 0),
+            (2263, 0),
+            (2263, 518400),
+        ]
+        for i, dat in enumerate(dats):
+            y, m, d = dat
+            self.assertEqual(get_gpswnotow(datetime.datetime(y, m, d)), vals[i])
 
 
 if __name__ == "__main__":

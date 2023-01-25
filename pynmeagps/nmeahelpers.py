@@ -18,6 +18,7 @@ from pynmeagps.nmeatypes_core import (
     LA,
     WGS84_SMAJ_AXIS,
     WGS84_FLATTENING,
+    GPSEPOCH0,
 )
 import pynmeagps.exceptions as nme
 
@@ -517,3 +518,20 @@ def haversine(
     )
 
     return round(dist, 3)
+
+
+def get_gpswnotow(dat: datetime) -> tuple:
+    """
+    Get GPS Week number (Wno) and Time of Week (Tow)
+    for midnight on given date.
+
+    GPS Epoch 0 = 6th Jan 1980
+
+    :param datetime dat: calendar date
+    :return: tuple of (Wno, Tow)
+    :rtype: tuple
+    """
+
+    wno = int((dat - GPSEPOCH0).days / 7)
+    tow = ((dat.weekday() + 1) % 7) * 86400
+    return wno, tow

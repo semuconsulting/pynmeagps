@@ -10,6 +10,8 @@ has been collated from public domain sources.
 :author: semuadmin
 """
 
+from datetime import datetime
+
 NMEA_HDR = [b"\x24\x47", b"\x24\x50"]  # standard, proprietary
 INPUT = 1
 OUTPUT = 0
@@ -30,6 +32,7 @@ GNSSLIST = {
     6: "GLONASS",
 }
 
+GPSEPOCH0 = datetime(1980, 1, 6)
 # Geodetic datum spheroid values:
 # WGS84, ETRS89, EPSG4326
 WGS84_SMAJ_AXIS = 6378137.0  # semi-major axis
