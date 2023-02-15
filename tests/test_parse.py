@@ -62,7 +62,7 @@ class ParseTest(unittest.TestCase):
         self.assertEqual(
             str(res),
             (
-                "<NMEA(PUBX00, msgId=00, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, PDOP=8.09, numSVs=6, reserved=0, DR=0)>"
+                "<NMEA(PUBX00, msgId=00, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, altRef=104.461, navStat=G3, hAcc=29.0, vAcc=31.0, SOG=0.085, COG=39.63, vVel=-0.007, diffAge=, HDOP=5.88, VDOP=7.62, TDOP=8.09, numSVs=6, reserved=0, DR=0)>"
             ),
         )
 

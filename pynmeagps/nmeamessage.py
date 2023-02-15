@@ -91,7 +91,6 @@ class NMEAMessage:
         gindex = []  # (nested) grouped attribute indices
 
         try:
-
             self._payload = kwargs.get("payload", [])
             self._checksum = kwargs.get("checksum", "00")
 
@@ -219,7 +218,9 @@ class NMEAMessage:
                 vals = self.val2str(val, att, self._hpnmeamode)
                 self._payload.append(vals)
 
-        except IndexError:  # probably just an older device missing NMEA <=4.10 dict attributes
+        except (
+            IndexError
+        ):  # probably just an older device missing NMEA <=4.10 dict attributes
             return pindex
 
         setattr(self, keyr, val)  # add attribute to NMEAMessage object

@@ -485,7 +485,7 @@ NMEA_PAYLOADS_GET = {
         "diffAge": DE,
         "HDOP": DE,
         "VDOP": DE,
-        "PDOP": DE,
+        "TDOP": DE,
         "numSVs": IN,
         "reserved": IN,
         "DR": IN,
