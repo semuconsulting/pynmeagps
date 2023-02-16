@@ -30,7 +30,7 @@ from pynmeagps.nmeahelpers import (
     calc_checksum,
     isvalid_cksum,
 )
-from pynmeagps.nmeatypes_core import NMEA_HDR, VALCKSUM
+from pynmeagps.nmeatypes_core import NMEA_HDR, VALCKSUM, VALMSGID
 
 
 class NMEAReader:
@@ -165,7 +165,7 @@ class NMEAReader:
         Parse NMEA byte stream to NMEAMessage object.
 
         :param bytes message: bytes message to parse
-        :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID
+        :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID (can be OR'd)
         :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
         :return: NMEAMessage object (or None if unknown message and VALMSGID is not set)
         :rtype: NMEAMessage
@@ -193,4 +193,6 @@ class NMEAReader:
             )
 
         except nme.NMEAMessageError as err:
+            if not validate & VALMSGID:
+                return None
             raise nme.NMEAParseError(err)
