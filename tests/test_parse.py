@@ -11,7 +11,7 @@ Created on 4 Mar 2021
 
 import unittest
 
-from pynmeagps import NMEAReader, NMEAParseError, SET
+from pynmeagps import NMEAReader, NMEAParseError, SET, VALCKSUM, VALMSGID
 
 
 class ParseTest(unittest.TestCase):
@@ -79,13 +79,14 @@ class ParseTest(unittest.TestCase):
     ):  # unknown message identifier with validate (VALCKSUM + VALMSGID) - should be rejected
         EXPECTED_ERROR = "Unknown msgID GNXXX, msgmode GET."
         with self.assertRaises(NMEAParseError) as context:
-            NMEAReader.parse(self.messageNK, validate=3)
+            NMEAReader.parse(self.messageNK, validate=VALCKSUM | VALMSGID)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
-    # def testParseNK2(
-    #     self,
-    # ):  # unknown message identifier with validate VALCKSUM only - should just be ignored.
-    #     NMEAReader.parse(self.messageNK)
+    def testParseNK2(
+        self,
+    ):  # unknown message identifier with validate VALCKSUM only - should just be ignored.
+        res = NMEAReader.parse(self.messageNK, validate=VALCKSUM)
+        self.assertEqual(res, None)
 
     def testParseBADMODE(self):  # invalid mode setting
         EXPECTED_ERROR = "Invalid parse mode 4 - must be 0, 1 or 2."
