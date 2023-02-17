@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.19
+
+FIXES:
+
+1. Fix typo in PUBX00 payload definition - PDOP is now TDOP. Thanks to @dbstf for issue report.
+1. Fix handling of VALMSGID flag in NMEAReader. Thanks to @nmichaels-qualinx for issue report.
+
 ### RELEASE 1.0.18
 
 ENHANCEMENTS:
