@@ -10,6 +10,7 @@ Created on 4 Mar 2021
 
 import os
 import unittest
+import sys
 
 from pynmeagps import (
     NMEAReader,
@@ -18,6 +19,9 @@ from pynmeagps import (
     NMEAParseError,
     VALCKSUM,
     VALMSGID,
+    ERR_RAISE,
+    ERR_IGNORE,
+    ERR_LOG,
 )
 
 
@@ -53,6 +57,23 @@ class StreamTest(unittest.TestCase):
         self.streamNMEAFOO1.close()
         self.streamNMEAFOO2.close()
         self.streamNMEABADCK.close()
+
+    def catchio(self):
+        """
+        Capture stdout as string.
+        """
+
+        self._saved_stdout = sys.stdout
+        self._strout = os.StringIO()
+        sys.stdout = self._strout
+
+    def restoreio(self) -> str:
+        """
+        Return captured output and restore stdout.
+        """
+
+        sys.stdout = self._saved_stdout
+        return self._strout.getvalue().strip()
 
     def testNMEASTARTUP(self):  # stream of NMEA device during start up (blank data)
         EXPECTED_RESULTS = (
@@ -212,10 +233,10 @@ class StreamTest(unittest.TestCase):
         self,
     ):  # stream of mixed NMEA & UBX data with nmea_only set to TRUE - should be rejected
         EXPECTED_ERROR = "Unknown data header b'$\\x11'"
-        with self.assertRaises(NMEAStreamError) as context:
+        with self.assertRaises(NMEAParseError) as context:
             i = 0
             raw = 0
-            nmr = NMEAReader(self.streamMIXED, nmeaonly=True)
+            nmr = NMEAReader(self.streamMIXED, nmeaonly=True, quitonerror=ERR_RAISE)
             while raw is not None:
                 (raw, _) = nmr.read()
                 if raw is not None:
@@ -243,7 +264,28 @@ class StreamTest(unittest.TestCase):
                 i += 1
         self.assertEqual(i, 8)
 
-    def testNMEAITERATE(self):  # NMEAReader iterate() helper method
+    def testNMEAITERATE(self):  # NMEAReader helper method
+        EXPECTED_RESULTS = (
+            "<NMEA(GNDTM, datum=W84, subDatum=, latOfset=0.0, NS=N, lonOfset=0.0, EW=E, alt=0.0, refDatum=W84)>",
+            "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>",
+            "<NMEA(GNVTG, cogt=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.046, sognUnit=N, sogk=0.085, sogkUnit=K, posMode=A)>",
+            "<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>",
+            "<NMEA(GNGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
+            "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=23, svid_02=24, svid_03=20, svid_04=12, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=1)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
+            "<NMEA(GPTHS, headt=23.34, mi=A)>",
+        )
+
+        i = 0
+        raw = 0
+        nmr = NMEAReader(self.streamNMEA4SM, nmeaonly=False)
+        for raw, parsed in nmr:
+            if raw is not None:
+                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                i += 1
+        self.assertEqual(i, 8)
+
+    def testNMEAITERATE1(self):  # NMEAReader iterate() helper method
         EXPECTED_RESULTS = (
             "<NMEA(GNDTM, datum=W84, subDatum=, latOfset=0.0, NS=N, lonOfset=0.0, EW=E, alt=0.0, refDatum=W84)>",
             "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>",
@@ -266,70 +308,80 @@ class StreamTest(unittest.TestCase):
 
     def testNMEAITERATE_ERR1(
         self,
-    ):  # NMEAReader iterate() helper method with bad checksum
+    ):  # NMEAReader iterator with bad checksum
         EXPECTED_ERROR = "Message GNVTG invalid checksum 3) - should be 30"
         with self.assertRaises(NMEAParseError) as context:
             nmr = NMEAReader(
-                self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
+                self.streamNMEABADCK,
+                nmeaonly=False,
+                validate=VALCKSUM,
+                msgmode=0,
+                quitonerror=ERR_RAISE,
             )
-            for raw, parsed in nmr.iterate(
-                quitonerror=True,
-            ):
+            for raw, parsed in nmr:
                 pass
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEAITERATE_ERR2(
         self,
-    ):  # NMEAReader iterate() helper method ignoring bad checksum and passing error handler
+    ):  # NMEAReader iterator ignoring bad checksum and passing error handler
         EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0.0, az_01=32, cno_01=, svid_02=10, elv_02=27.0, az_02=310, cno_02=, svid_03=12, elv_03=19.0, az_03=205, cno_03=19, svid_04=13, elv_04=38.0, az_04=134, cno_04=21, signalID=1)>"
         nmr = NMEAReader(
-            self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
+            self.streamNMEABADCK,
+            nmeaonly=False,
+            validate=VALCKSUM,
+            msgmode=0,
+            quitonerror=ERR_LOG,
+            errorhandler=lambda e: print(f"I ignored the following error: {e}"),
         )
         res = ""
-        for raw, parsed in nmr.iterate(
-            quitonerror=False,
-            errorhandler=lambda e: print(f"I ignored the following error: {e}"),
-        ):
+        for raw, parsed in nmr:
             res = str(parsed)
         self.assertEqual(EXPECTED_RESULT, res)
 
     def testNMEAITERATE_ERR3(
         self,
-    ):  # NMEAReader iterate() helper method ignoring bad checksum and continuing
+    ):  # NMEAReader iterator ignoring bad checksum and continuing
         EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0.0, az_01=32, cno_01=, svid_02=10, elv_02=27.0, az_02=310, cno_02=, svid_03=12, elv_03=19.0, az_03=205, cno_03=19, svid_04=13, elv_04=38.0, az_04=134, cno_04=21, signalID=1)>"
         nmr = NMEAReader(
-            self.streamNMEABADCK, nmeaonly=False, validate=VALCKSUM, msgmode=0
+            self.streamNMEABADCK,
+            nmeaonly=False,
+            validate=VALCKSUM,
+            msgmode=0,
+            quitonerror=ERR_IGNORE,
         )
         res = ""
-        for raw, parsed in nmr.iterate(
-            quitonerror=False,
-        ):
+        for raw, parsed in nmr:
             res = str(parsed)
         self.assertEqual(EXPECTED_RESULT, res)
 
     def testNMEAFOO1(self):  # stream containing invalid attribute type
         EXPECTED_ERROR = "Unknown attribute type Z2"
-        with self.assertRaises(NMEATypeError) as context:
+        with self.assertRaises(NMEAParseError) as context:
             i = 0
             raw = 0
-            nmr = NMEAReader(self.streamNMEAFOO1, nmeaonly=False)
+            nmr = NMEAReader(
+                self.streamNMEAFOO1,
+                nmeaonly=False,
+                quitonerror=ERR_RAISE,
+            )
             for raw, parsed in nmr:
                 i += 1
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEAFOO2(self):  # stream containing invalid value for attribute type
         EXPECTED_ERROR = "Incorrect type for attribute spd in msgID RMC"
-        with self.assertRaises(NMEATypeError) as context:
+        with self.assertRaises(NMEAParseError) as context:
             i = 0
             raw = 0
-            nmr = NMEAReader(self.streamNMEAFOO2, nmeaonly=False)
+            nmr = NMEAReader(self.streamNMEAFOO2, nmeaonly=False, quitonerror=ERR_RAISE)
             for raw, parsed in nmr:
                 i += 1
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEABADMODE(self):  # invalid stream mode
         EXPECTED_ERROR = "Invalid stream mode 4 - must be 0, 1 or 2."
-        with self.assertRaises(NMEAStreamError) as context:
+        with self.assertRaises(NMEAParseError) as context:
             NMEAReader(self.streamNMEAFOO1, nmeaonly=False, validate=1, msgmode=4)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
