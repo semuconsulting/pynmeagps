@@ -1,6 +1,6 @@
 # pynmeagps Release Notes
 
-### RELEASE 1.2.20rc0
+### RELEASE 1.2.20
 
 CHANGES:
 
