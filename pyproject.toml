@@ -42,7 +42,7 @@ dependencies = [
 ]
 
 [project.urls]
-homepage = "https://www.semuconsulting.com/pynmeagps/"
+homepage = "https://github.com/semuconsulting/pynmeagps"
 documentation = "https://www.semuconsulting.com/pynmeagps/"
 repository = "https://github.com/semuconsulting/pynmeagps"
 changelog = "https://github.com/semuconsulting/pynmeagps/blob/master/RELEASE_NOTES.md"
