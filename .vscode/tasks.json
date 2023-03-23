@@ -98,30 +98,17 @@
         },
         {
             "label": "Coverage",
-            "type": "process",
+            "type": "shell",
             "command": "${config:python.defaultInterpreterPath}",
             "args": [
                 "-m",
                 "coverage",
                 "run",
-                "--source=${config:modulename}",
                 "-m",
                 "unittest",
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Coverage Report",
-            "type": "process",
-            "command": "${config:python.defaultInterpreterPath}",
-            "args": [
-                "-m",
+                "&&",
                 "coverage",
-                "html"
-            ],
-            "dependsOrder": "sequence",
-            "dependsOn": [
-                "Coverage"
+                "html",
             ],
             "problemMatcher": []
         },
@@ -191,7 +178,7 @@
                 "PylintError",
                 "Build",
                 //"Test",
-                "Coverage Report",
+                "Coverage",
                 "Sphinx HTML"
             ],
             "problemMatcher": []
