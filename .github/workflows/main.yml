@@ -24,7 +24,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Lint with pylint
         run: |
-          pylint -E pynmeagps
+          pylint -E src/pynmeagps
       #    - name: Test with pytest
       #      run: |
       #        python tests/testsuite.py
