@@ -9,8 +9,11 @@ Created on 4 Mar 2021
 """
 
 import os
-import unittest
 import sys
+import unittest
+
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+sys.path.append(os.path.join(ROOT, "src"))
 
 from pynmeagps import (
     NMEAReader,

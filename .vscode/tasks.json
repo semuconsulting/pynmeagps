@@ -1,8 +1,8 @@
 {
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
-    // These Python project tasks assume you have installed
-    // and configured: black, coverage, pytest, Sphinx and wheel
+    // These Python project tasks assume you have installed and configured: 
+    // build, wheel, black, pylint, unittest, coverage, Sphinx, sphinx-rtd-theme
     "version": "2.0.0",
     "tasks": [
         {
@@ -46,20 +46,7 @@
             "args": [
                 "-m",
                 "black",
-                "${config:modulename}"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Pylint",
-            "type": "process",
-            "command": "${config:python.defaultInterpreterPath}",
-            "args": [
-                "-m",
-                "pylint",
-                "--reports=y",
-                "--exit-zero",
-                "${config:modulename}"
+                "src/${config:modulename}"
             ],
             "problemMatcher": []
         },
@@ -71,6 +58,18 @@
                 "-m",
                 "pylint",
                 "-E",
+                "src/${config:modulename}"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Pylint",
+            "type": "process",
+            "command": "${config:python.defaultInterpreterPath}",
+            "args": [
+                "-m",
+                "pylint",
+                "--reports=y",
                 "${config:modulename}"
             ],
             "problemMatcher": []
@@ -80,9 +79,10 @@
             "type": "process",
             "command": "${config:python.defaultInterpreterPath}",
             "args": [
-                "${workspaceFolder}/setup.py",
-                "sdist",
-                "bdist_wheel"
+                "-m",
+                "build",
+                ".",
+                "--wheel",
             ],
             "problemMatcher": []
         },
@@ -91,7 +91,8 @@
             "type": "process",
             "command": "${config:python.defaultInterpreterPath}",
             "args": [
-                "${workspaceFolder}/tests/testsuite.py"
+                "-m",
+                "unittest"
             ],
             "problemMatcher": []
         },
@@ -105,7 +106,7 @@
                 "run",
                 "--source=${config:modulename}",
                 "-m",
-                "pytest"
+                "unittest",
             ],
             "problemMatcher": []
         },
@@ -132,7 +133,7 @@
                 "-f",
                 "-o",
                 "docs",
-                "${config:modulename}"
+                "src/${config:modulename}"
             ],
             "problemMatcher": []
         },
@@ -156,6 +157,22 @@
             "problemMatcher": []
         },
         {
+            "label": "Sphinx Deploy to S3",
+            "type": "process",
+            "command": "aws",
+            "args": [
+                "s3",
+                "cp",
+                "${workspaceFolder}/docs/_build/html",
+                "s3://www.semuconsulting.com/${config:modulename}/"
+            ],
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Sphinx HTML"
+            ],
+            "problemMatcher": []
+        },
+        {
             "label": "Install Locally",
             "type": "process",
             "command": "${config:python.defaultInterpreterPath}",
@@ -163,7 +180,7 @@
                 "-m",
                 "pip",
                 "install",
-                "${workspaceFolder}/dist/${config:distname}-${config:moduleversion}.tar.gz",
+                "${workspaceFolder}/dist/${config:distname}-${config:moduleversion}-py3-none-any.whl",
                 "--user",
                 "--force-reinstall"
             ],
@@ -171,11 +188,20 @@
             "dependsOn": [
                 "Clean",
                 "Format",
-                "Pylint",
+                "PylintError",
                 "Build",
-                "Test",
+                //"Test",
                 "Coverage Report",
                 "Sphinx HTML"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Benchmark",
+            "type": "process",
+            "command": "${config:python.defaultInterpreterPath}",
+            "args": [
+                "${workspaceFolder}/examples/benchmark.py",
             ],
             "problemMatcher": []
         },

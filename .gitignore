@@ -13,7 +13,7 @@ Pipfile*.*
 /references
 /pynmeagps_*
 /pynmeagps-*
-/pynmeagps.egg*
+src/pynmeagps.egg*
 /__pycache__
 /.dbeaver
 /pynmeagps/__pycache__
