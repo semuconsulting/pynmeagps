@@ -37,7 +37,7 @@ Companion libraries are available which handle UBX &copy; and RTCM3 &copy; messa
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pynmeagps.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pynmeagps)
 
-The library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. While the NMEA 0183 protocol itself is proprietary, the definitions here have been collated from public domain sources.
+The library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/src/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. While the NMEA 0183 protocol itself is proprietary, the definitions here have been collated from public domain sources.
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pynmeagps](https://www.semuconsulting.com/pynmeagps).
 
