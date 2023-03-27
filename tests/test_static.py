@@ -8,20 +8,14 @@ Created on 3 Oct 2020
 :author: semuadmin
 """
 
-import os
-import sys
 import unittest
-
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-sys.path.append(os.path.join(ROOT, "src"))
-
 import datetime
 from pynmeagps import (
     NMEAReader,
     NMEAMessage,
     NMEAMessageError,
     NMEATypeError,
-)  # pylint: disable=unused-import
+)
 from pynmeagps.nmeatypes_core import GET, POLL
 from pynmeagps.nmeahelpers import (
     int2hexstr,

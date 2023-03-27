@@ -12,16 +12,10 @@ import os
 import sys
 import unittest
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-sys.path.append(os.path.join(ROOT, "src"))
-
 from pynmeagps import (
     NMEAReader,
-    NMEATypeError,
-    NMEAStreamError,
     NMEAParseError,
     VALCKSUM,
-    VALMSGID,
     ERR_RAISE,
     ERR_IGNORE,
     ERR_LOG,
