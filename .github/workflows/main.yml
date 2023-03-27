@@ -25,13 +25,13 @@ jobs:
       - name: Lint with pylint
         run: |
           pylint -E src/pynmeagps
-      #    - name: Test with pytest
-      #      run: |
-      #        python tests/testsuite.py
-      - name: Generate coverage report
+      - name: Test with pytest
         run: |
-          pytest --cov=pynmeagps --cov-report=xml
-      - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: true
+          pytest
+      # - name: Generate coverage report
+      #   run: |
+      #     pytest --cov=pyrtcm --cov-report=xml
+      # - name: "Upload coverage to Codecov"
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     fail_ci_if_error: true
