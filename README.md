@@ -266,6 +266,7 @@ b'$EIGNQ,RMC*24\r\n'
  - `ecef2llh` - converts ECEF (X, Y, Z) coordinates to geodetic (lat, lon, ellipsoidal height) coordinates
  - `llh2ecef` - converts geodetic (lat, lon, ellipsoidal height) coordinates to ECEF (X, Y, Z) coordinates
  - `haversine` - finds spherical distance in km between two sets of (lat, lon) coordinates
+ - `bearing` - finds bearing in degrees between two sets of (lat, lon) coordinates
 
 See [Sphinx documentation](https://www.semuconsulting.com/pynmeagps/pynmeagps.html#module-pynmeagaps.nmeahelpers) for details.
 

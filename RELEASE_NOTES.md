@@ -1,10 +1,16 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.2.21
+
+ENHANCEMENTS:
+
+1. Add `bearing` helper method.
+
 ### RELEASE 1.2.20
 
 CHANGES:
 
-1. `quitonerror` and `errorhandler` kwargs added to NMEAReader constructor - see Sphinx documentation for details
+1. `quitonerror` and `errorhandler` kwargs added to NMEAReader constructor - see Sphinx documentation for details.
 2. `NMEAReader.iterate()` method deprecated - use the standard iterator instead e.g. `nmr = NMEAReader(**wkargs): for (raw,parse) in nmr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the NMEAReader constructor.
 
 ### RELEASE 1.0.19
