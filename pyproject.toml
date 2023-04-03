@@ -70,3 +70,11 @@ disable = """
     deprecated-pragma,
     use-symbolic-message-instead,
 """
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "--cov --cov-report html --cov-report term-missing --cov-fail-under 95"
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src"]
