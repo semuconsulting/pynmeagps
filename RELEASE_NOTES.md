@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.2.22
+
+FIXES:
+
+1. Rounding removed from `haversine` helper method.
+
 ### RELEASE 1.2.21
 
 ENHANCEMENTS:
