@@ -517,7 +517,7 @@ def haversine(
         cos(phi2 - phi1) - cos(phi1) * cos(phi2) * (1 - cos(lambda2 - lambda1))
     )
 
-    return round(dist, 3)
+    return dist
 
 
 def bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
