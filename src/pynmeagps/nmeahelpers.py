@@ -11,7 +11,7 @@ Created on 04 Mar 2021
 # pylint: disable=invalid-name
 
 from datetime import datetime
-from math import sqrt, sin, cos, asin, acos, atan2, pi
+from math import sqrt, sin, cos, asin, acos, atan2, pi, radians
 from pynmeagps.nmeatypes_core import (
     NMEA_MSGIDS,
     NMEA_MSGIDS_PROP,
@@ -518,6 +518,29 @@ def haversine(
     )
 
     return round(dist, 3)
+
+
+def bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """
+    Calculate bearing between two coordinates.
+
+    :param float lat1: lat1 φ1
+    :param float lon1: lon1 λ1
+    :param float lat2: lat2 φ2
+    :param float lon2: lon2 λ2
+    :param float rds: earth radius (6371 km)
+    :return: bearing in degrees
+    :rtype: float
+    """
+
+    coordinates = lat1, lon1, lat2, lon2
+    phi1, lambda1, phi2, lambda2 = [radians(c) for c in coordinates]
+    y = sin(lambda2 - lambda1) * cos(phi2)
+    x = cos(phi1) * sin(phi2) - sin(phi1) * cos(phi2) * cos(lambda2 - lambda1)
+    theta = atan2(y, x)
+    brng = (theta * 180 / pi + 360) % 360
+
+    return brng
 
 
 def get_gpswnotow(dat: datetime) -> tuple:
