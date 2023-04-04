@@ -1,18 +1,18 @@
 # pynmeagps Release Notes
 
-### RELEASE 1.2.22
+### RELEASE 1.0.22
 
 FIXES:
 
 1. Rounding removed from `haversine` helper method.
 
-### RELEASE 1.2.21
+### RELEASE 1.0.21
 
 ENHANCEMENTS:
 
 1. Add `bearing` helper method.
 
-### RELEASE 1.2.20
+### RELEASE 1.0.20
 
 CHANGES:
 
