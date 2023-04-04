@@ -11,7 +11,7 @@ Created on 04 Mar 2021
 # pylint: disable=invalid-name
 
 from datetime import datetime
-from math import sqrt, sin, cos, asin, acos, atan2, pi, radians
+from math import sqrt, sin, cos, asin, acos, atan2, pi
 from pynmeagps.nmeatypes_core import (
     NMEA_MSGIDS,
     NMEA_MSGIDS_PROP,
@@ -524,17 +524,15 @@ def bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
     Calculate bearing between two coordinates.
 
-    :param float lat1: lat1 φ1
-    :param float lon1: lon1 λ1
-    :param float lat2: lat2 φ2
-    :param float lon2: lon2 λ2
-    :param float rds: earth radius (6371 km)
+    :param float lat1: lat1
+    :param float lon1: lon1
+    :param float lat2: lat2
+    :param float lon2: lon2
     :return: bearing in degrees
     :rtype: float
     """
 
-    coordinates = lat1, lon1, lat2, lon2
-    phi1, lambda1, phi2, lambda2 = [radians(c) for c in coordinates]
+    phi1, lambda1, phi2, lambda2 = [c * pi / 180 for c in (lat1, lon1, lat2, lon2)]
     y = sin(lambda2 - lambda1) * cos(phi2)
     x = cos(phi1) * sin(phi2) - sin(phi1) * cos(phi2) * cos(lambda2 - lambda1)
     theta = atan2(y, x)
