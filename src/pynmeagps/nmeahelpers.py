@@ -16,14 +16,15 @@ from pynmeagps.nmeatypes_core import (
     NMEA_MSGIDS,
     NMEA_MSGIDS_PROP,
     LA,
+    LN,
     WGS84_SMAJ_AXIS,
     WGS84_FLATTENING,
+    WGS84,
     GPSEPOCH0,
 )
 import pynmeagps.exceptions as nme
 
 KNOTSCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
-WGS84 = "WGS_84"
 
 
 def int2hexstr(val: int) -> str:
@@ -164,12 +165,12 @@ def ddd2dmm(degrees: float, att: str, hpmode: bool = False) -> str:
         degrees, minutes = divmod(degrees * 60, 60)
         degrees = int(degrees * 100)
         if hpmode:
-            if att == "LA":
+            if att == LA:
                 dmm = f"{degrees + minutes:.7f}".zfill(12)
             else:  # LN
                 dmm = f"{degrees + minutes:.7f}".zfill(13)
         else:
-            if att == "LA":
+            if att == LA:
                 dmm = f"{degrees + minutes:.5f}".zfill(10)
             else:  # LN
                 dmm = f"{degrees + minutes:.5f}".zfill(11)
@@ -293,8 +294,8 @@ def latlon2dms(lat: float, lon: float) -> tuple:
     :rtype: tuple
     """
 
-    lat = deg2dms(lat, "LA")
-    lon = deg2dms(lon, "LN")
+    lat = deg2dms(lat, LA)
+    lon = deg2dms(lon, LN)
     return lat, lon
 
 
@@ -308,8 +309,8 @@ def latlon2dmm(lat: float, lon: float) -> tuple:
     :rtype: tuple
     """
 
-    lat = deg2dmm(lat, "LA")
-    lon = deg2dmm(lon, "LN")
+    lat = deg2dmm(lat, LA)
+    lon = deg2dmm(lon, LN)
     return lat, lon
 
 
@@ -331,9 +332,9 @@ def deg2dms(degrees: float, att: str) -> str:
         minutes, seconds = divmod(degrees * 3600, 60)
         degrees, minutes = divmod(minutes, 60)
         if negative:
-            sfx = "S" if att == "LA" else "W"
+            sfx = "S" if att == LA else "W"
         else:
-            sfx = "N" if att == "LA" else "E"
+            sfx = "N" if att == LA else "E"
         return f"{int(degrees)}\u00b0{int(minutes)}\u2032{round(seconds,5)}\u2033{sfx}"
     except (TypeError, ValueError):
         return ""
@@ -356,9 +357,9 @@ def deg2dmm(degrees: float, att: str) -> str:
         degrees = abs(degrees)
         degrees, minutes = divmod(degrees * 60, 60)
         if negative:
-            sfx = "S" if att == "LA" else "W"
+            sfx = "S" if att == LA else "W"
         else:
-            sfx = "N" if att == "LA" else "E"
+            sfx = "N" if att == LA else "E"
         return f"{int(degrees)}\u00b0{round(minutes,7)}\u2032{sfx}"
     except (TypeError, ValueError):
         return ""

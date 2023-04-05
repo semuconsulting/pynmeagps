@@ -38,6 +38,7 @@ GNSSLIST = {
 GPSEPOCH0 = datetime(1980, 1, 6)
 # Geodetic datum spheroid values:
 # WGS84, ETRS89, EPSG4326
+WGS84 = "WGS_84"
 WGS84_SMAJ_AXIS = 6378137.0  # semi-major axis
 WGS84_FLATTENING = 298.257223563  # flattening
 
