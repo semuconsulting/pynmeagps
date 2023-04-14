@@ -15,7 +15,6 @@
                 "pip",
                 "install",
                 "--upgrade",
-                "--upgrade",
                 "-r",
                 "${workspaceFolder}/requirements_build.txt",
             ],
