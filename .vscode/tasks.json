@@ -192,8 +192,8 @@
             "dependsOrder": "sequence",
             "dependsOn": [
                 "Clean",
-                //"Update Toolchain",
-                //"Update Dependencies",
+                "Update Toolchain",
+                "Update Dependencies",
                 "Format",
                 "Pylint",
                 "Test",

@@ -453,10 +453,8 @@ class NMEAMessage:
         elif att == nmt.DE:  # decimal
             if vals != "":
                 val = float(vals)
-        elif att == nmt.DT:  # date ddmmyy
-            val = date2utc(vals)
-        elif att == nmt.DM:  # date mmddyy
-            val = date2utc(vals, nmt.DM)
+        elif att in (nmt.DT, nmt.DM):  # date
+            val = date2utc(vals, att)
         elif att == nmt.IN:  # integer
             if vals != "":
                 val = int(vals)
@@ -495,8 +493,8 @@ class NMEAMessage:
             vals = ddd2dmm(val, att, hpmode)
         elif att == nmt.TM:
             vals = time2str(val)
-        elif att == nmt.DT:
-            vals = date2str(val)
+        elif att in (nmt.DT, nmt.DM):
+            vals = date2str(val, att)
         else:
             raise nme.NMEATypeError(f"Unknown attribute type {att}.")
         return vals

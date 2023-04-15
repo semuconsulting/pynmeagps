@@ -160,6 +160,8 @@ class StaticTest(unittest.TestCase):
     def testDate2str(self):
         res = date2str(datetime.date(2021, 3, 7))
         self.assertEqual(res, "070321")
+        res = date2str(datetime.date(2021, 3, 7), "DM")
+        self.assertEqual(res, "030721")
         res = date2str("wsdfasdf")
         self.assertEqual(res, "")
 

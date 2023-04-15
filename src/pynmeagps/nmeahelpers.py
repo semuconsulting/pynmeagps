@@ -185,17 +185,14 @@ def date2utc(dates: str, form: str = DT) -> datetime.date:
     """
     Convert NMEA Date to UTC datetime.
 
-    :param str dates: NMEA date ddmmyy
+    :param str dates: NMEA date
     :param str form: date format DT = ddmmyy, DM = mmddyy (DT)
     :return: UTC date YYyy:mm:dd
     :rtype: datetime.date
     """
 
     try:
-        if form == DM:
-            dform = "%m%d%y"
-        else:
-            dform = "%d%m%y"
+        dform = "%m%d%y" if form == DM else "%d%m%y"
         utc = datetime.strptime(dates, dform)
         return utc.date()
     except (TypeError, ValueError):
@@ -235,17 +232,19 @@ def time2str(tim: datetime.time) -> str:
         return ""
 
 
-def date2str(dat: datetime.date) -> str:
+def date2str(dat: datetime.date, form: str = DT) -> str:
     """
     Convert datetime.date to NMEA formatted string.
 
     :param datetime.date dat: date
-    :return: NMEA formatted date string ddmmyy
+    :param str form: date format DT = ddmmyy, DM = mmddyy (DT)
+    :return: NMEA formatted date string
     :rtype: str
     """
 
     try:
-        return dat.strftime("%d%m%y")
+        dform = "%m%d%y" if form == DM else "%d%m%y"
+        return dat.strftime(dform)
     except (AttributeError, TypeError, ValueError):
         return ""
 
