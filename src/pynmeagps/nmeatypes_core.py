@@ -25,7 +25,7 @@ ERR_IGNORE = 0
 ERR_LOG = 1
 ERR_RAISE = 2
 # proprietary messages where msgId is first element of payload:
-PROP_MSGIDS = ("UBX", "TNL")
+PROP_MSGIDS = ("UBX", "TNL", "ASHR")
 
 GNSSLIST = {
     0: "GPS",
@@ -177,6 +177,7 @@ NMEA_MSGIDS = {
     "GGA": "Global positioning system fix data",
     "GLL": "Latitude and longitude, with time of position fix and status",
     "GLQ": "Poll Standard Message - Talker ID GL (GLONASS)",
+    "GMP": "GNSS Map Projection Fix Data",
     "GNQ": "Poll Standard Message - Talker ID GN (Any GNSS)",
     "GNS": "GNSS Fix Data",
     "GPQ": "Poll Standard Message - Talker ID GP (GPS, SBAS)",
@@ -248,12 +249,45 @@ NMEA_MSGIDS_PROP = {
     # ***************************************************************
     # Trimble Proprietary message types
     # ***************************************************************
+    "ASHRALR": "Alarms",
+    "ASHRARA": "True Heading",
+    "ASHRARR": "Vector & Accuracy",
+    "ASHRATT": "True Heading",
+    "ASHRBTS": "Bluetooth Status",
+    "ASHRCAP": "Parameters of Antenna Used at Received Base",
+    "ASHRCPA": "Height of Antenna Used at Received Base",
+    "ASHRCPO": "Position of Received Base",
+    "ASHRDDM": "Differential Decoder Message",
+    "ASHRDDS": "Differential Decoder Status",
+    "ASHRHPR": "True Heading",
+    "ASHRLTN": "Latency",
+    "ASHRMDM": "Modem State and Parameter",
+    "ASHRPOS": "Position",
+    "ASHRPTT": "PPS Time Tag",
+    "ASHRPWR": "Power Status",
+    "ASHRRCS": "Recording Status",
+    "ASHRSBD": "BEIDOU Satellites Status",
+    "ASHRSGA": "GALILEO Satellites Status (E1,E5a,E5b)",
+    "ASHRSGL": "GLONASS Satellites Status",
+    "ASHRSGO": "GALILEO Satellites Status (E1,E5a,E5b,E6)",
+    "ASHRSGP": "GPS Satellites Status",
+    "ASHRSIR": "IRNSS Satellites Status",
+    "ASHRSLB": "L-Band Satellites Status",
+    "ASHRSQZ": "QZSS Satellites Status",
+    "ASHRSSB": "SBAS Satellites Status",
+    "ASHRTEM": "Receiver Temperature",
+    "ASHRTHS": "True Heading and Status",
+    "ASHRTTT": "Event Marker",
+    "ASHRVCR": "Vector and Accuracy",
+    "ASHRVCT": "Vector and Accuracy",
+    "ASHRVEL": "Velocity",
     "FUGDP": "Fugro Dynamic Positioning",
     "TNLAVR": "Time, yaw, tilt/roll, range for moving baseline RTK",
     "TNLBPQ": "Base station position and quality indicator",
     "TNLDG": "L-band corrections and beacon signal strength and related information",
-    "NTLEVT": "Event marker data",
+    "TNLEVT": "Event marker data",
     "TNLGGK": "Time, position, position type, DOP",
+    "TNLGGKx": "GNSS Position Message",
     "TNLPJK": "Local coordinate position output",
     "TNLPJT": "Projection type",
     "TNLVGK": "Vector information",

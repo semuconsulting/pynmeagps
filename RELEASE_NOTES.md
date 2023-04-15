@@ -5,6 +5,7 @@
 ENHANCEMENTS:
 
 1. Add proprietary Trimble message definitions.
+    - GMP   GNSS Map Projection Fix Data
     - LLQ 	Leica local position and quality
     - ROT 	Rate of turn
     - PTNL,AVR 	Time, yaw, tilt, range, mode, PDOP, and number of SVs for Moving Baseline RTK
@@ -16,6 +17,38 @@ ENHANCEMENTS:
     - PTNL,PJT 	Projection type
     - PTNL,VGK 	Time, locator vector, type, and DOP values
     - PTNL,VHD 	Heading Information
+    - PASHR,ALR Alarms
+    - PASHR,ARA True Heading
+    - PASHR,ARR Vector & Accuracy
+    - PASHR,ATT True Heading
+    - PASHR,BTS Bluetooth Status
+    - PASHR,CAP Parameters of Antenna Used at Received Base
+    - PASHR,CPA Height of Antenna Used at Received Base
+    - PASHR,CPO Position of Received Base
+    - PASHR,DDM Differential Decoder Message
+    - PASHR,DDS Differential Decoder Status
+    - PASHR,HPR True Heading
+    - PASHR,LTN Latency
+    - PASHR,MDM Modem State and Parameter
+    - PASHR,POS Position
+    - PASHR,PTT PPS Time Tag
+    - PASHR,PWR Power Status
+    - PASHR,RCS Recording Status
+    - PASHR,SBD BEIDOU Satellites Status
+    - PASHR,SGA GALILEO Satellites Status (E1,E5a,E5b)
+    - PASHR,SGL GLONASS Satellites Status
+    - PASHR,SGO GALILEO Satellites Status (E1,E5a,E5b,E6)
+    - PASHR,SGP GPS Satellites Status
+    - PASHR,SIR IRNSS Satellites Status
+    - PASHR,SLB L-Band Satellites Status
+    - PASHR,SQZ QZSS Satellites Status
+    - PASHR,SSB SBAS Satellites Status
+    - PASHR,TEM Receiver Temperature
+    - PASHR,THS True Heading and Status
+    - PASHR,TTT Event Marker
+    - PASHR,VCR Vector and Accuracy
+    - PASHR,VCT Vector and Accuracy
+    - PASHR,VEL Velocity
 
 ### RELEASE 1.0.22
 

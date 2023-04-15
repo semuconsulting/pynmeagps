@@ -368,9 +368,7 @@ class NMEAMessage:
         :rtype: str
         """
 
-        if self.talker == "P" and self._msgID == "UBX":
-            return self._talker + self._msgID + self.msgId  # pylint: disable=no-member
-        if self.talker == "P" and self._msgID == "TNL":
+        if self.talker == "P" and self._msgID in nmt.PROP_MSGIDS:
             return self._talker + self._msgID + self.msgId  # pylint: disable=no-member
         return self._talker + self._msgID
 

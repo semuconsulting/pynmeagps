@@ -148,6 +148,20 @@ NMEA_PAYLOADS_GET = {
         "status": ST,
         "posMode": ST,
     },
+    "GMP": {
+        "utctime": TM,
+        "mapProjection": ST,
+        "mapZone": ST,
+        "gridN": DE,
+        "gridE": DE,
+        "modeInd": CH,
+        "sip": IN,
+        "HDOP": DE,
+        "alt": DE,
+        "geoidSep": DE,
+        "corrAge": DE,
+        "baseId": ST,
+    },
     "GNS": {
         "time": TM,
         "lat": LA,
@@ -581,7 +595,7 @@ NMEA_PAYLOADS_GET = {
         "rollc": ST,  # "Roll"
         "range": DE,
         "gpsQual": IN,
-        "pdop": DE,
+        "PDOP": DE,
         "sip": IN,
     },
     "TNLBPQ": {
@@ -625,9 +639,27 @@ NMEA_PAYLOADS_GET = {
         "EW": CH,
         "gpsQual": IN,
         "sip": IN,
-        "dop": DE,
+        "DOP": DE,
         "height": ST,  # starts with "EHT-"
         "hunit": CH,  # 'M'
+    },
+    "TNLGGKx": {
+        "msgId": ST,  # "GGK"
+        "utctime": TM,
+        "utcdate": DT,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "posType": IN,
+        "sip": IN,
+        "PDOP": DE,
+        "height": DE,
+        "numExt": IN,
+        "sigmaE": DE,
+        "sigmaN": DE,
+        "sigmaV": DE,
+        "propogationAge": DE,
     },
     "TNLPJK": {
         "msgId": ST,  # "PJK"
@@ -639,7 +671,7 @@ NMEA_PAYLOADS_GET = {
         "eunit": CH,  # 'E"
         "gpsQual": IN,
         "sip": IN,
-        "dop": DE,
+        "DOP": DE,
         "height": ST,  # starts with "EHT-" or "GHT-"
         "hunit": CH,  # 'M'
     },
@@ -657,7 +689,7 @@ NMEA_PAYLOADS_GET = {
         "vectV": DE,
         "gpsQual": IN,
         "sip": IN,
-        "dop": DE,
+        "DOP": DE,
         "vunit": CH,  # 'M'
     },
     "TNLVHD": {
@@ -672,8 +704,431 @@ NMEA_PAYLOADS_GET = {
         "rangeRate": DE,
         "gpsQual": IN,
         "sip": IN,
-        "pdop": DE,
+        "PDOP": DE,
         "unit": CH,  # 'M'
+    },
+    "ASHRALR": {
+        "msgId": ST,  # "ALR"
+        "alarmCode": IN,
+        "alarmSubcode": IN,
+        "streamId": CH,
+        "alarmCat": ST,
+        "alarmLevel": IN,
+        "desc": ST,
+    },
+    "ASHRARA": {
+        "msgId": ST,  # "ARA"
+        "valid": CH,  # = "0" when valid
+        "utctime": TM,
+        "hdgSpeed": DE,
+        "pitchSpeed": DE,
+        "rollSpeed": DE,
+        "hdgAcc": DE,
+        "pitchAcc": DE,
+        "rollAcc": DE,
+        "reserved": ST,
+    },
+    "ASHRARR": {
+        "msgId": ST,  # "ARR"
+        "vectNum": IN,
+        "vectMode": IN,
+        "sip": IN,
+        "utctime": TM,
+        "antEcefX": DE,
+        "antEcefY": DE,
+        "antEcefZ": DE,
+        "coord1std": DE,
+        "coord2std": DE,
+        "coord3std": DE,
+        "coord12corr": DE,
+        "coord13corr": DE,
+        "coord23corr": DE,
+        "refId": CH,
+        "vectFrame": IN,  # 0 = XYZ
+        "vectOpt": IN,
+        "clkAssum": IN,
+    },
+    "ASHRATT": {
+        "msgId": ST,  # "ATT"
+        "weekTime": DE,
+        "trueHdg": DE,
+        "pitch": DE,
+        "roll": DE,
+        "carrierRmsErr": DE,
+        "baselineRmsErr": DE,
+        "ambiguity": IN,
+    },
+    "ASHRBTS": {
+        "msgId": ST,  # "BTS"
+        "portgroup": (
+            3,
+            {
+                "port": CH,  # C, H or T
+                "connected": IN,
+                "name": ST,
+                "addr": ST,
+                "linkQual": IN,
+            },
+        ),
+    },
+    "ASHRCAP": {
+        "msgId": ST,  # "CAP"
+        "name": ST,
+        "L1Noffset": DE,
+        "L1Eoffset": DE,
+        "L1Voffset": DE,
+        "L2Noffset": DE,
+        "L2Eoffset": DE,
+        "L2Voffset": DE,
+    },
+    "ASHRCPA": {
+        "msgId": ST,  # "CPA"
+        "antHeight": DE,
+        "antRadius": DE,
+        "vertOffset": DE,
+        "horAzi": DE,
+        "horDist": DE,
+        "reserved1": ST,
+        "reserved2": ST,
+        "reserved3": ST,
+        "reserved4": ST,
+    },
+    "ASHRCPO": {
+        "msgId": ST,  # "CPO"
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "height": DE,
+    },
+    "ASHRDDM": {
+        "msgId": ST,  # "DDM"
+        "corrPort": CH,
+        "msgTransport": ST,
+        "msgIdent": ST,
+        "count": IN,
+        "baseId": ST,
+        "timeLag": DE,
+        "corrAge": DE,
+        "attr": ST,
+    },
+    "ASHRDDS": {
+        "msgId": ST,  # "DDS"
+        "diffDecodeNum": IN,
+        "timeTag": TM,
+        "numMsgDecoded": IN,
+        "port": CH,
+        "prot": ST,
+        "timeWindow": IN,
+        "percLinkQual": IN,
+        "percDeselectInfo": IN,
+        "percCrc": IN,
+        "latencyStd": IN,
+        "latencyMean": IN,
+        "epochIntMean": IN,
+        "epochIntMin": IN,
+        "numMsgDetected": IN,
+        "msgType": ST,
+        "lastMsgInt": DE,
+        "lastMsgAge": DE,
+    },
+    "ASHRHPR": {
+        "msgId": ST,  # "HPR"
+        "utctime": TM,
+        "trueHdg": DE,
+        "pitch": DE,
+        "roll": DE,
+        "carrierRmsErr": DE,
+        "baselineRmsErr": DE,
+        "ambiguity": IN,
+        "attStatus": IN,
+        "antBaseline": ST,
+        "PDOP": DE,
+    },
+    "ASHRLTN": {
+        "msgId": ST,  # "LTN"
+        "latency": DE,
+    },
+    "ASHRMDM": {
+        "msgId": ST,  # "MDM"
+        "port": ST,
+        "baud": IN,
+        "state": ST,
+        "powerMode": ST,
+        "pinCode": ST,
+        "protocol": IN,
+        "csdMode": IN,  # not used
+        "accessPoint": ST,
+        "login": ST,
+        "password": ST,
+        "phoneNum": ST,
+        "autoDial": CH,
+        "maxRedial": IN,
+        "model": ST,
+        "selMode": IN,
+        "gsmAnt": ST,
+    },
+    "ASHRPOS": {
+        "msgId": ST,  # "POS"
+        "solnType": IN,
+        "sip": IN,
+        "utctime": TM,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "alt": DE,
+        "corrAge": DE,
+        "trueTrk": DE,
+        "sog": DE,
+        "vertVel": DE,
+        "PDOP": DE,
+        "HDOP": DE,
+        "VDOP": DE,
+        "TDOP": DE,
+        "baseId": ST,
+    },
+    "ASHRPTT": {
+        "msgId": ST,  # "PTT"
+        "dow": IN,
+        "timeTag": ST,
+    },
+    "ASHRPWR": {
+        "msgId": ST,  # "PWR"
+        "powerSource": IN,
+        "voltsOut": DE,
+        "reserved1": ST,
+        "percRemaining": IN,
+        "reserved2": ST,
+        "voltsIn": DE,
+        "chargeStatus": IN,
+        "reserved3": ST,
+        "tempInt": DE,
+        "tempBatt": DE,
+    },
+    "ASHRRCS": {
+        "msgId": ST,  # "RCS"
+        "recordStatus": CH,
+        "memory": IN,
+        "fileName": ST,
+        "recordRate": IN,
+        "occupationType": IN,
+        "occupationState": IN,
+        "occupationName": ST,
+    },
+    "ASHRSBD": {
+        "msgId": ST,  # "SBD"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "prn": IN,
+                "azi": DE,
+                "ele": DE,
+                "snrB1": DE,
+                "snrB2": DE,
+                "snrB3": DE,
+                "usageStatus": ST,
+                "corrStatus": ST,
+            },
+        ),
+    },
+    "ASHRSGA": {
+        "msgId": ST,  # "SGA"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "prn": IN,
+                "azi": DE,
+                "ele": DE,
+                "snrE1": DE,
+                "snrE5b": DE,
+                "snrE5a": DE,
+                "usageStatus": ST,
+                "corrStatus": ST,
+            },
+        ),
+    },
+    "ASHRSGL": {
+        "msgId": ST,  # "SGL"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "prn": IN,
+                "azi": DE,
+                "ele": DE,
+                "snrL1": DE,
+                "snrL2": DE,
+                "snrL3": DE,
+                "usageStatus": ST,
+                "corrStatus": ST,
+            },
+        ),
+    },
+    "ASHRSGO": {
+        "msgId": ST,  # "SGO"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "prn": IN,
+                "azi": DE,
+                "ele": DE,
+                "snrE1": DE,
+                "snrE5b": DE,
+                "snrE5a": DE,
+                "snrE6": DE,
+                "reserved": ST,
+                "usageStatus": ST,
+                "corrStatus": ST,
+            },
+        ),
+    },
+    "ASHRSGP": {
+        "msgId": ST,  # "SGP"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "prn": IN,
+                "azi": DE,
+                "ele": DE,
+                "snrL1": DE,
+                "snrL2": DE,
+                "snrL3": DE,
+                "usageStatus": ST,
+                "corrStatus": ST,
+            },
+        ),
+    },
+    "ASHRSIR": {
+        "msgId": ST,  # "SIR"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "prn": IN,
+                "azi": DE,
+                "ele": DE,
+                "reserved2": ST,
+                "reserved3": ST,
+                "snrL5": DE,
+                "usageStatus": ST,
+                "corrStatus": ST,
+            },
+        ),
+    },
+    "ASHRSLB": {
+        "msgId": ST,  # "SLB"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "satNum": IN,
+                "contTrkInt": DE,
+                "azi": DE,
+                "ele": DE,
+                "snr": DE,
+            },
+        ),
+    },
+    "ASHRSQZ": {
+        "msgId": ST,  # "SQZ"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "prn": IN,
+                "azi": DE,
+                "ele": DE,
+                "snrL1": DE,
+                "snrL2": DE,
+                "snrL3": DE,
+                "usageStatus": ST,
+                "corrStatus": ST,
+            },
+        ),
+    },
+    "ASHRSSB": {
+        "msgId": ST,  # "SSB"
+        "siv": IN,
+        "satgroup": (  # repeating group * siv
+            "siv",
+            {
+                "prn": IN,
+                "azi": DE,
+                "ele": DE,
+                "snrL1": DE,
+                "reserved": ST,
+                "snrL5": DE,
+                "usageStatus": ST,
+                "corrStatus": ST,
+            },
+        ),
+    },
+    "ASHRTEM": {
+        "msgId": ST,  # "TEM"
+        "temp": DE,  # 1/1000 degrees
+    },
+    "ASHRTHS": {
+        "msgId": ST,  # "THS"
+        "lastComputedHdg": DE,
+        "solnStatus": CH,
+    },
+    "ASHRTTT": {
+        "msgId": ST,  # "TTT"
+        "dow": IN,
+        "timeTag": TM,
+    },
+    "ASHRVCR": {
+        "msgId": ST,  # "VCR"
+        "baselineNum": IN,
+        "baselineMode": IN,
+        "sip": IN,
+        "utctime": TM,
+        "antEcefX": DE,
+        "antEcefY": DE,
+        "antEcefZ": DE,
+        "coord1std": DE,
+        "coord2std": DE,
+        "coord3std": DE,
+        "coord12corr": DE,
+        "coord13corr": DE,
+        "coord23corr": DE,
+        "baseId": ST,
+        "baselineCoordId": ST,  # 0 = XYZ
+    },
+    "ASHRVCT": {
+        "msgId": ST,  # "VCT"
+        "baselineMode": IN,
+        "sip": IN,
+        "utctime": TM,
+        "antEcefX": DE,
+        "antEcefY": DE,
+        "antEcefZ": DE,
+        "coord1std": DE,
+        "coord2std": DE,
+        "coord3std": DE,
+        "coord12corr": DE,
+        "coord13corr": DE,
+        "coord23corr": DE,
+        "baseId": ST,
+        "baselineCoordId": ST,  # 0 = XYZ
+        "baselineNum": IN,
+        "vrs": IN,
+        "staticModeAssumption": IN,
+    },
+    "ASHRVEL": {
+        "msgId": ST,  # "VEL"
+        "velE": DE,
+        "velN": DE,
+        "velV": DE,
+        "velERmsErr": DE,
+        "velNRmsErr": DE,
+        "velVRmsErr": DE,
+        "velSmoothInt": IN,
     },
     # *********************************************
     # Dummy message for error testing
