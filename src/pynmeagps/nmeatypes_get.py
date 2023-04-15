@@ -1037,17 +1037,19 @@ NMEA_PAYLOADS_GET = {
         "lat": DE,
         "lon": DE,
         "height": DE,
-        "ele": DE,
-        "azi": DE,
+        "ele": DE,  # optional
+        "azi": DE,  # optional
     },
     "GPPADV120": {
         "msgId": ST,  # "120"
-        "prn1": IN,
-        "ele1": DE,
-        "azi1": DE,
-        "prn2": IN,
-        "ele2": DE,
-        "azi2": DE,
+        "satgrp": (  # repeating group * 2
+            2,
+            {
+                "prn": IN,
+                "ele": DE,
+                "azi": DE,
+            },
+        ),
     },
     "TNLAVR": {
         "msgId": ST,  # "AVR"

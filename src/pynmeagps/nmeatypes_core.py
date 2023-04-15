@@ -25,7 +25,7 @@ ERR_IGNORE = 0
 ERR_LOG = 1
 ERR_RAISE = 2
 # proprietary messages where msgId is first element of payload:
-PROP_MSGIDS = ("UBX", "TNL", "ASHR", "GPP")
+PROP_MSGIDS = ("UBX", "TNL", "ASHR", "GPPADV")
 
 GNSSLIST = {
     0: "GPS",

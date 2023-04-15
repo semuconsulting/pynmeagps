@@ -420,6 +420,8 @@ class StreamTest(unittest.TestCase):
             "<NMEA(PTNLVGK, msgId=VGK, utctime=16:01:59, utcdate=1997-01-09, vectE=-0.161, vectN=9.985, vectV=-0.002, gpsQual=3, sip=7, DOP=1.0, vunit=4)>",
             "<NMEA(PASHRARR, msgId=ARR, vectNum=1, vectMode=3, sip=12, utctime=16:01:59, antEcefX=123.45, antEcefY=123.45, antEcefZ=-123.45, coord1std=12.34, coord2std=12.34, coord3std=12.34, coord12corr=2.34, coord13corr=2.34, coord23corr=-2.34, refId=S, vectFrame=0, vectOpt=2, clkAssum=1)>",
             "<NMEA(PASHRBTS, msgId=BTS, port_01=C, connected_01=1, name_01=btsdev1, addr_01=hs-344-fg, linkQual_01=87, port_02=H, connected_02=1, name_02=btsdev2, addr_02=pc-377xs, linkQual_02=68, port_03=T, connected_03=0, name_03=, addr_03=, linkQual_03=)>",
+            "<NMEA(PGPPADV110, msgId=110, lat=39.88113582, lon=-105.07838455, height=1614.125)>",
+            "<NMEA(PGPPADV120, msgId=120, prn_01=21, ele_01=76.82, azi_01=68.51, prn_02=29, ele_02=20.66, azi_02=317.47)>",
         )
 
         i = 0
@@ -430,7 +432,7 @@ class StreamTest(unittest.TestCase):
                 print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
-        self.assertEqual(i, 18)
+        self.assertEqual(i, 20)
 
 
 if __name__ == "__main__":
