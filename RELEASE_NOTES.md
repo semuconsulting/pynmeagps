@@ -8,15 +8,6 @@ ENHANCEMENTS:
     - GMP   GNSS Map Projection Fix Data
     - LLQ 	Leica local position and quality
     - ROT 	Rate of turn
-    - PTNL,AVR 	Time, yaw, tilt, range, mode, PDOP, and number of SVs for Moving Baseline RTK
-    - PTNL,BPQ 	Base station position and position quality indicator
-    - PTNL,DG 	L-band corrections and beacon signal strength and related information
-    - PTNL,EVT 	Event marker data
-    - PTNL,GGK 	Time, position, position type, and DOP values
-    - PTNL,PJK 	Time, position, position type, and DOP values
-    - PTNL,PJT 	Projection type
-    - PTNL,VGK 	Time, locator vector, type, and DOP values
-    - PTNL,VHD 	Heading Information
     - PASHR,ALR Alarms
     - PASHR,ARA True Heading
     - PASHR,ARR Vector & Accuracy
@@ -28,8 +19,10 @@ ENHANCEMENTS:
     - PASHR,DDM Differential Decoder Message
     - PASHR,DDS Differential Decoder Status
     - PASHR,HPR True Heading
+    - PASHRHR Proprietary Roll and Pitch
     - PASHR,LTN Latency
     - PASHR,MDM Modem State and Parameter
+    - PASHR,PBN Position and Velocity Information
     - PASHR,POS Position
     - PASHR,PTT PPS Time Tag
     - PASHR,PWR Power Status
@@ -49,6 +42,19 @@ ENHANCEMENTS:
     - PASHR,VCR Vector and Accuracy
     - PASHR,VCT Vector and Accuracy
     - PASHR,VEL Velocity
+    - FUGDP Fugro Dynamic Positioning
+    - GPPADV,110 Position and satellite information for RTK network operations 110
+    - GPPADV,120 Position and satellite information for RTK network operations 120
+    - PTNL,AVR 	Time, yaw, tilt, range, mode, PDOP, and number of SVs for Moving Baseline RTK
+    - PTNL,BPQ 	Base station position and position quality indicator
+    - PTNL,DG 	L-band corrections and beacon signal strength and related information
+    - PTNL,EVT 	Event marker data
+    - PTNL,GGK 	Time, position, position type, and DOP values
+    - PTNL,PJK 	Time, position, position type, and DOP values
+    - PTNL,PJT 	Projection type
+    - PTNL,REX Rover Extended Output
+    - PTNL,VGK 	Time, locator vector, type, and DOP values
+    - PTNL,VHD 	Heading Information
 
 ### RELEASE 1.0.22
 

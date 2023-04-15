@@ -25,7 +25,7 @@ ERR_IGNORE = 0
 ERR_LOG = 1
 ERR_RAISE = 2
 # proprietary messages where msgId is first element of payload:
-PROP_MSGIDS = ("UBX", "TNL", "ASHR")
+PROP_MSGIDS = ("UBX", "TNL", "ASHR", "GPP")
 
 GNSSLIST = {
     0: "GPS",
@@ -260,9 +260,11 @@ NMEA_MSGIDS_PROP = {
     "ASHRDDM": "Differential Decoder Message",
     "ASHRDDS": "Differential Decoder Status",
     "ASHRHPR": "True Heading",
+    "ASHRHR": "Proprietary Roll and Pitch",
     "ASHRLTN": "Latency",
     "ASHRMDM": "Modem State and Parameter",
     "ASHRPOS": "Position",
+    "ASHRPBN": "Position and Velocity Information",
     "ASHRPTT": "PPS Time Tag",
     "ASHRPWR": "Power Status",
     "ASHRRCS": "Recording Status",
@@ -282,6 +284,8 @@ NMEA_MSGIDS_PROP = {
     "ASHRVCT": "Vector and Accuracy",
     "ASHRVEL": "Velocity",
     "FUGDP": "Fugro Dynamic Positioning",
+    "GPPADV110": "Position and satellite information for RTK network operations 110",
+    "GPPADV120": "Position and satellite information for RTK network operations 120",
     "TNLAVR": "Time, yaw, tilt/roll, range for moving baseline RTK",
     "TNLBPQ": "Base station position and quality indicator",
     "TNLDG": "L-band corrections and beacon signal strength and related information",
@@ -290,6 +294,7 @@ NMEA_MSGIDS_PROP = {
     "TNLGGKx": "GNSS Position Message",
     "TNLPJK": "Local coordinate position output",
     "TNLPJT": "Projection type",
+    "TNLREX": "Rover Extended Output",
     "TNLVGK": "Vector information",
     "TNLVHD": "Heading information",
     # ***************************************************************
