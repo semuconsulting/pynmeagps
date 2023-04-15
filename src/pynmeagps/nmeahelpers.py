@@ -17,6 +17,8 @@ from pynmeagps.nmeatypes_core import (
     NMEA_MSGIDS_PROP,
     LA,
     LN,
+    DT,
+    DM,
     WGS84_SMAJ_AXIS,
     WGS84_FLATTENING,
     WGS84,
@@ -179,17 +181,22 @@ def ddd2dmm(degrees: float, att: str, hpmode: bool = False) -> str:
         return ""
 
 
-def date2utc(dates: str) -> datetime.date:
+def date2utc(dates: str, form: str = DT) -> datetime.date:
     """
     Convert NMEA Date to UTC datetime.
 
     :param str dates: NMEA date ddmmyy
+    :param str form: date format DT = ddmmyy, DM = mmddyy (DT)
     :return: UTC date YYyy:mm:dd
     :rtype: datetime.date
     """
 
     try:
-        utc = datetime.strptime(dates, "%d%m%y")
+        if form == DM:
+            dform = "%m%d%y"
+        else:
+            dform = "%d%m%y"
+        utc = datetime.strptime(dates, dform)
         return utc.date()
     except (TypeError, ValueError):
         return ""

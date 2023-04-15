@@ -31,6 +31,7 @@ from pynmeagps.nmeatypes_core import (
     CH,
     DE,
     DT,
+    DM,
     HX,
     IN,
     LA,
@@ -553,6 +554,7 @@ NMEA_PAYLOADS_GET = {
     },
     # ***************************************************************
     # Trimble Proprietary message types
+    # https://receiverhelp.trimble.com/alloy-gnss/en-us/NMEA-0183messages_MessageOverview.html
     # ***************************************************************
     "FUGDP": {
         "type": ST,  # GPS (GP), GLONASS (GL) or GNSS (GN)
@@ -649,7 +651,7 @@ NMEA_PAYLOADS_GET = {
     "TNLVGK": {
         "msgId": ST,  # "VGK"
         "utctime": TM,
-        "utcdate": DT,
+        "utcdate": DM,  # mmddyy
         "vectE": DE,
         "vectN": DE,
         "vectV": DE,
@@ -661,7 +663,7 @@ NMEA_PAYLOADS_GET = {
     "TNLVHD": {
         "msgId": ST,  # "VHD"
         "utctime": TM,
-        "utcdate": DT,
+        "utcdate": DM,  # mmddyy
         "azi": DE,
         "aziRate": DE,
         "ele": DE,

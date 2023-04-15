@@ -142,6 +142,8 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, "")
         res = date2utc("120320")
         self.assertEqual(res, datetime.date(2020, 3, 12))
+        res = date2utc("031220", "DM")
+        self.assertEqual(res, datetime.date(2020, 3, 12))
 
     def testTime2UTC(self):
         res = time2utc("")

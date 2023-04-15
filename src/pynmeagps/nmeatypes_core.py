@@ -50,6 +50,7 @@ WGS84_FLATTENING = 298.257223563  # flattening
 CH = "CH"  # Character
 DE = "DE"  # Decimal
 DT = "DT"  # Date ddmmyy
+DM = "DM"  # Date mmddyy
 HX = "HX"  # Hexadecimal Integer
 IN = "IN"  # Integer
 LA = "LA"  # Latitude value ddmm.mmmmm

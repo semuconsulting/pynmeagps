@@ -416,8 +416,8 @@ class StreamTest(unittest.TestCase):
             "<NMEA(PTNLPJK, msgId=PJK, utctime=20:28:31.500000, utcdate=2012-11-01, northing=805083.35, nunit=N, easting=388997.346, eunit=E, gpsQual=10, sip=9, dop=1.5, height=GHT+25.478, hunit=M)>",
             "<NMEA(PTNLPJK, msgId=PJK, utctime=01:07:17, utcdate=, northing=732646.511, nunit=N, easting=1731051.091, eunit=E, gpsQual=1, sip=5, dop=2.7, height=EHT+28.345, hunit=M)>",
             "<NMEA(PTNLPJT, msgId=PJT, coordName=NAD83(Conus), projName=California Zone 4 0404)>",
-            "<NMEA(PTNLVHD, msgId=VHD, utctime=03:05:56, utcdate=, azi=187.718, aziRate=-22.138, ele=-76.929, eleRate=-5.015, range=0.033, rangeRate=0.006, gpsQual=3, sip=7, pdop=2.4, unit=M)>",
-            "<NMEA(PTNLVGK, msgId=VGK, utctime=16:01:59, utcdate=1997-09-01, vectE=-0.161, vectN=9.985, vectV=-0.002, gpsQual=3, sip=7, dop=1.0, vunit=4)>",
+            "<NMEA(PTNLVHD, msgId=VHD, utctime=03:05:56, utcdate=1998-09-30, azi=187.718, aziRate=-22.138, ele=-76.929, eleRate=-5.015, range=0.033, rangeRate=0.006, gpsQual=3, sip=7, pdop=2.4, unit=M)>",
+            "<NMEA(PTNLVGK, msgId=VGK, utctime=16:01:59, utcdate=1997-01-09, vectE=-0.161, vectN=9.985, vectV=-0.002, gpsQual=3, sip=7, dop=1.0, vunit=4)>",
         )
 
         i = 0

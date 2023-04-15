@@ -455,6 +455,8 @@ class NMEAMessage:
                 val = float(vals)
         elif att == nmt.DT:  # date ddmmyy
             val = date2utc(vals)
+        elif att == nmt.DM:  # date mmddyy
+            val = date2utc(vals, nmt.DM)
         elif att == nmt.IN:  # integer
             if vals != "":
                 val = int(vals)
