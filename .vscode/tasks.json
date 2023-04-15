@@ -15,14 +15,13 @@
                 "pip",
                 "install",
                 "--upgrade",
-                "--upgrade",
                 "-r",
                 "${workspaceFolder}/requirements_build.txt",
             ],
             "problemMatcher": []
         },
         {
-            "label": "Install Dependencies",
+            "label": "Update Dependencies",
             "type": "process",
             "command": "${config:python.defaultInterpreterPath}",
             "args": [

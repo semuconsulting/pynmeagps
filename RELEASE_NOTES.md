@@ -1,5 +1,61 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.23
+
+ENHANCEMENTS:
+
+1. Add proprietary Trimble message definitions.
+    - GMP   GNSS Map Projection Fix Data
+    - LLQ 	Leica local position and quality
+    - ROT 	Rate of turn
+    - PASHR,ALR Alarms
+    - PASHR,ARA True Heading
+    - PASHR,ARR Vector & Accuracy
+    - PASHR,ATT True Heading
+    - PASHR,BTS Bluetooth Status
+    - PASHR,CAP Parameters of Antenna Used at Received Base
+    - PASHR,CPA Height of Antenna Used at Received Base
+    - PASHR,CPO Position of Received Base
+    - PASHR,DDM Differential Decoder Message
+    - PASHR,DDS Differential Decoder Status
+    - PASHR,HPR True Heading
+    - PASHRHR Proprietary Roll and Pitch
+    - PASHR,LTN Latency
+    - PASHR,MDM Modem State and Parameter
+    - PASHR,PBN Position and Velocity Information
+    - PASHR,POS Position
+    - PASHR,PTT PPS Time Tag
+    - PASHR,PWR Power Status
+    - PASHR,RCS Recording Status
+    - PASHR,SBD BEIDOU Satellites Status
+    - PASHR,SGA GALILEO Satellites Status (E1,E5a,E5b)
+    - PASHR,SGL GLONASS Satellites Status
+    - PASHR,SGO GALILEO Satellites Status (E1,E5a,E5b,E6)
+    - PASHR,SGP GPS Satellites Status
+    - PASHR,SIR IRNSS Satellites Status
+    - PASHR,SLB L-Band Satellites Status
+    - PASHR,SQZ QZSS Satellites Status
+    - PASHR,SSB SBAS Satellites Status
+    - PASHR,TEM Receiver Temperature
+    - PASHR,THS True Heading and Status
+    - PASHR,TTT Event Marker
+    - PASHR,VCR Vector and Accuracy
+    - PASHR,VCT Vector and Accuracy
+    - PASHR,VEL Velocity
+    - FUGDP Fugro Dynamic Positioning
+    - GPPADV,110 Position and satellite information for RTK network operations 110
+    - GPPADV,120 Position and satellite information for RTK network operations 120
+    - PTNL,AVR 	Time, yaw, tilt, range, mode, PDOP, and number of SVs for Moving Baseline RTK
+    - PTNL,BPQ 	Base station position and position quality indicator
+    - PTNL,DG 	L-band corrections and beacon signal strength and related information
+    - PTNL,EVT 	Event marker data
+    - PTNL,GGK 	Time, position, position type, and DOP values
+    - PTNL,PJK 	Time, position, position type, and DOP values
+    - PTNL,PJT 	Projection type
+    - PTNL,REX Rover Extended Output
+    - PTNL,VGK 	Time, locator vector, type, and DOP values
+    - PTNL,VHD 	Heading Information
+
 ### RELEASE 1.0.22
 
 FIXES:

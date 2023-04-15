@@ -43,6 +43,7 @@ class StreamTest(unittest.TestCase):
         self.streamNMEABADCK = open(
             os.path.join(dirname, "pygpsdata-nmeabadck2.log"), "rb"
         )
+        self.streamTRIMBLE = open(os.path.join(dirname, "trimble_nmea.log"), "rb")
 
     def tearDown(self):
         self.streamNMEA2.close()
@@ -54,6 +55,7 @@ class StreamTest(unittest.TestCase):
         self.streamNMEAFOO1.close()
         self.streamNMEAFOO2.close()
         self.streamNMEABADCK.close()
+        self.streamTRIMBLE.close()
 
     def catchio(self):
         """
@@ -397,6 +399,40 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+
+    def testNMEATRIMBLE(self):  # test proprietary Trimble messages
+        EXPECTED_RESULTS = (
+            "<NMEA(GPLLQ, utctime=03:41:37, utcdate=2012-07-21, easting=23.45, eunit=M, northing=13.07, nunit=M, gpsQual=3, sip=15, posQual=0.011, height=3.14, hunit=M)>",
+            "<NMEA(GPROT, rot=35.6, valid=A)>",
+            "<NMEA(PFUGDP, type=GN, utctime=03:36:15, lat=39.8980003333, NS=N, lon=-105.112554, EW=W, siv=13, dpvoaQual=9, dgnssMode=FF, smajErr=0.1, sminErr=0.1, dirErr=149)>",
+            "<NMEA(PTNLAVR, msgId=AVR, utctime=21:24:05.200000, yaw=52.1531, yawc=Yaw, tilt=-0.0806, tiltc=Tilt, roll=, rollc=, range=12.575, gpsQual=3, PDOP=1.4, sip=16)>",
+            "<NMEA(PTNLAVR, msgId=AVR, utctime=21:26:04.300000, yaw=52.18, yawc=Yaw, tilt=, tiltc=, roll=-0.0807, rollc=Roll, range=12.579, gpsQual=3, PDOP=1.4, sip=16)>",
+            "<NMEA(PTNLBPQ, msgId=BPQ, utctime=22:44:45.060000, utcdate=2007-12-02, lat=37.384897319, NS=N, lon=-122.0054366887, EW=W, height=EHT-5.923, hunit=M, gpsQual=5)>",
+            "<NMEA(PTNLDG, msgId=DG, strength=44.0, snr=33.0, freq=287.0, bitRate=100, chan=0, trkStatus=4, trkPerf=1)>",
+            "<NMEA(PTNLDG, msgId=DG, strength=124.0, snr=10.5, freq=1557855.0, bitRate=1200, chan=2, trkStatus=4, trkPerf=0)>",
+            "<NMEA(PTNLEVT, msgId=EVT, utctime=22:12:12.000008, port=1, numEvents=5026, wno=1893, dow=1, leaps=17)>",
+            "<NMEA(PTNLEVT, msgId=EVT, utctime=22:12:13.000008, port=1, numEvents=5027, wno=1893, dow=1, leaps=17)>",
+            "<NMEA(PTNLGGK, msgId=GGK, utctime=10:29:39, utcdate=, lat=50.0162206402, NS=N, lon=8.4603351237, EW=E, gpsQual=5, sip=9, DOP=1.9, height=EHT150.790, hunit=M)>",
+            "<NMEA(PTNLPJK, msgId=PJK, utctime=20:28:31.500000, utcdate=2012-11-01, northing=805083.35, nunit=N, easting=388997.346, eunit=E, gpsQual=10, sip=9, DOP=1.5, height=GHT+25.478, hunit=M)>",
+            "<NMEA(PTNLPJK, msgId=PJK, utctime=01:07:17, utcdate=, northing=732646.511, nunit=N, easting=1731051.091, eunit=E, gpsQual=1, sip=5, DOP=2.7, height=EHT+28.345, hunit=M)>",
+            "<NMEA(PTNLPJT, msgId=PJT, coordName=NAD83(Conus), projName=California Zone 4 0404)>",
+            "<NMEA(PTNLVHD, msgId=VHD, utctime=03:05:56, utcdate=1998-09-30, azi=187.718, aziRate=-22.138, ele=-76.929, eleRate=-5.015, range=0.033, rangeRate=0.006, gpsQual=3, sip=7, PDOP=2.4, unit=M)>",
+            "<NMEA(PTNLVGK, msgId=VGK, utctime=16:01:59, utcdate=1997-01-09, vectE=-0.161, vectN=9.985, vectV=-0.002, gpsQual=3, sip=7, DOP=1.0, vunit=4)>",
+            "<NMEA(PASHRARR, msgId=ARR, vectNum=1, vectMode=3, sip=12, utctime=16:01:59, antEcefX=123.45, antEcefY=123.45, antEcefZ=-123.45, coord1std=12.34, coord2std=12.34, coord3std=12.34, coord12corr=2.34, coord13corr=2.34, coord23corr=-2.34, refId=S, vectFrame=0, vectOpt=2, clkAssum=1)>",
+            "<NMEA(PASHRBTS, msgId=BTS, port_01=C, connected_01=1, name_01=btsdev1, addr_01=hs-344-fg, linkQual_01=87, port_02=H, connected_02=1, name_02=btsdev2, addr_02=pc-377xs, linkQual_02=68, port_03=T, connected_03=0, name_03=, addr_03=, linkQual_03=)>",
+            "<NMEA(PGPPADV110, msgId=110, lat=39.88113582, lon=-105.07838455, height=1614.125)>",
+            "<NMEA(PGPPADV120, msgId=120, prn_01=21, ele_01=76.82, azi_01=68.51, prn_02=29, ele_02=20.66, azi_02=317.47)>",
+        )
+
+        i = 0
+        raw = 0
+        nmr = NMEAReader(self.streamTRIMBLE, nmeaonly=False)
+        for raw, parsed in nmr.iterate():
+            if raw is not None:
+                print(parsed)
+                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                i += 1
+        self.assertEqual(i, 20)
 
 
 if __name__ == "__main__":

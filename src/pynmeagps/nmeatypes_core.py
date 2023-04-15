@@ -24,6 +24,8 @@ VALMSGID = 2
 ERR_IGNORE = 0
 ERR_LOG = 1
 ERR_RAISE = 2
+# proprietary messages where msgId is first element of payload:
+PROP_MSGIDS = ("UBX", "TNL", "ASHR", "GPPADV")
 
 GNSSLIST = {
     0: "GPS",
@@ -48,6 +50,7 @@ WGS84_FLATTENING = 298.257223563  # flattening
 CH = "CH"  # Character
 DE = "DE"  # Decimal
 DT = "DT"  # Date ddmmyy
+DM = "DM"  # Date mmddyy
 HX = "HX"  # Hexadecimal Integer
 IN = "IN"  # Integer
 LA = "LA"  # Latitude value ddmm.mmmmm
@@ -174,6 +177,7 @@ NMEA_MSGIDS = {
     "GGA": "Global positioning system fix data",
     "GLL": "Latitude and longitude, with time of position fix and status",
     "GLQ": "Poll Standard Message - Talker ID GL (GLONASS)",
+    "GMP": "GNSS Map Projection Fix Data",
     "GNQ": "Poll Standard Message - Talker ID GN (Any GNSS)",
     "GNS": "GNSS Fix Data",
     "GPQ": "Poll Standard Message - Talker ID GP (GPS, SBAS)",
@@ -185,12 +189,14 @@ NMEA_MSGIDS = {
     "HDG": "Heading, Magnetic, Deviation, Variation",
     "HDM": "Heading, Magnetic",  # deprecated
     "HDT": "Heating, True",
+    "LLQ": "Leica local position and quality",
     "MSK": "Send control for a beacon receiver",
     "MSS": "Beacon receiver status information",
     "RLM": "Return Link Message",
     "RMA": "Recommended Loran data",
     "RMB": "Recommended Navigation data for GPS",
     "RMC": "Recommended Minimum data",
+    "ROT": "Rate and direction of turn",
     "RTE": "Route message",
     "STN": "Multiple Data ID",
     "THS": "True Heading and Status",
@@ -240,6 +246,57 @@ NMEA_MSGIDS_PROP = {
     "UBX06": "Lat/Long Position Data",
     "UBX40": "Set NMEA message output rate",
     "UBX41": "PUBX-CONFIG Set Protocols and Baudrate",
+    # ***************************************************************
+    # Trimble Proprietary message types
+    # ***************************************************************
+    "ASHRALR": "Alarms",
+    "ASHRARA": "True Heading",
+    "ASHRARR": "Vector & Accuracy",
+    "ASHRATT": "True Heading",
+    "ASHRBTS": "Bluetooth Status",
+    "ASHRCAP": "Parameters of Antenna Used at Received Base",
+    "ASHRCPA": "Height of Antenna Used at Received Base",
+    "ASHRCPO": "Position of Received Base",
+    "ASHRDDM": "Differential Decoder Message",
+    "ASHRDDS": "Differential Decoder Status",
+    "ASHRHPR": "True Heading",
+    "ASHRHR": "Proprietary Roll and Pitch",
+    "ASHRLTN": "Latency",
+    "ASHRMDM": "Modem State and Parameter",
+    "ASHRPOS": "Position",
+    "ASHRPBN": "Position and Velocity Information",
+    "ASHRPTT": "PPS Time Tag",
+    "ASHRPWR": "Power Status",
+    "ASHRRCS": "Recording Status",
+    "ASHRSBD": "BEIDOU Satellites Status",
+    "ASHRSGA": "GALILEO Satellites Status (E1,E5a,E5b)",
+    "ASHRSGL": "GLONASS Satellites Status",
+    "ASHRSGO": "GALILEO Satellites Status (E1,E5a,E5b,E6)",
+    "ASHRSGP": "GPS Satellites Status",
+    "ASHRSIR": "IRNSS Satellites Status",
+    "ASHRSLB": "L-Band Satellites Status",
+    "ASHRSQZ": "QZSS Satellites Status",
+    "ASHRSSB": "SBAS Satellites Status",
+    "ASHRTEM": "Receiver Temperature",
+    "ASHRTHS": "True Heading and Status",
+    "ASHRTTT": "Event Marker",
+    "ASHRVCR": "Vector and Accuracy",
+    "ASHRVCT": "Vector and Accuracy",
+    "ASHRVEL": "Velocity",
+    "FUGDP": "Fugro Dynamic Positioning",
+    "GPPADV110": "Position and satellite information for RTK network operations 110",
+    "GPPADV120": "Position and satellite information for RTK network operations 120",
+    "TNLAVR": "Time, yaw, tilt/roll, range for moving baseline RTK",
+    "TNLBPQ": "Base station position and quality indicator",
+    "TNLDG": "L-band corrections and beacon signal strength and related information",
+    "TNLEVT": "Event marker data",
+    "TNLGGK": "Time, position, position type, DOP",
+    "TNLGGKx": "GNSS Position Message",
+    "TNLPJK": "Local coordinate position output",
+    "TNLPJT": "Projection type",
+    "TNLREX": "Rover Extended Output",
+    "TNLVGK": "Vector information",
+    "TNLVHD": "Heading information",
     # ***************************************************************
     # Dummy message for testing only
     # ***************************************************************

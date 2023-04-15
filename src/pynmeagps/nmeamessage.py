@@ -63,7 +63,7 @@ class NMEAMessage:
         if (
             msgID not in (nmt.NMEA_MSGIDS)
             and msgID not in (nmt.NMEA_MSGIDS_PROP)
-            and msgID != "UBX"
+            and msgID not in (nmt.PROP_MSGIDS)
         ):
             raise nme.NMEAMessageError(
                 f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
@@ -257,14 +257,14 @@ class NMEAMessage:
 
         try:
             key = self.msgID
-            if key == "UBX":  # proprietary UBX message
+            if key in nmt.PROP_MSGIDS:  # proprietary, first element is msgId
                 if "payload" in kwargs:
                     key += self._payload[0]
                 elif "msgId" in kwargs:
                     key += kwargs["msgId"]
                 else:
                     raise nme.NMEAMessageError(
-                        "PUBX message definitions must include payload or msgId keyword arguments."
+                        f"P{key} message definitions must include payload or msgId keyword arguments."
                     )
             if self._mode == nmt.POLL:
                 return nmp.NMEA_PAYLOADS_POLL[key]
@@ -368,7 +368,7 @@ class NMEAMessage:
         :rtype: str
         """
 
-        if self.talker == "P" and self._msgID == "UBX":
+        if self.talker == "P" and self._msgID in nmt.PROP_MSGIDS:
             return self._talker + self._msgID + self.msgId  # pylint: disable=no-member
         return self._talker + self._msgID
 
@@ -451,8 +451,8 @@ class NMEAMessage:
         elif att == nmt.DE:  # decimal
             if vals != "":
                 val = float(vals)
-        elif att == nmt.DT:  # date ddmmyy
-            val = date2utc(vals)
+        elif att in (nmt.DT, nmt.DM):  # date
+            val = date2utc(vals, att)
         elif att == nmt.IN:  # integer
             if vals != "":
                 val = int(vals)
@@ -491,8 +491,8 @@ class NMEAMessage:
             vals = ddd2dmm(val, att, hpmode)
         elif att == nmt.TM:
             vals = time2str(val)
-        elif att == nmt.DT:
-            vals = date2str(val)
+        elif att in (nmt.DT, nmt.DM):
+            vals = date2str(val, att)
         else:
             raise nme.NMEATypeError(f"Unknown attribute type {att}.")
         return vals
