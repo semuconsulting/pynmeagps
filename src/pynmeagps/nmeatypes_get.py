@@ -228,6 +228,19 @@ NMEA_PAYLOADS_GET = {
         "heading": DE,
         "MT": CH,  # 'T'
     },
+    "LLQ": {
+        "utctime": TM,
+        "utcdate": DT,
+        "easting": DE,
+        "eunit": CH,  # 'M'
+        "northing": DE,
+        "nunit": CH,  # 'M'
+        "gpsQual": IN,
+        "sip": IN,
+        "posQual": DE,
+        "height": DE,
+        "hunit": CH,  # 'M'
+    },
     "MSK": {
         "freq": DE,
         "fmode": CH,
@@ -240,6 +253,10 @@ NMEA_PAYLOADS_GET = {
         "snr": IN,
         "freq": DE,
         "beacbps": IN,
+    },
+    "ROT": {
+        "rot": DE,  # -ve = turn to port
+        "valid": CH,  # A valid, V invalid
     },
     "RLM": {
         "beacon": HX,
@@ -533,6 +550,128 @@ NMEA_PAYLOADS_GET = {
         "gyroBiasAcc": IN,
         "gyroScaleAcc": IN,
         "measUsed": HX,
+    },
+    # ***************************************************************
+    # Trimble Proprietary message types
+    # ***************************************************************
+    "FUGDP": {
+        "type": ST,  # GPS (GP), GLONASS (GL) or GNSS (GN)
+        "utctime": TM,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "siv": IN,
+        "dpvoaQual": ST,
+        "dgnssMode": ST,
+        "smajErr": DE,
+        "sminErr": DE,
+        "dirErr": IN,
+    },
+    "TNLAVR": {
+        "msgId": ST,  # "AVR"
+        "utctime": TM,
+        "yaw": DE,
+        "yawc": ST,  # "Yaw"
+        "tilt": DE,
+        "tiltc": ST,  # "Tilt"
+        "roll": DE,
+        "rollc": ST,  # "Roll"
+        "range": DE,
+        "gpsQual": IN,
+        "pdop": DE,
+        "sip": IN,
+    },
+    "TNLBPQ": {
+        "msgId": ST,  # "BPQ"
+        "utctime": TM,
+        "utcdate": DT,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "height": ST,  # starts with "EHT-"
+        "hunit": CH,  # 'M'
+        "gpsQual": IN,
+    },
+    "TNLDG": {
+        "msgId": ST,  # "DG" TODO check
+        "strength": DE,
+        "snr": DE,
+        "freq": DE,
+        "bitRate": IN,
+        "chan": IN,
+        "trkStatus": CH,
+        "trkPerf": IN,
+    },
+    "TNLEVT": {
+        "msgId": ST,  # "EVT"
+        "utctime": TM,
+        "port": IN,
+        "numEvents": IN,
+        "wno": IN,
+        "dow": IN,
+        "leaps": IN,
+    },
+    "TNLGGK": {
+        "msgId": ST,  # "GGK"
+        "utctime": TM,
+        "utcdate": DT,
+        "lat": LA,
+        "NS": CH,
+        "lon": LN,
+        "EW": CH,
+        "gpsQual": IN,
+        "sip": IN,
+        "dop": DE,
+        "height": ST,  # starts with "EHT-"
+        "hunit": CH,  # 'M'
+    },
+    "TNLPJK": {
+        "msgId": ST,  # "PJK"
+        "utctime": TM,
+        "utcdate": DT,
+        "northing": DE,
+        "nunit": CH,  # 'N'
+        "easting": DE,
+        "eunit": CH,  # 'E"
+        "gpsQual": IN,
+        "sip": IN,
+        "dop": DE,
+        "height": ST,  # starts with "EHT-" or "GHT-"
+        "hunit": CH,  # 'M'
+    },
+    "TNLPJT": {
+        "msgId": ST,  # "PJT"
+        "coordName": ST,
+        "projName": ST,
+    },
+    "TNLVGK": {
+        "msgId": ST,  # "VGK"
+        "utctime": TM,
+        "utcdate": DT,
+        "vectE": DE,
+        "vectN": DE,
+        "vectV": DE,
+        "gpsQual": IN,
+        "sip": IN,
+        "dop": DE,
+        "vunit": CH,  # 'M'
+    },
+    "TNLVHD": {
+        "msgId": ST,  # "VHD"
+        "utctime": TM,
+        "utcdate": DT,
+        "azi": DE,
+        "aziRate": DE,
+        "ele": DE,
+        "eleRate": DE,
+        "range": DE,
+        "rangeRate": DE,
+        "gpsQual": IN,
+        "sip": IN,
+        "pdop": DE,
+        "unit": CH,  # 'M'
     },
     # *********************************************
     # Dummy message for error testing

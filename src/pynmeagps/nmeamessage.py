@@ -63,7 +63,7 @@ class NMEAMessage:
         if (
             msgID not in (nmt.NMEA_MSGIDS)
             and msgID not in (nmt.NMEA_MSGIDS_PROP)
-            and msgID != "UBX"
+            and msgID not in (nmt.PROP_MSGIDS)
         ):
             raise nme.NMEAMessageError(
                 f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
@@ -257,14 +257,14 @@ class NMEAMessage:
 
         try:
             key = self.msgID
-            if key == "UBX":  # proprietary UBX message
+            if key in nmt.PROP_MSGIDS:  # proprietary, first element is msgId
                 if "payload" in kwargs:
                     key += self._payload[0]
                 elif "msgId" in kwargs:
                     key += kwargs["msgId"]
                 else:
                     raise nme.NMEAMessageError(
-                        "PUBX message definitions must include payload or msgId keyword arguments."
+                        f"P{key} message definitions must include payload or msgId keyword arguments."
                     )
             if self._mode == nmt.POLL:
                 return nmp.NMEA_PAYLOADS_POLL[key]
@@ -369,6 +369,8 @@ class NMEAMessage:
         """
 
         if self.talker == "P" and self._msgID == "UBX":
+            return self._talker + self._msgID + self.msgId  # pylint: disable=no-member
+        if self.talker == "P" and self._msgID == "TNL":
             return self._talker + self._msgID + self.msgId  # pylint: disable=no-member
         return self._talker + self._msgID
 

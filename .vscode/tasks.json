@@ -21,7 +21,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Install Dependencies",
+            "label": "Update Dependencies",
             "type": "process",
             "command": "${config:python.defaultInterpreterPath}",
             "args": [

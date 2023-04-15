@@ -1,5 +1,22 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.23
+
+ENHANCEMENTS:
+
+1. Add proprietary Trimble message definitions.
+    - LLQ 	Leica local position and quality
+    - ROT 	Rate of turn
+    - PTNL,AVR 	Time, yaw, tilt, range, mode, PDOP, and number of SVs for Moving Baseline RTK
+    - PTNL,BPQ 	Base station position and position quality indicator
+    - PTNL,DG 	L-band corrections and beacon signal strength and related information
+    - PTNL,EVT 	Event marker data
+    - PTNL,GGK 	Time, position, position type, and DOP values
+    - PTNL,PJK 	Time, position, position type, and DOP values
+    - PTNL,PJT 	Projection type
+    - PTNL,VGK 	Time, locator vector, type, and DOP values
+    - PTNL,VHD 	Heading Information
+
 ### RELEASE 1.0.22
 
 FIXES:

@@ -24,6 +24,8 @@ VALMSGID = 2
 ERR_IGNORE = 0
 ERR_LOG = 1
 ERR_RAISE = 2
+# proprietary messages where msgId is first element of payload:
+PROP_MSGIDS = ("UBX", "TNL")
 
 GNSSLIST = {
     0: "GPS",
@@ -185,12 +187,14 @@ NMEA_MSGIDS = {
     "HDG": "Heading, Magnetic, Deviation, Variation",
     "HDM": "Heading, Magnetic",  # deprecated
     "HDT": "Heating, True",
+    "LLQ": "Leica local position and quality",
     "MSK": "Send control for a beacon receiver",
     "MSS": "Beacon receiver status information",
     "RLM": "Return Link Message",
     "RMA": "Recommended Loran data",
     "RMB": "Recommended Navigation data for GPS",
     "RMC": "Recommended Minimum data",
+    "ROT": "Rate and direction of turn",
     "RTE": "Route message",
     "STN": "Multiple Data ID",
     "THS": "True Heading and Status",
@@ -240,6 +244,19 @@ NMEA_MSGIDS_PROP = {
     "UBX06": "Lat/Long Position Data",
     "UBX40": "Set NMEA message output rate",
     "UBX41": "PUBX-CONFIG Set Protocols and Baudrate",
+    # ***************************************************************
+    # Trimble Proprietary message types
+    # ***************************************************************
+    "FUGDP": "Fugro Dynamic Positioning",
+    "TNLAVR": "Time, yaw, tilt/roll, range for moving baseline RTK",
+    "TNLBPQ": "Base station position and quality indicator",
+    "TNLDG": "L-band corrections and beacon signal strength and related information",
+    "NTLEVT": "Event marker data",
+    "TNLGGK": "Time, position, position type, DOP",
+    "TNLPJK": "Local coordinate position output",
+    "TNLPJT": "Projection type",
+    "TNLVGK": "Vector information",
+    "TNLVHD": "Heading information",
     # ***************************************************************
     # Dummy message for testing only
     # ***************************************************************
