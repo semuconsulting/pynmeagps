@@ -29,7 +29,7 @@ jobs:
           pip install .
       - name: Lint with pylint
         run: |
-          pylint -E src/pyubx2
+          pylint -E src/pynmeagps
       - name: Security vulnerability analysis with bandit
         run: |
           bandit -c pyproject.toml -r .
