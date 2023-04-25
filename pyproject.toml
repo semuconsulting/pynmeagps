@@ -48,20 +48,24 @@ changelog = "https://github.com/semuconsulting/pynmeagps/blob/master/RELEASE_NOT
 
 [project.optional-dependencies]
 deploy = [
-    "build >= 0.10",
-    "pip >= 23.0",
+    "build",
+    "pip",
     "setuptools >= 66.0",
-    "wheel >= 0.40"
+    "wheel"
 ]
 test = [
-    "bandit >= 1.7",
-    "black >= 23.1",
-    "pylint >= 2.17",
-    "pytest >= 7.2",
-    "pytest-cov >= 4.0",
-    "Sphinx >= 5.3",
-    "sphinx-rtd-theme >= 1.2.0",
+    "bandit",
+    "black",
+    "pylint",
+    "pytest",
+    "pytest-cov",
+    "Sphinx",
+    "sphinx-rtd-theme",
 ]
+
+[tool.black]
+line-length = 88
+target-version = ['py37']
 
 [tool.bandit]
 exclude_dirs = ["docs", "examples", "tests"]
@@ -69,9 +73,9 @@ skips = []
 
 [tool.pylint]
 jobs = 0
+recursive = "y"
 reports = "y"
 py-version = "3.7"
-#exit-zero = "y"
 fail-under = "9.8"
 fail-on = "E,F"
 clear-cache-post-run = "y"
