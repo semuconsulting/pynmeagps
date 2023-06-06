@@ -1,5 +1,10 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.24
+
+1. Remove Python 3.7 from workflows.
+1. Add proprietary POLL messages to nmeatypes_poll.py
+
 ### RELEASE 1.0.23
 
 ENHANCEMENTS:

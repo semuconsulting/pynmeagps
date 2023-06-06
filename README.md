@@ -48,7 +48,7 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 ---
 ## <a name="installation">Installation</a>
 
-`pynmeagps` is compatible with Python >=3.7 and has no third-party library dependencies.
+`pynmeagps` is compatible with Python >=3.8 and has no third-party library dependencies.
 
 In the following, `python` & `pip` refer to the Python 3 executables. You may need to type 
 `python3` or `pip3`, depending on your particular environment.
