@@ -275,7 +275,7 @@ See [Sphinx documentation](https://www.semuconsulting.com/pynmeagps/pynmeagps.ht
 
 The following command line examples can be found in the `/examples` folder:
 
-1. `nmeapoller.py` illustrates how to implement a threaded serial reader for NMEA messages using `pynmeagps.NMEAReader` and send poll requests for a variety of NMEA message types. 
+1. `nmeapoller.py` illustrates how to read, write and display NMEA messages 'concurrently' using threads and queues. This represents a useful generic pattern for many end user applications.
 
 1. `nmeafile.py` illustrates how to implement an NMEA datalog file reader using `pynmeagps.NMEAReader` iterator functionality.
 
