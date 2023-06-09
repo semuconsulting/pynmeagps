@@ -10,8 +10,17 @@ Created on 14 Jan 2023
 :license: BSD 3-Clause
 """
 
-from pynmeagps import latlon2dms, latlon2dmm, ecef2llh, llh2ecef, haversine, llh2iso6709
 from datums import DATUMS  # assumes this is in same folder
+from pynmeagps import (
+    latlon2dms,
+    latlon2dmm,
+    ecef2llh,
+    llh2ecef,
+    haversine,
+    llh2iso6709,
+    bearing,
+)
+
 
 LAT1, LON1, ALT1 = 53.24, -2.16, 143.23
 LAT2, LON2 = 53.32, -2.08
@@ -34,6 +43,13 @@ print(
 )
 dist = haversine(LAT1, LON1, LAT2, LON2)
 print(f"Distance: {dist/1000} km")
+
+print(
+    f"\nFind bearing between {LAT1}, {LON1} and",
+    f" {LAT2}, {LON2} using default WGS84 datum...",
+)
+brng = bearing(LAT1, LON1, LAT2, LON2)
+print(f"Bearing: {brng} degrees")
 
 X, Y, Z = 3822566.3113, -144427.5123, 5086857.1208
 print(f"\nConvert ECEF X: {X}, Y: {Y}, Z: {Z} to geodetic using default WGS84 datum...")
