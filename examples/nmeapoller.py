@@ -1,30 +1,38 @@
 """
 nmeapoller.py
 
-This example illustrates a simple implementation of a
-'pseudo-concurrent' threaded NMEAMessage message
-polling utility.
+This example illustrates how to read, write and display NMEA messages
+concurrently using threads and queues. This represents a useful
+generic pattern for many end user applications.
 
-(NB: Since Python implements a Global Interpreter Lock (GIL),
-threads are not truly concurrent.)
+It implements three threads which run concurrently:
+1) a read thread which continuously reads NMEA data from the receiver.
+2) a write thread which sends NMEA commands or polls to the receiver.
+3) a display thread which displays parsed NMEA data at the terminal.
+NMEA data is passed between threads using queues.
 
-It connects to the receiver's serial port and sets up a
-NMEAReader read thread. With the read thread running
-in the background, it polls for a variety of NMEA
-messages. The read thread reads and parses any responses
-to these polls and outputs them to the terminal.
+Press CTRL-C to terminate early.
 
-If a given NMEA message is not supported by your device,
-you'll see a '<GNTXT...NMEA unknown msg>' response.
+FYI: Since Python implements a Global Interpreter Lock (GIL),
+threads are not strictly concurrent, though this is of minor
+practical consequence here. True concurrency could be
+achieved using multiprocessing (i.e. separate interpreter
+processes rather than threads) but this is non-trivial in
+this context as serial streams cannot be shared between
+processes. A discrete hardware I/O process must be implemented
+e.g. using RPC server techniques.
 
-Created on 7 Mar 2021
-@author: semuadmin
+Created on 07 March 2021
+
+:author: semuadmin
+:copyright: SEMU Consulting © 2021
+:license: BSD 3-Clause
 """
 # pylint: disable=invalid-name
 
+from queue import Queue
 from sys import platform
-from io import BufferedReader
-from threading import Thread, Lock
+from threading import Event, Lock, Thread
 from time import sleep
 from serial import Serial
 from pynmeagps import (
@@ -34,81 +42,136 @@ from pynmeagps import (
     NMEA_MSGIDS,
 )
 
-# initialise global variables
-reading = False
 
-
-def read_messages(stream, lock, nmeareader):
+def read_data(
+    stream: object,
+    nmr: NMEAReader,
+    queue: Queue,
+    lock: Lock,
+    stop: Event,
+):
     """
-    Reads, parses and prints out incoming UBX messages
+    THREADED
+    Read and parse incoming NMEA data and place
+    raw and parsed data on queue
     """
     # pylint: disable=unused-variable, broad-except
 
-    while reading:
+    while not stop.is_set():
         if stream.in_waiting:
             try:
                 lock.acquire()
-                (raw_data, parsed_data) = nmeareader.read()
+                (raw_data, parsed_data) = nmr.read()
                 lock.release()
                 if parsed_data:
-                    print(parsed_data)
+                    queue.put((raw_data, parsed_data))
             except Exception as err:
                 print(f"\n\nSomething went wrong {err}\n\n")
                 continue
 
 
-def start_thread(stream, lock, nmeareader):
+def write_data(stream: object, queue: Queue, lock: Lock, stop: Event):
     """
-    Start read thread
-    """
-
-    thr = Thread(target=read_messages, args=(stream, lock, nmeareader), daemon=True)
-    thr.start()
-    return thr
-
-
-def send_message(stream, lock, message):
-    """
-    Send message to device
+    THREADED
+    Read queue and send NMEA message to device
     """
 
-    lock.acquire()
-    stream.write(message.serialize())
-    lock.release()
+    while not stop.is_set():
+        if queue.empty() is False:
+            message = queue.get()
+            lock.acquire()
+            stream.write(message.serialize())
+            lock.release()
+            queue.task_done()
+
+
+def display_data(queue: Queue, stop: Event):
+    """
+    THREADED
+    Get NMEA data from queue and display.
+    """
+    # pylint: disable=unused-variable,
+
+    while not stop.is_set():
+        if queue.empty() is False:
+            (raw, parsed) = queue.get()
+            print(parsed)
+            queue.task_done()
 
 
 if __name__ == "__main__":
-
     # set port, baudrate and timeout to suit your device configuration
     if platform == "win32":  # Windows
         port = "COM13"
     elif platform == "darwin":  # MacOS
-        port = "/dev/tty.usbmodem14101"
+        port = "/dev/tty.usbmodem2101"
     else:  # Linux
         port = "/dev/ttyACM1"
     baudrate = 9600
     timeout = 0.1
 
-    with Serial(port, baudrate, timeout=timeout) as serial:
+    with Serial(port, baudrate, timeout=timeout) as serial_stream:
+        nmeareader = NMEAReader(serial_stream)
 
-        # create NMEAReader instance
-        nmr = NMEAReader(BufferedReader(serial))
-
-        print("\nStarting read thread...\n")
-        reading = True
         serial_lock = Lock()
-        read_thread = start_thread(serial, serial_lock, nmr)
+        read_queue = Queue()
+        send_queue = Queue()
+        stop_event = Event()
 
-        # DO OTHER STUFF HERE WHILE THREAD RUNS IN BACKGROUND...
-        for msgid in NMEA_MSGIDS:
-            print(f"\n\nSending a GNQ message to poll for an {msgid} response...\n\n")
-            msg = NMEAMessage("EI", "GNQ", POLL, msgId=msgid)
-            send_message(serial, serial_lock, msg)
-            sleep(1)
+        read_thread = Thread(
+            target=read_data,
+            args=(
+                serial_stream,
+                nmeareader,
+                read_queue,
+                serial_lock,
+                stop_event,
+            ),
+        )
+        write_thread = Thread(
+            target=write_data,
+            args=(
+                serial_stream,
+                send_queue,
+                serial_lock,
+                stop_event,
+            ),
+        )
+        display_thread = Thread(
+            target=display_data,
+            args=(
+                read_queue,
+                stop_event,
+            ),
+        )
 
-        print("\nPolling complete. Pausing for any final responses...\n")
-        sleep(1)
-        print("\nStopping reader thread...\n")
-        reading = False
+        print("\nStarting handler threads. Press Ctrl-C to terminate...")
+        read_thread.start()
+        write_thread.start()
+        display_thread.start()
+
+        # loop until user presses Ctrl-C
+        while not stop_event.is_set():
+            try:
+                # DO STUFF IN THE BACKGROUND...
+                # Poll for each NMEA sentence type.
+                # NB: Your receiver may not support all types. It will return a
+                # GNTXT "NMEA unknown msg" response for any types it doesn't support.
+                for msgid in NMEA_MSGIDS:
+                    print(
+                        f"\nSending a GNQ message to poll for an {msgid} response...\n"
+                    )
+                    msg = NMEAMessage("EI", "GNQ", POLL, msgId=msgid)
+                    send_queue.put(msg)
+                    sleep(1)
+                stop_event.set()
+
+            except KeyboardInterrupt:  # capture Ctrl-C
+                print("\n\nTerminated by user.")
+                stop_event.set()
+
+        print("\nStop signal set. Waiting for threads to complete...")
         read_thread.join()
-        print("\nProcessing Complete")
+        write_thread.join()
+        display_thread.join()
+        print("\nProcessing complete")
