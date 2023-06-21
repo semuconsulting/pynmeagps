@@ -70,7 +70,7 @@ If required, `pynmeagps` can also be installed into a virtual environment, e.g.:
 python3 -m pip install --user --upgrade virtualenv
 python3 -m virtualenv env
 source env/bin/activate (or env\Scripts\activate on Windows)
-(env) python -m pip install --upgrade pynmeagps
+(env) python3 -m pip install --upgrade pynmeagps
 ...
 deactivate
 ```
