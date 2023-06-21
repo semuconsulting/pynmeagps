@@ -37,7 +37,7 @@ Companion libraries are available which handle UBX &copy; and RTCM3 &copy; messa
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pynmeagps.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pynmeagps)
 
-The library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/src/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. While the NMEA 0183 protocol itself is proprietary, the definitions here have been collated from public domain sources.
+The library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS devices, but is readily [extensible](#extensibility). Refer to `NMEA_MSGIDS` and `NMEA_MSGIDS_PROP` in [nmeatypes_core.py](https://github.com/semuconsulting/pynmeagps/blob/master/src/pynmeagps/nmeatypes_core.py) for the complete dictionary of messages currently supported. While the [NMEA 0183 protocol itself is proprietary](https://www.nmea.org/nmea-0183.html), the definitions here have been collated from public domain sources.
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pynmeagps](https://www.semuconsulting.com/pynmeagps).
 
@@ -50,8 +50,8 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 
 `pynmeagps` is compatible with Python >=3.8 and has no third-party library dependencies.
 
-In the following, `python` & `pip` refer to the Python 3 executables. You may need to type 
-`python3` or `pip3`, depending on your particular environment.
+In the following, `python3` & `pip` refer to the Python 3 executables. You may need to type 
+`python` or `pip3`, depending on your particular environment.
 
 ![Python version](https://img.shields.io/pypi/pyversions/pynmeagps.svg?style=flat)
 [![PyPI version](https://img.shields.io/pypi/v/pynmeagps.svg?style=flat)](https://pypi.org/project/pynmeagps/)
@@ -61,14 +61,14 @@ The recommended way to install the latest version of `pynmeagps` is with
 [pip](http://pypi.python.org/pypi/pip/):
 
 ```shell
-python -m pip install --upgrade pynmeagps
+python3 -m pip install --upgrade pynmeagps
 ```
 
 If required, `pynmeagps` can also be installed into a virtual environment, e.g.:
 
 ```shell
-python -m pip install --user --upgrade virtualenv
-python -m virtualenv env
+python3 -m pip install --user --upgrade virtualenv
+python3 -m virtualenv env
 source env/bin/activate (or env\Scripts\activate on Windows)
 (env) python -m pip install --upgrade pynmeagps
 ...
