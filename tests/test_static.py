@@ -106,11 +106,15 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, False)
 
     def testDMM2DDD(self):
-        res = dmm2ddd("5314.12345", "LA")
+        res = dmm2ddd("5314.12345")
         self.assertEqual(res, 53.2353908333)
-        res = dmm2ddd("00214.12345", "LN")
+        res = dmm2ddd("02348.3822990")
+        self.assertEqual(res, 23.80637165)
+        res = dmm2ddd("00234.3822990")
+        self.assertEqual(res, 2.5730383167)
+        res = dmm2ddd("00214.12345")
         self.assertEqual(res, 2.2353908333)
-        res = dmm2ddd("12825.12344", "LN")
+        res = dmm2ddd("12825.12344")
         self.assertEqual(res, 128.418724)
 
     def testDDD2DMM(self):

@@ -2,6 +2,10 @@
 
 ### RELEASE CANDIDATE 1.0.25
 
+FIXES:
+
+1. Cater for 3-digit degrees latitude value - Fixes #37
+
 ### RELEASE 1.0.24
 
 1. Remove Python 3.7 from workflows.
