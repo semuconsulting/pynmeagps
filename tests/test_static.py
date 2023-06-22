@@ -116,6 +116,10 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, 2.2353908333)
         res = dmm2ddd("12825.12344")
         self.assertEqual(res, 128.418724)
+        res = dmm2ddd("1282512344")
+        self.assertEqual(res, "")
+        res = dmm2ddd("2345.x5678")
+        self.assertEqual(res, "")
 
     def testDDD2DMM(self):
         res = ddd2dmm(3.75000, "LA")

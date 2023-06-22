@@ -130,12 +130,14 @@ def dmm2ddd(pos: str) -> float:
 
     :param str pos: (d)ddmm.mmmmm
     :return: pos as decimal degrees
-    :rtype: float
+    :rtype: float or str if invalid
 
     """
 
     try:
         dp = pos.find(".")
+        if dp < 4:
+            raise ValueError()
         posdeg = float(pos[0 : dp - 2])
         posmin = float(pos[dp - 2 :])
         return round((posdeg + posmin / 60), 10)
