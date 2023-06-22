@@ -1,5 +1,7 @@
 # pynmeagps Release Notes
 
+### RELEASE CANDIDATE 1.0.25
+
 ### RELEASE 1.0.24
 
 1. Remove Python 3.7 from workflows.
