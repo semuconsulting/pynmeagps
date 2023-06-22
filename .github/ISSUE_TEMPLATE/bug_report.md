@@ -11,7 +11,7 @@ assignees: semuadmin
 
 ---
 
-**PYNMEAGPS BUG REPORT**
+# pynmeagps Bug Report Template
 
 **NB**: Please raise any general queries in the [pynmeagps Discussions Channels](https://github.com/semuconsulting/pynmeagps/discussions) in the first instance.
 
