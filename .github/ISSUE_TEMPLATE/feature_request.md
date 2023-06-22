@@ -10,6 +10,9 @@ labels: ''
 assignees: semuadmin
 
 ---
+**PYNMEAGPS FEATURE REQUEST**
+
+**NB**: Please raise any feature suggestions or queries in the [pynmeagps Discussions Channels](https://github.com/semuconsulting/pynmeagps/discussions) in the first instance.
 
 **Is your feature request related to a problem? Please describe.**
 
