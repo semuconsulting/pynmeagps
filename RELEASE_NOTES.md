@@ -1,10 +1,13 @@
 # pynmeagps Release Notes
 
-### RELEASE CANDIDATE 1.0.25
+### RELEASE 1.0.25
 
 FIXES:
 
-1. Cater for 3-digit degrees latitude value - Fixes #37
+1. Add support for non-standard 3-digit degree latitude value, e.g.
+   `'$GNGLL,02348.3822990,S,15313.5862807,E,040856.82,A,D*5F'`
+1. NB: footprint of `dmm2ddd` helper method has changed - `att` argument no longer required.
+1. Fixes #37
 
 ### RELEASE 1.0.24
 
