@@ -8,7 +8,7 @@ Fixes # (issue)
 
 ## Testing
 
-Please test all changes, however trivial, against the supplied pytest suite `tests/test_*.py` e.g. by executing the `tests/testsuite.py` module or using your IDE's native Python unittest integration facilities. Please describe any test cases you have amended or added to this suite to maintain >= 99% code coverage.
+Please test all changes, however trivial, against the supplied pytest suite `tests/test_*.py`. Please describe any test cases you have amended or added to this suite to maintain >= 99% code coverage.
 
 - [ ] Test A
 - [ ] Test B
@@ -16,7 +16,7 @@ Please test all changes, however trivial, against the supplied pytest suite `tes
 ## Checklist:
 
 - [ ] I agree to abide by the code of conduct (see [CODE_OF_CONDUCT.md](https://github.com/semuconsulting/pynmeagps/blob/master/CODE_OF_CONDUCT.md)).
-- [ ] My code follows the style guidelines of this project (see `CONTRIBUTING.MD`).
+- [ ] My code follows the style guidelines of this project (see [CONTRIBUTING.md](https://github.com/semuconsulting/pynmeagps/blob/master/CONTRIBUTING.md)).
 - [ ] I have performed a self-review of my own code.
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] I have made corresponding changes to the documentation.

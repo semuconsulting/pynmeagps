@@ -457,7 +457,7 @@ class NMEAMessage:
             if vals != "":
                 val = int(vals)
         elif att in (nmt.LA, nmt.LN):  # lat/lon (d)ddmm.mmmmm(mm)
-            val = dmm2ddd(vals, att)
+            val = dmm2ddd(vals)
         elif att == nmt.TM:  # time hhmmss.ss
             val = time2utc(vals)
         else:

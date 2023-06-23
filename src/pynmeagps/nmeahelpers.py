@@ -124,24 +124,22 @@ def isvalid_cksum(message: object) -> bool:
     return cksum == calc_checksum(message)
 
 
-def dmm2ddd(pos: str, att: str) -> float:
+def dmm2ddd(pos: str) -> float:
     """
     Convert NMEA lat/lon string to (unsigned) decimal degrees.
 
     :param str pos: (d)ddmm.mmmmm
-    :param str att: 'LA' (lat) or 'LN' (lon)
     :return: pos as decimal degrees
-    :rtype: float
+    :rtype: float or str if invalid
 
     """
 
     try:
-        if att == LA:
-            posdeg = float(pos[0:2])
-            posmin = float(pos[2:])
-        else:
-            posdeg = float(pos[0:3])
-            posmin = float(pos[3:])
+        dp = pos.find(".")
+        if dp < 4:
+            raise ValueError()
+        posdeg = float(pos[0 : dp - 2])
+        posmin = float(pos[dp - 2 :])
         return round((posdeg + posmin / 60), 10)
     except (TypeError, ValueError):
         return ""
