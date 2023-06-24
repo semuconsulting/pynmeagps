@@ -28,7 +28,6 @@ import pynmeagps.exceptions as nme
 from pynmeagps.nmeahelpers import (
     get_parts,
     calc_checksum,
-    isvalid_cksum,
 )
 from pynmeagps.nmeatypes_core import (
     NMEA_HDR,
@@ -48,7 +47,7 @@ class NMEAReader:
         """Constructor.
 
         :param stream stream: input data stream (e.g. Serial or binary File)
-        :param int quitonerror: (kwarg) 0 = ignore errors, 1 = log errors and continue, 2 = (re)raise errors (1)
+        :param int quitonerror: (kwarg) 0 = ignore, 1 = log and continue, 2 = (re)raise (1)
         :param int errorhandler: (kwarg) error handling object or function (None)
         :param bool nmeaonly (kwarg): True = error on non-NMEA data, False = ignore non-NMEA data
         :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID
@@ -194,7 +193,7 @@ class NMEAReader:
         Parse NMEA byte stream to NMEAMessage object.
 
         :param bytes message: bytes message to parse
-        :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID (can be OR'd)
+        :param int validate (kwarg): 1 VALCKSUM (default), 2 VALMSGID (can be OR'd)
         :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
         :return: NMEAMessage object (or None if unknown message and VALMSGID is not set)
         :rtype: NMEAMessage
@@ -210,12 +209,13 @@ class NMEAReader:
             )
 
         try:
-            talker, msgid, payload, checksum = get_parts(message)
+            _, talker, msgid, payload, checksum = get_parts(message)
             if validate & VALCKSUM:
-                if not isvalid_cksum(message):
+                ccksum = calc_checksum(message)
+                if checksum != ccksum:
                     raise nme.NMEAParseError(
                         f"Message {talker}{msgid} invalid checksum {checksum}"
-                        f" - should be {calc_checksum(message)}."
+                        f" - should be {ccksum}."
                     )
             return NMEAMessage(
                 talker, msgid, msgmode, payload=payload, checksum=checksum

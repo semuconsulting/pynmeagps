@@ -4,7 +4,8 @@
 
 CHANGES:
 
-2. Deprecated `NMEAReader.iterate()` method removed - use the standard iterator instead e.g. `nmr = NMEAReader(stream, **wkargs): for (raw,parse) in nmr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the NMEAReader constructor.
+1. Deprecated `NMEAReader.iterate()` method removed - use the standard iterator instead e.g. `nmr = NMEAReader(stream, **wkargs): for (raw,parse) in nmr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the NMEAReader constructor.
+1. Internal streamlining of helper methods.
 
 ### RELEASE 1.0.25
 
