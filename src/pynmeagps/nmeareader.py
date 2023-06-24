@@ -188,23 +188,6 @@ class NMEAReader:
             else:
                 self._errorhandler(err)
 
-    def iterate(self, **kwargs) -> tuple:  # pylint: disable=unused-argument
-        """
-        DEPRECATED - WILL BE REMOVED IN VERSION >=1.2.21
-        USE STANDARD ITERATOR INSTEAD
-        Invoke the iterator within an exception handling framework.
-
-        :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
-        :rtype: tuple
-        :raises: NMEA...Error (if quitonerror is True and stream is invalid)
-        """
-
-        while True:
-            try:
-                yield next(self)
-            except StopIteration:
-                break
-
     @staticmethod
     def parse(message: bytes, **kwargs) -> object:
         """

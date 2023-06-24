@@ -121,7 +121,7 @@ Examples:
 ...
 ```
 
-Example - Socket input (using enhanced iterator):
+Example - Socket input (using iterator):
 
 ```python
 >>> import socket
@@ -129,7 +129,7 @@ Example - Socket input (using enhanced iterator):
 >>> stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
 >>> stream.connect(("localhost", 50007))
 >>> nmr = NMEAReader(stream)
->>> for (raw_data, parsed_data) in nmr.iterate(): print(parsed_data)
+>>> for (raw_data, parsed_data) in nmr: print(parsed_data)
 ```
 
 ---

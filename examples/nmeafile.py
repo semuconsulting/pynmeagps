@@ -28,10 +28,10 @@ def read(stream, errorhandler):
 
     msgcount = 0
 
-    nmr = NMEAReader(stream)
-    for (raw, parsed_data) in nmr.iterate(
-        nmeaonly=False, quitonerror=False, errorhandler=errorhandler
-    ):
+    nmr = NMEAReader(
+        stream, nmeaonly=False, quitonerror=False, errorhandler=errorhandler
+    )
+    for raw, parsed_data in nmr:
         print(parsed_data)
         msgcount += 1
 
@@ -39,7 +39,6 @@ def read(stream, errorhandler):
 
 
 if __name__ == "__main__":
-
     print("\nEnter fully qualified name of file containing raw NMEA data: ", end="")
     filename = input().strip('"')
 
