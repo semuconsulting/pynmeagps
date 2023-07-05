@@ -79,7 +79,7 @@ print(
     f"\nConvert ECEF X: {X}, Y: {Y}, Z: {Z} to",
     f"geodetic using alternate {DATUM} ({ellipsoid}) datum ...",
 )
-lat, lon, height = ecef2llh(X - delta_x, Y - delta_z, Z - delta_z, a, f)
+lat, lon, height = ecef2llh(X - delta_x, Y - delta_y, Z - delta_z, a, f)
 print(f"Geodetic lat: {lat}, lon: {lon}, height: {height}")
 
 print(f"\nConvert geodetic {lat}, {lon}, {height} back to ECEF ...")
