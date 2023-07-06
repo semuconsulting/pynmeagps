@@ -25,7 +25,7 @@ def read(stream: socket.socket):
         stream,
     )
     try:
-        for (_, parsed_data) in nmr.iterate():
+        for (_, parsed_data) in nmr:
             print(parsed_data)
             msgcount += 1
     except KeyboardInterrupt:

@@ -29,24 +29,12 @@ import pynmeagps.exceptions as nme
 KNOTSCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
 
 
-def int2hexstr(val: int) -> str:
-    """
-    Convert integer to hex string representation.
-
-    :param int val: integer < 255 e.g. 31
-    :return: hex representation of integer e.g. '1F'
-    :rtype: str
-    """
-
-    return format(val, "02X")
-
-
 def get_parts(message: object) -> tuple:
     """
-    Get talker, msgid, payload and checksum of raw NMEA message.
+    Get content, talker, msgid, payload and checksum of raw NMEA message.
 
     :param object message: entire message as bytes or string
-    :return: tuple of (talker as str, msgID as str, payload as list, checksum as str)
+    :return: tuple of (content, talker, msgID, payload as list, checksum)
     :rtype: tuple
     :raises: NMEAMessageError (if message is badly formed)
     """
@@ -63,36 +51,9 @@ def get_parts(message: object) -> tuple:
         else:  # standard
             talker = hdr[0:2]
             msgid = hdr[2:]
-        return talker, msgid, payload, cksum
+        return content, talker, msgid, payload, cksum
     except Exception as err:
         raise nme.NMEAMessageError(f"Badly formed message {message}") from err
-
-
-def get_content(message: object) -> str:
-    """
-    Get content of raw NMEA message (everything between "$" and "*").
-
-    :param object message: entire message as bytes or string
-    :return: content as str
-    :rtype: str
-    """
-
-    if isinstance(message, bytes):
-        message = message.decode("utf-8")
-    content, _ = message.strip("$\r\n").split("*", 1)
-    return content
-
-
-def list2csv(payload: list) -> str:
-    """
-    Convert list of strings to single string of comma separated values.
-
-    :param list payload: list of values e.g. ["this", "that"]
-    :return: string of comma separated values e.g. "this,that"
-    :rtype: str
-    """
-
-    return ",".join(map(str, payload))
 
 
 def calc_checksum(message: object) -> str:
@@ -104,24 +65,11 @@ def calc_checksum(message: object) -> str:
     :rtype: str
     """
 
-    content = get_content(message)
+    content, _, _, _, _ = get_parts(message)
     cksum = 0
     for sub in content:
         cksum ^= ord(sub)
-    return int2hexstr(cksum)
-
-
-def isvalid_cksum(message: object) -> bool:
-    """
-    Validate raw message checksum.
-
-    :param bytes message: entire message as bytes or string
-    :return: checksum valid flag
-    :rtype: bool
-    """
-
-    _, _, _, cksum = get_parts(message)
-    return cksum == calc_checksum(message)
+    return f"{cksum:02X}"
 
 
 def dmm2ddd(pos: str) -> float:

@@ -23,7 +23,6 @@ from pynmeagps.nmeahelpers import (
     time2str,
     dmm2ddd,
     ddd2dmm,
-    list2csv,
     calc_checksum,
 )
 
@@ -264,7 +263,8 @@ class NMEAMessage:
                     key += kwargs["msgId"]
                 else:
                     raise nme.NMEAMessageError(
-                        f"P{key} message definitions must include payload or msgId keyword arguments."
+                        f"P{key} message definitions must "
+                        + "include payload or msgId keyword arguments."
                     )
             if self._mode == nmt.POLL:
                 return nmp.NMEA_PAYLOADS_POLL[key]
@@ -354,8 +354,8 @@ class NMEAMessage:
         """
 
         output = "$" + self._talker + self._msgID + ","
-        if len(self._payload) > 0:
-            output += list2csv(self._payload)
+        for i, s in enumerate(self._payload):
+            output += ("," if i else "") + s
         output += "*" + self._checksum + "\r\n"
         return output.encode("utf-8")  # convert str to bytes
 

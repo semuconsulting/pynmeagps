@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE CANDIDATE 1.0.26
+
+CHANGES:
+
+1. Deprecated `NMEAReader.iterate()` method removed - use the standard iterator instead e.g. `nmr = NMEAReader(stream, **wkargs): for (raw,parse) in nmr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the NMEAReader constructor.
+1. Internal streamlining of helper methods.
+
 ### RELEASE 1.0.25
 
 FIXES:
@@ -87,7 +94,7 @@ ENHANCEMENTS:
 CHANGES:
 
 1. `quitonerror` and `errorhandler` kwargs added to NMEAReader constructor - see Sphinx documentation for details.
-2. `NMEAReader.iterate()` method deprecated - use the standard iterator instead e.g. `nmr = NMEAReader(**wkargs): for (raw,parse) in nmr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the NMEAReader constructor.
+2. `NMEAReader.iterate()` method deprecated - use the standard iterator instead e.g. `nmr = NMEAReader(stream, **wkargs): for (raw,parse) in nmr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the NMEAReader constructor.
 
 ### RELEASE 1.0.19
 

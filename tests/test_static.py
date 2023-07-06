@@ -18,11 +18,8 @@ from pynmeagps import (
 )
 from pynmeagps.nmeatypes_core import GET, POLL
 from pynmeagps.nmeahelpers import (
-    int2hexstr,
     get_parts,
-    get_content,
     calc_checksum,
-    isvalid_cksum,
     deg2dmm,
     deg2dms,
     dmm2ddd,
@@ -63,17 +60,12 @@ class StaticTest(unittest.TestCase):
     # Helper methods
     # *******************************************
 
-    def testInt2Hex(self):
-        res = int2hexstr(15)
-        self.assertEqual(res, "0F")
-        res = int2hexstr(104)
-        self.assertEqual(res, "68")
-
     def testGetParts(self):
         res = get_parts(self.messageGLL)
         self.assertEqual(
             res,
             (
+                "GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A",
                 "GN",
                 "GLL",
                 ["5327.04319", "S", "00214.41396", "E", "223232.00", "A", "A"],
@@ -87,23 +79,11 @@ class StaticTest(unittest.TestCase):
             get_parts(self.messageCRAP)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
-    def testGetContent(self):
-        res = get_content(self.messageGLL)
-        self.assertEqual(res, "GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A")
-
     def testCalcChecksum(self):
         res = calc_checksum(self.messageGLL)
         self.assertEqual(res, "68")
         res = calc_checksum(self.messagePUBX)
         self.assertEqual(res, "69")
-
-    def testGoodChecksum(self):
-        res = isvalid_cksum(self.messageGLL)
-        self.assertEqual(res, True)
-
-    def testBadChecksum(self):
-        res = isvalid_cksum(self.messageBADCK)
-        self.assertEqual(res, False)
 
     def testDMM2DDD(self):
         res = dmm2ddd("5314.12345")
