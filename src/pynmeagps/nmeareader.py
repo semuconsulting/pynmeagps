@@ -193,6 +193,17 @@ class NMEAReader:
             else:
                 self._errorhandler(err)
 
+    @property
+    def datastream(self) -> object:
+        """
+        Getter for stream.
+
+        :return: data stream
+        :rtype: object
+        """
+
+        return self._stream
+
     @staticmethod
     def parse(message: bytes, validate=VALCKSUM, msgmode=GET) -> object:
         """

@@ -8,6 +8,7 @@ Created on 3 Oct 2020
 :author: semuadmin
 """
 
+import os
 import unittest
 import datetime
 from pynmeagps import (
@@ -44,6 +45,7 @@ from pynmeagps.nmeahelpers import (
 class StaticTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
+        dirname = os.path.dirname(__file__)
         self.messageCRAP = "$GNRMC,,%$£"
         self.messageBLANK = "$GNRMC,,A,,N,,W,0.046,,,,,A,V*0F"
         self.messageGLL = "$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n"
@@ -52,9 +54,10 @@ class StaticTest(unittest.TestCase):
         self.msgGLL = NMEAReader.parse(self.messageGLL)
         self.msgPUBX00 = NMEAReader.parse(self.messagePUBX)
         self.msgGNQ = NMEAMessage("EI", "GNQ", POLL, msgId="RMC")
+        self.streamNMEA2 = open(os.path.join(dirname, "pygpsdata-nmea2.log"), "rb")
 
     def tearDown(self):
-        pass
+        self.streamNMEA2.close()
 
     # *******************************************
     # Helper methods
@@ -214,6 +217,11 @@ class StaticTest(unittest.TestCase):
     def testMsgmode2(self):
         res = self.msgGNQ.msgmode
         self.assertEqual(res, POLL)
+
+    def testdatastream(self):  # test datastream getter
+        EXPECTED_RESULT = "<class '_io.BufferedReader'>"
+        res = str(type(NMEAReader(self.streamNMEA2).datastream))
+        self.assertEqual(res, EXPECTED_RESULT)
 
     def testPayloadS(self):
         res = self.msgGLL.payload

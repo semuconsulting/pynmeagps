@@ -11,7 +11,7 @@ Created on 11 May 2022
 
 import unittest
 from socket import socket
-from pynmeagps import NMEAReader
+from pynmeagps import NMEAReader, NMEAMessage, POLL
 
 
 class DummySocket(socket):
@@ -51,6 +51,11 @@ class DummySocket(socket):
         self._buffer = self._buffer[num:]
         return buff
 
+    def send(self, data: bytes):
+        if self._timeout:
+            raise TimeoutError
+        return None
+
 
 class SocketTest(unittest.TestCase):
     def setUp(self):
@@ -80,7 +85,7 @@ class SocketTest(unittest.TestCase):
         )
         raw = None
         stream = DummySocket()
-        nmr = NMEAReader(stream, bufsize=1024, protfilter=7)
+        nmr = NMEAReader(stream, bufsize=1024)
         buff = nmr._stream.buffer  # test buffer getter method
         i = 0
         for raw, parsed in nmr:
@@ -91,6 +96,14 @@ class SocketTest(unittest.TestCase):
                 if i >= 12:
                     break
         self.assertEqual(i, 12)
+
+
+    def testSocketSend(self):
+        stream = DummySocket()
+        nmr = NMEAReader(stream, bufsize=1024)
+        msg = NMEAMessage('EI', 'GNQ', POLL, msgId='RMC')
+        res = nmr.datastream.write(msg.serialize())
+        self.assertEqual(res, None)
 
     def testSocketIter(self):  # test for extended stream
         raw = None
