@@ -31,7 +31,7 @@ class NMEAMessage:
     """NMEA GNSS/GPS Message Class."""
 
     def __init__(
-        self, talker: str, msgID: str, msgmode: int, hpnmeamode=False, **kwargs
+        self, talker: str, msgID: str, msgmode: int, hpnmeamode: bool = False, **kwargs
     ):
         """Constructor.
 
