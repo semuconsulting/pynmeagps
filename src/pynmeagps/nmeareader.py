@@ -30,6 +30,7 @@ from pynmeagps.nmeahelpers import (
     calc_checksum,
 )
 from pynmeagps.nmeatypes_core import (
+    GET,
     NMEA_HDR,
     VALCKSUM,
     VALMSGID,
@@ -43,34 +44,39 @@ class NMEAReader:
     NMEAReader class.
     """
 
-    def __init__(self, stream, **kwargs):
+    def __init__(
+        self,
+        stream,
+        quitonerror=ERR_LOG,
+        validate=VALCKSUM,
+        msgmode=GET,
+        nmeaonly=False,
+        bufsize=4096,
+        errorhandler=None,
+    ):
         """Constructor.
 
         :param stream stream: input data stream (e.g. Serial or binary File)
-        :param int quitonerror: (kwarg) 0 = ignore, 1 = log and continue, 2 = (re)raise (1)
-        :param int errorhandler: (kwarg) error handling object or function (None)
-        :param bool nmeaonly (kwarg): True = error on non-NMEA data, False = ignore non-NMEA data
-        :param int validate (kwarg): bitfield validation flags - VALCKSUM (default), VALMSGID
-        :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
-        :param int bufsize: (kwarg) socket recv buffer size (4096)
+        :param int quitonerror: 0 = ignore, 1 = log and continue, 2 = (re)raise (1)
+        :param int errorhandler: error handling object or function (None)
+        :param bool nmeaonly: True = error on non-NMEA data, False = ignore non-NMEA data
+        :param int validate: bitfield validation flags - VALCKSUM (default), VALMSGID
+        :param int msgmode: 0 = GET (default), 1 = SET, 2 = POLL
+        :param int bufsize: socket recv buffer size (4096)
         :raises: NMEAParseError (if mode is invalid)
-
         """
+        # pylint: disable=too-many-arguments
 
-        bufsize = int(kwargs.get("bufsize", 4096))
         if isinstance(stream, socket):
             self._stream = SocketStream(stream, bufsize=bufsize)
         else:
             self._stream = stream
-        nmeaonly = kwargs.get("nmeaonly", False)
-        validate = kwargs.get("validate", VALCKSUM)
-        msgmode = kwargs.get("msgmode", 0)
         if msgmode not in (0, 1, 2):
             raise nme.NMEAParseError(
                 f"Invalid stream mode {msgmode} - must be 0, 1 or 2."
             )
-        self._quitonerror = kwargs.get("quitonerror", ERR_LOG)
-        self._errorhandler = kwargs.get("errorhandler", None)
+        self._quitonerror = quitonerror
+        self._errorhandler = errorhandler
         self._nmea_only = nmeaonly
         self._validate = validate
         self._mode = msgmode
@@ -80,7 +86,7 @@ class NMEAReader:
 
         return self
 
-    def __next__(self) -> (bytes, NMEAMessage):
+    def __next__(self) -> tuple:
         """
         Return next item in iteration.
 
@@ -95,7 +101,7 @@ class NMEAReader:
             raise StopIteration
         return (raw_data, parsed_data)
 
-    def read(self) -> (bytes, NMEAMessage):
+    def read(self) -> tuple:
         """
         Read the binary data from the stream buffer.
 
@@ -188,21 +194,19 @@ class NMEAReader:
                 self._errorhandler(err)
 
     @staticmethod
-    def parse(message: bytes, **kwargs) -> object:
+    def parse(message: bytes, validate=VALCKSUM, msgmode=GET) -> object:
         """
         Parse NMEA byte stream to NMEAMessage object.
 
         :param bytes message: bytes message to parse
-        :param int validate (kwarg): 1 VALCKSUM (default), 2 VALMSGID (can be OR'd)
-        :param int msgmode (kwarg): 0 = GET (default), 1 = SET, 2 = POLL
+        :param int validate: 1 VALCKSUM (default), 2 VALMSGID (can be OR'd)
+        :param int msgmode: 0 = GET (default), 1 = SET, 2 = POLL
         :return: NMEAMessage object (or None if unknown message and VALMSGID is not set)
         :rtype: NMEAMessage
         :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
 
         """
 
-        validate = kwargs.get("validate", VALCKSUM)
-        msgmode = kwargs.get("msgmode", 0)
         if msgmode not in (0, 1, 2):
             raise nme.NMEAParseError(
                 f"Invalid parse mode {msgmode} - must be 0, 1 or 2."

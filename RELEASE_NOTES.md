@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE CANDIDATE 1.0.27
+
+CHANGES:
+
+1. Update constructor arguments and docstrings to clarify API (no functional changes).
+
 ### RELEASE 1.0.26
 
 CHANGES:

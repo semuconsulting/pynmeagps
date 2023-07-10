@@ -7,7 +7,7 @@ Created on 04 Mar 2021
 :copyright: SEMU Consulting © 2021
 :license: BSD 3-Clause
 """
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name, too-many-instance-attributes
 
 import struct
 from datetime import datetime, timezone
@@ -30,9 +30,9 @@ from pynmeagps.nmeahelpers import (
 class NMEAMessage:
     """NMEA GNSS/GPS Message Class."""
 
-    # pylint: disable=too-many-instance-attributes
-
-    def __init__(self, talker: str, msgID: str, msgmode: int, **kwargs):
+    def __init__(
+        self, talker: str, msgID: str, msgmode: int, hpnmeamode=False, **kwargs
+    ):
         """Constructor.
 
         If 'payload' is passed as a keyword arg, this is taken to contain the entire
@@ -44,10 +44,9 @@ class NMEAMessage:
         :param str talker: message talker e.g. "GP" or "P"
         :param str msgID: message ID e.g. "GGA"
         :param int msgmode: mode (0=GET, 1=SET, 2=POLL)
-        :param bool hpnmeamode: (kwarg) high precision lat/lon mode (7dp rather than 5dp)
+        :param bool hpnmeamode: high precision lat/lon mode (7dp rather than 5dp) (False)
         :param kwargs: keyword arg(s) representing all or some payload attributes
         :raises: NMEAMessageError
-
         """
 
         # object is mutable during initialisation only
@@ -70,7 +69,7 @@ class NMEAMessage:
 
         self._mode = msgmode
         # high precision NMEA mode returns NMEA lat/lon to 7dp rather than 5dp
-        self._hpnmeamode = kwargs.get("hpnmeamode", False)
+        self._hpnmeamode = hpnmeamode
         self._talker = talker
         self._msgID = msgID
         self._do_attributes(**kwargs)
