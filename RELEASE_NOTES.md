@@ -1,6 +1,6 @@
 # pynmeagps Release Notes
 
-### RELEASE CANDIDATE 1.0.27
+### RELEASE 1.0.27
 
 CHANGES:
 
