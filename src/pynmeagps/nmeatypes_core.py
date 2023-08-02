@@ -35,6 +35,7 @@ GNSSLIST = {
     4: "IMES",
     5: "QZSS",
     6: "GLONASS",
+    7: "NAVIC",
 }
 
 GPSEPOCH0 = datetime(1980, 1, 6)
