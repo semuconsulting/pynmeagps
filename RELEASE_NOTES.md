@@ -1,10 +1,10 @@
 # pynmeagps Release Notes
 
-### RELEASE CANDIDATE 1.0.28
+### RELEASE 1.0.28
 
 ENHANCEMENTS:
 
-1. Add 'NAVIC' to list of gnssId enumerations.
+1. Add 'NAVIC' to list of gnssId enumerations - reference only, no functional change.
 
 ### RELEASE 1.0.27
 
