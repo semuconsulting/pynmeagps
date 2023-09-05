@@ -2,27 +2,23 @@
 nmeapoller.py
 
 This example illustrates how to read, write and display NMEA messages
-concurrently using threads and queues. This represents a useful
+"concurrently" using threads and queues. This represents a useful
 generic pattern for many end user applications.
 
-It implements three threads which run concurrently:
-1) a read thread which continuously reads NMEA data from the receiver.
-2) a write thread which sends NMEA commands or polls to the receiver.
-3) a display thread which displays parsed NMEA data at the terminal.
+It implements two threads which run concurrently:
+1) an I/O thread which continuously reads NMEA data from the
+receiver and sends any queued outbound command or poll messages.
+2) a process thread which processes parsed NMEA data - in this example
+it simply prints the parsed data to the terminal.
 NMEA data is passed between threads using queues.
 
-Press CTRL-C to terminate early.
+Press CTRL-C to terminate.
 
 FYI: Since Python implements a Global Interpreter Lock (GIL),
 threads are not strictly concurrent, though this is of minor
-practical consequence here. True concurrency could be
-achieved using multiprocessing (i.e. separate interpreter
-processes rather than threads) but this is non-trivial in
-this context as serial streams cannot be shared between
-processes. A discrete hardware I/O process must be implemented
-e.g. using RPC server techniques.
+practical consequence here.
 
-Created on 07 March 2021
+Created on 07 Aug 2021
 
 :author: semuadmin
 :copyright: SEMU Consulting © 2021
@@ -34,67 +30,55 @@ from queue import Queue
 from sys import platform
 from threading import Event, Lock, Thread
 from time import sleep
+
 from serial import Serial
-from pynmeagps import (
-    NMEAMessage,
-    NMEAReader,
-    POLL,
-    NMEA_MSGIDS,
-)
+
+from pynmeagps import NMEA_MSGIDS, POLL, NMEAMessage, NMEAReader
 
 
-def read_data(
+def io_data(
     stream: object,
     nmr: NMEAReader,
-    queue: Queue,
-    lock: Lock,
+    readqueue: Queue,
+    sendqueue: Queue,
     stop: Event,
 ):
     """
     THREADED
-    Read and parse incoming NMEA data and place
-    raw and parsed data on queue
+    Read and parse inbound NMEA data and place
+    raw and parsed data on queue.
+
+    Send any queued outbound messages to receiver.
     """
-    # pylint: disable=unused-variable, broad-except
+    # pylint: disable=broad-exception-caught
 
     while not stop.is_set():
-        if stream.in_waiting:
-            try:
-                lock.acquire()
+        try:
+            if stream.in_waiting:
                 (raw_data, parsed_data) = nmr.read()
-                lock.release()
                 if parsed_data:
-                    queue.put((raw_data, parsed_data))
-            except Exception as err:
-                print(f"\n\nSomething went wrong {err}\n\n")
-                continue
+                    readqueue.put((raw_data, parsed_data))
+
+            if not sendqueue.empty():
+                data = sendqueue.get(False)
+                if data is not None:
+                    nmr.datastream.write(data.serialize())
+                sendqueue.task_done()
+
+        except Exception as err:
+            print(f"\n\nSomething went wrong {err}\n\n")
+            continue
 
 
-def write_data(stream: object, queue: Queue, lock: Lock, stop: Event):
-    """
-    THREADED
-    Read queue and send NMEA message to device
-    """
-
-    while not stop.is_set():
-        if queue.empty() is False:
-            message = queue.get()
-            lock.acquire()
-            stream.write(message.serialize())
-            lock.release()
-            queue.task_done()
-
-
-def display_data(queue: Queue, stop: Event):
+def process_data(queue: Queue, stop: Event):
     """
     THREADED
     Get NMEA data from queue and display.
     """
-    # pylint: disable=unused-variable,
 
     while not stop.is_set():
         if queue.empty() is False:
-            (raw, parsed) = queue.get()
+            (_, parsed) = queue.get()
             print(parsed)
             queue.task_done()
 
@@ -104,10 +88,10 @@ if __name__ == "__main__":
     if platform == "win32":  # Windows
         port = "COM13"
     elif platform == "darwin":  # MacOS
-        port = "/dev/tty.usbmodem2101"
+        port = "/dev/tty.usbmodem1101"
     else:  # Linux
         port = "/dev/ttyACM1"
-    baudrate = 9600
+    baudrate = 38400
     timeout = 0.1
 
     with Serial(port, baudrate, timeout=timeout) as serial_stream:
@@ -118,27 +102,18 @@ if __name__ == "__main__":
         send_queue = Queue()
         stop_event = Event()
 
-        read_thread = Thread(
-            target=read_data,
+        io_thread = Thread(
+            target=io_data,
             args=(
                 serial_stream,
                 nmeareader,
                 read_queue,
-                serial_lock,
-                stop_event,
-            ),
-        )
-        write_thread = Thread(
-            target=write_data,
-            args=(
-                serial_stream,
                 send_queue,
-                serial_lock,
                 stop_event,
             ),
         )
-        display_thread = Thread(
-            target=display_data,
+        process_thread = Thread(
+            target=process_data,
             args=(
                 read_queue,
                 stop_event,
@@ -146,9 +121,8 @@ if __name__ == "__main__":
         )
 
         print("\nStarting handler threads. Press Ctrl-C to terminate...")
-        read_thread.start()
-        write_thread.start()
-        display_thread.start()
+        io_thread.start()
+        process_thread.start()
 
         # loop until user presses Ctrl-C
         while not stop_event.is_set():
@@ -164,6 +138,7 @@ if __name__ == "__main__":
                     msg = NMEAMessage("EI", "GNQ", POLL, msgId=msgid)
                     send_queue.put(msg)
                     sleep(1)
+                sleep(3)
                 stop_event.set()
 
             except KeyboardInterrupt:  # capture Ctrl-C
@@ -171,7 +146,6 @@ if __name__ == "__main__":
                 stop_event.set()
 
         print("\nStop signal set. Waiting for threads to complete...")
-        read_thread.join()
-        write_thread.join()
-        display_thread.join()
+        io_thread.join()
+        process_thread.join()
         print("\nProcessing complete")
