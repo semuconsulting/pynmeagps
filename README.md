@@ -78,7 +78,7 @@ deactivate
 For [Conda](https://docs.conda.io/en/latest/) users, `pynmeagps` is also available from [conda forge](https://github.com/conda-forge/pynmeagps-feedstock):
 
 ```shell
-conda install pynmeagps
+conda install -c conda-forge pynmeagps
 ```
 
 ---
