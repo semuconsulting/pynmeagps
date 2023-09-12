@@ -22,3 +22,4 @@ src/pynmeagps.egg*
 /.pytest_cache/
 pylint_report.txt
 .venv
+/conda
