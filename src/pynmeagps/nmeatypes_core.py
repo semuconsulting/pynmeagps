@@ -12,7 +12,7 @@ has been collated from public domain sources.
 
 from datetime import datetime
 
-NMEA_HDR = [b"\x24\x47", b"\x24\x50"]  # standard, proprietary
+NMEA_HDR = [b"\x24\x47", b"\x24\x50", b"\x24\x42"]  # standard, proprietary, beidou
 INPUT = 1
 OUTPUT = 0
 GET = 0
@@ -106,7 +106,8 @@ NMEA_TALKERS = {
     # Navigation System Satellite Receivers:
     # ***************************************************************
     "GA": "Galileo Positioning System",
-    "GB": "BDS (BeiDou System) ",
+    "GB": "BDS (BeiDou System)",
+    "BD": "BDS (BeiDou System)",  # legacy, use GB instead
     "GI": "NavIC (IRNSS)",
     "GL": "GLONASS Receiver",
     "GN": "Global Navigation Satellite System (GNSS)",
