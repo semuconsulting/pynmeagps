@@ -53,6 +53,7 @@ class NMEAReader:
         quitonerror: int = ERR_LOG,
         bufsize: int = 4096,
         errorhandler: object = None,
+        nmeahdr: list[bytes] = NMEA_HDR
     ):
         """Constructor.
 
@@ -80,6 +81,7 @@ class NMEAReader:
         self._nmea_only = nmeaonly
         self._validate = validate
         self._mode = msgmode
+        self._nmeahdr = nmeahdr
 
     def __iter__(self):
         """Iterator."""
@@ -122,7 +124,7 @@ class NMEAReader:
                     continue
                 byte2 = self._read_bytes(1)  # read 2nd byte to confirm protocol
                 bytehdr = byte1 + byte2
-                if bytehdr in NMEA_HDR:  # it's a NMEA message
+                if bytehdr in self._nmeahdr:  # it's a NMEA message
                     byten = self._read_line()  # NMEA protocol is CRLF terminated
                     raw_data = bytehdr + byten
                     parsed_data = self.parse(
