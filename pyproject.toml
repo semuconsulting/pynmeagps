@@ -4,15 +4,11 @@ build-backend = "setuptools.build_meta:__legacy__"
 
 [project]
 name = "pynmeagps"
-authors = [
-    {name = "semuadmin", email = "semuadmin@semuconsulting.com"},
-]
-maintainers = [
-  {name = "semuadmin", email = "semuadmin@semuconsulting.com"}
-]
+authors = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
+maintainers = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 description = "NMEA protocol parser and generator"
-version = "1.0.29"
-license = {file = "LICENSE"}
+version = "1.0.30"
+license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -35,10 +31,9 @@ classifiers = [
     "Topic :: Utilities",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: GIS",
-    ]
-
-dependencies = [
 ]
+
+dependencies = []
 
 [project.urls]
 homepage = "https://github.com/semuconsulting/pynmeagps"
@@ -47,12 +42,7 @@ repository = "https://github.com/semuconsulting/pynmeagps"
 changelog = "https://github.com/semuconsulting/pynmeagps/blob/master/RELEASE_NOTES.md"
 
 [project.optional-dependencies]
-deploy = [
-    "build",
-    "pip",
-    "setuptools >= 66.0",
-    "wheel"
-]
+deploy = ["build", "pip", "setuptools >= 66.0", "wheel"]
 test = [
     "bandit",
     "black",
