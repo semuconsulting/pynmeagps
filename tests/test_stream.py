@@ -154,6 +154,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GPMSK, freq=318.0, fmode=A, beacbps=100, bpsmode=M, MMSfreq=2.0)>",
             "<NMEA(GPMSS, strength=55, snr=27, freq=318.0, beacbps=100)>",
             "<NMEA(GBGSV, numMsg=2, msgNum=2, numSV=6, svid_01=14, elv_01=55.0, az_01=175, cno_01=46, svid_02=40, elv_02=29.0, az_02=43, cno_02=18, signalID=B)>",
+            "<NMEA(INGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
         )
 
         i = 0
@@ -164,7 +165,7 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
-        self.assertEqual(i, 48)
+        self.assertEqual(i, 49)
 
     def testNMEA2(self):  # stream of NMEA v2.30 device (u-blox M6N)
         EXPECTED_RESULTS = (

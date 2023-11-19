@@ -12,7 +12,12 @@ has been collated from public domain sources.
 
 from datetime import datetime
 
-NMEA_HDR = [b"\x24\x47", b"\x24\x50", b"\x24\x42"]  # standard, proprietary, beidou
+NMEA_HDR = [
+    b"\x24\x42",  # B Beidou (legacy)
+    b"\x24\x47",  # G standard GNSS
+    b"\x24\x49",  # I integrated navigation
+    b"\x24\x50",  # P proprietary GNSS
+]
 INPUT = 1
 OUTPUT = 0
 GET = 0
