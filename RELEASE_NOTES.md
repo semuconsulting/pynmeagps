@@ -4,6 +4,7 @@
 
 ENHANCEMENTS:
 
+1. Cater for 'IN' (Integrated Navigation) Talker ID.
 
 ### RELEASE 1.0.29
 
