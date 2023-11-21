@@ -1,6 +1,12 @@
 # pynmeagps Release Notes
 
-### RELEASE CANDIDATE 1.0.29
+### RELEASE CANDIDATE 1.0.30
+
+ENHANCEMENTS:
+
+1. Cater for 'IN' (Integrated Navigation) Talker ID.
+
+### RELEASE 1.0.29
 
 ENHANCEMENTS:
 
