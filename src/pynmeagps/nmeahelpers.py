@@ -56,20 +56,36 @@ def get_parts(message: object) -> tuple:
         raise nme.NMEAMessageError(f"Badly formed message {message}") from err
 
 
-def calc_checksum(message: object) -> str:
+def calc_checksum(content: object) -> str:
     """
     Calculate checksum for raw NMEA message.
 
-    :param object message: entire message as bytes or string
+    :param object content: NMEA message content (everything except checksum)
     :return: checksum as hex string
     :rtype: str
     """
 
-    content, _, _, _, _ = get_parts(message)
     cksum = 0
     for sub in content:
         cksum ^= ord(sub)
     return f"{cksum:02X}"
+
+
+def generate_checksum(talker: str, msgID: str, payload: list) -> str:
+    """
+    Generate checksum for new NMEA message.
+
+    :param str talker: talker e.g. "GN"
+    :param str msgID: msgID e.g. "GLL"
+    :param list payload: payload as list
+    :return: checksum as hex string
+    :rtype: str
+    """
+
+    content = talker + msgID + ","
+    for i, s in enumerate(payload):
+        content += ("," if i else "") + s
+    return calc_checksum(content)
 
 
 def dmm2ddd(pos: str) -> float:

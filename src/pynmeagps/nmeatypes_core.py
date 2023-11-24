@@ -12,12 +12,6 @@ has been collated from public domain sources.
 
 from datetime import datetime
 
-NMEA_HDR = [
-    b"\x24\x42",  # B Beidou (legacy)
-    b"\x24\x47",  # G standard GNSS
-    b"\x24\x49",  # I integrated navigation
-    b"\x24\x50",  # P proprietary GNSS
-]
 INPUT = 1
 OUTPUT = 0
 GET = 0
@@ -59,21 +53,26 @@ DT = "DT"  # Date ddmmyy
 DM = "DM"  # Date mmddyy
 HX = "HX"  # Hexadecimal Integer
 IN = "IN"  # Integer
-LA = "LA"  # Latitude value ddmm.mmmmm
-LN = "LN"  # Longitude value dddmm.mmmmm
+LA = "LA"  # Latitude value ddmm.mmmmm (ddmm.mmmmmmm in HP mode)
+LAD = "LAD"  # Latitude direction (N/S)
+LN = "LN"  # Longitude value dddmm.mmmmm (dddmm.mmmmmmm in HP mode)
+LND = "LND"  # Longitude direction (E/W)
 ST = "ST"  # String
 TM = "TM"  # Time hhmmss.ss
 
-VALID_TYPES = (CH, DE, DT, HX, IN, LA, LN, ST, TM)
+VALID_TYPES = (CH, DE, DT, HX, IN, LA, LAD, LN, LND, ST, TM)
 
 # *****************************************
 # THESE ARE THE NMEA V4 PROTOCOL TALKER IDS
 # *****************************************
 NMEA_TALKERS = {
+    # ***************************************************************
+    # Base Stations:
+    # ***************************************************************
     "AB": "Independent AIS Base Station",
     "AD": "Dependent AIS Base Station",
     # ***************************************************************
-    # Heading Track Controller:
+    # Heading Track Controllers:
     # ***************************************************************
     "AG": "Heading Track Controller (Autopilot): General",
     "AI": "Mobile Class A or B AIS Station",
@@ -162,6 +161,9 @@ NMEA_TALKERS = {
     "ZQ": "Quartz",
     "ZV": "Radio Update",
 }
+
+# format list of permissible NMEA 2-byte header sequences
+NMEA_HDR = {b"\x24" + i[0:1].encode("utf-8") for i in NMEA_TALKERS}
 
 # ****************************************************************************
 # THESE ARE THE NMEA PROTOCOL CORE MESSAGE IDENTITIES

@@ -1,6 +1,13 @@
 # pynmeagps Release Notes
 
-### RELEASE CANDIDATE 1.0.30
+### RELEASE CANDIDATE 1.0.31
+
+ENHANCEMENTS:
+
+1. Extend `NMEA_HDR` to include *all* known Talker IDs (*not just those relevant to GNSS*).
+2. Minor Internal streamlining.
+
+### RELEASE 1.0.30
 
 ENHANCEMENTS:
 
