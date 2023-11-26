@@ -23,3 +23,4 @@ src/pynmeagps.egg*
 pylint_report.txt
 .venv
 /conda
+setup.cfg
