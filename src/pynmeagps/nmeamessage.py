@@ -11,19 +11,20 @@ Created on 04 Mar 2021
 
 import struct
 from datetime import datetime, timezone
+
 import pynmeagps.exceptions as nme
 import pynmeagps.nmeatypes_core as nmt
 import pynmeagps.nmeatypes_get as nmg
 import pynmeagps.nmeatypes_poll as nmp
 import pynmeagps.nmeatypes_set as nms
 from pynmeagps.nmeahelpers import (
-    date2utc,
     date2str,
-    time2utc,
-    time2str,
-    dmm2ddd,
+    date2utc,
     ddd2dmm,
+    dmm2ddd,
     generate_checksum,
+    time2str,
+    time2utc,
 )
 
 

@@ -11,20 +11,21 @@ Created on 04 Mar 2021
 # pylint: disable=invalid-name
 
 from datetime import datetime
-from math import sqrt, sin, cos, asin, acos, atan2, pi
+from math import acos, asin, atan2, cos, pi, sin, sqrt
+
+import pynmeagps.exceptions as nme
 from pynmeagps.nmeatypes_core import (
-    NMEA_MSGIDS,
-    NMEA_MSGIDS_PROP,
+    DM,
+    DT,
+    GPSEPOCH0,
     LA,
     LN,
-    DT,
-    DM,
-    WGS84_SMAJ_AXIS,
-    WGS84_FLATTENING,
+    NMEA_MSGIDS,
+    NMEA_MSGIDS_PROP,
     WGS84,
-    GPSEPOCH0,
+    WGS84_FLATTENING,
+    WGS84_SMAJ_AXIS,
 )
-import pynmeagps.exceptions as nme
 
 KNOTSCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
 

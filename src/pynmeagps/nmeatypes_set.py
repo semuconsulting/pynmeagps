@@ -27,19 +27,7 @@ has been collated from public domain sources.
 :author: semuadmin
 """
 
-from pynmeagps.nmeatypes_core import (
-    CH,
-    DE,
-    DT,
-    HX,
-    IN,
-    LA,
-    LAD,
-    LN,
-    LND,
-    ST,
-    TM,
-)
+from pynmeagps.nmeatypes_core import CH, DE, DT, HX, IN, LA, LAD, LN, LND, ST, TM
 
 NMEA_PAYLOADS_SET = {
     # *********************************************
