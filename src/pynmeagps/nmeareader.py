@@ -22,21 +22,19 @@ Created on 4 Mar 2021
 """
 
 from socket import socket
-from pynmeagps.socket_stream import SocketStream
-from pynmeagps.nmeamessage import NMEAMessage
+
 import pynmeagps.exceptions as nme
-from pynmeagps.nmeahelpers import (
-    get_parts,
-    calc_checksum,
-)
+from pynmeagps.nmeahelpers import calc_checksum, get_parts
+from pynmeagps.nmeamessage import NMEAMessage
 from pynmeagps.nmeatypes_core import (
+    ERR_LOG,
+    ERR_RAISE,
     GET,
     NMEA_HDR,
     VALCKSUM,
     VALMSGID,
-    ERR_LOG,
-    ERR_RAISE,
 )
+from pynmeagps.socket_stream import SocketStream
 
 
 class NMEAReader:
@@ -228,9 +226,9 @@ class NMEAReader:
             )
 
         try:
-            _, talker, msgid, payload, checksum = get_parts(message)
+            content, talker, msgid, payload, checksum = get_parts(message)
             if validate & VALCKSUM:
-                ccksum = calc_checksum(message)
+                ccksum = calc_checksum(content)
                 if checksum != ccksum:
                     raise nme.NMEAParseError(
                         f"Message {talker}{msgid} invalid checksum {checksum}"

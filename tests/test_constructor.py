@@ -9,7 +9,8 @@ Created on 4 Mar 2021
 """
 
 import unittest
-from pynmeagps import NMEAMessage, GET, SET, POLL, NMEAMessageError
+from datetime import datetime
+from pynmeagps import NMEAMessage, NMEAReader, GET, SET, POLL, NMEAMessageError
 
 
 class FillTest(unittest.TestCase):
@@ -28,10 +29,20 @@ class FillTest(unittest.TestCase):
             payload=["5327.04319", "S", "00214.41396", "E", "223232.00", "A", "A"],
         )
         self.assertEqual(str(res), EXPECTED_RESULT)
+        res2 = NMEAReader.parse(res.serialize())
+        self.assertEqual(str(res2), EXPECTED_RESULT)
 
     def testFill_GNGLL_HP(self):  # test GET constructor in high precision mode
-        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
-        EXPECTED_PAYLOAD = ["4307.4074073", "N", "00259.2592593", "W", "", "A", "A"]
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=16:29:24.123456, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = [
+            "4307.4074073",
+            "N",
+            "00259.2592593",
+            "W",
+            "162924.12",
+            "A",
+            "A",
+        ]
         res = NMEAMessage(
             "GN",
             "GLL",
@@ -40,13 +51,16 @@ class FillTest(unittest.TestCase):
             NS="N",
             lon=2.987654321,
             EW="W",
-            time="22:32:32",
+            time=datetime(2023, 11, 22, 16, 29, 24, 123456).time(),
             status="A",
             posMode="A",
             hpnmeamode=1,
         )
         self.assertEqual(str(res), EXPECTED_RESULT)
         self.assertEqual(res.payload, EXPECTED_PAYLOAD)
+        res2 = NMEAReader.parse(res.serialize())
+        print(res.serialize())
+        print(res2.serialize())
 
     def testFill_GNGLL_SP(self):  # test GET constructor in standard precision mode
         EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
@@ -70,14 +84,16 @@ class FillTest(unittest.TestCase):
     def testFill_GNGLL_NSEW1(
         self,
     ):  # derive NS or EW values
-        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
-        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "W", "", "A", "A"]
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=-43.123456789, NS=S, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = ["4307.40741", "S", "00259.25926", "W", "", "A", "A"]
         res = NMEAMessage(
             "GN",
             "GLL",
             GET,
             lat=43.123456789,
-            lon=-2.987654321,
+            NS="S",
+            lon=2.987654321,
+            EW="W",
             time="22:32:32",
             status="A",
             posMode="A",
@@ -89,14 +105,13 @@ class FillTest(unittest.TestCase):
     def testFill_GNGLL_NSEW2(
         self,
     ):  # derive NS or EW values
-        EXPECTED_RESULT = "<NMEA(GNGLL, lat=-43.123456789, NS=S, lon=2.987654321, EW=E, time=22:32:32, status=A, posMode=A)>"
-        EXPECTED_PAYLOAD = ["4307.40741", "S", "00259.25926", "E", "", "A", "A"]
+        EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=2.987654321, EW=E, time=22:32:32, status=A, posMode=A)>"
+        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "E", "", "A", "A"]
         res = NMEAMessage(
             "GN",
             "GLL",
             GET,
             lat=43.123456789,
-            NS="S",
             lon=2.987654321,
             time="22:32:32",
             status="A",

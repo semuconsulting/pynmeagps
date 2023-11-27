@@ -27,17 +27,7 @@ has been collated from public domain sources.
 :author: semuadmin
 """
 
-from pynmeagps.nmeatypes_core import (
-    CH,
-    DE,
-    DT,
-    HX,
-    IN,
-    LA,
-    LN,
-    ST,
-    TM,
-)
+from pynmeagps.nmeatypes_core import CH, DE, DT, HX, IN, LA, LAD, LN, LND, ST, TM
 
 NMEA_PAYLOADS_SET = {
     # *********************************************
@@ -49,9 +39,9 @@ NMEA_PAYLOADS_SET = {
     # *********************************************
     "GRMI": {  # sensor initialisation information
         "lat": LA,
-        "NS": CH,
+        "NS": LAD,
         "lon": LN,
-        "EW": CH,
+        "EW": LND,
         "date": DT,
         "time": TM,
         "rcvr_cmd": CH,

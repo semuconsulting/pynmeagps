@@ -39,6 +39,7 @@ from pynmeagps.nmeahelpers import (
     latlon2dms,
     llh2iso6709,
     get_gpswnotow,
+    generate_checksum,
 )
 
 
@@ -76,6 +77,16 @@ class StaticTest(unittest.TestCase):
             ),
         )
 
+    def testGenChecksum(self):  # test generation of new checksum
+        res = generate_checksum(
+            "GN", "GLL", ["5327.04319", "S", "00214.41396", "E", "223232.00", "A", "A"]
+        )
+        self.assertEqual(res, "68")
+        res = generate_checksum(
+            "GN", "GLL", ["1234.04319", "N", "00056.41396", "E", "123232.00", "A", "A"]
+        )
+        self.assertEqual(res, "75")
+
     def testGetPartsCRAP(self):  # test badly formed NMEA message
         EXPECTED_ERROR = "Badly formed message $GNRMC,,%$£"
         with self.assertRaises(NMEAMessageError) as context:
@@ -83,9 +94,11 @@ class StaticTest(unittest.TestCase):
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testCalcChecksum(self):
-        res = calc_checksum(self.messageGLL)
+        content, _, _, _, _ = get_parts(self.messageGLL)
+        res = calc_checksum(content)
         self.assertEqual(res, "68")
-        res = calc_checksum(self.messagePUBX)
+        content, _, _, _, _ = get_parts(self.messagePUBX)
+        res = calc_checksum(content)
         self.assertEqual(res, "69")
 
     def testDMM2DDD(self):

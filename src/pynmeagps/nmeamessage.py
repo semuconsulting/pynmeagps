@@ -11,19 +11,20 @@ Created on 04 Mar 2021
 
 import struct
 from datetime import datetime, timezone
+
 import pynmeagps.exceptions as nme
 import pynmeagps.nmeatypes_core as nmt
 import pynmeagps.nmeatypes_get as nmg
 import pynmeagps.nmeatypes_poll as nmp
 import pynmeagps.nmeatypes_set as nms
 from pynmeagps.nmeahelpers import (
-    date2utc,
     date2str,
-    time2utc,
-    time2str,
-    dmm2ddd,
+    date2utc,
     ddd2dmm,
-    calc_checksum,
+    dmm2ddd,
+    generate_checksum,
+    time2str,
+    time2utc,
 )
 
 
@@ -73,7 +74,6 @@ class NMEAMessage:
         self._talker = talker
         self._msgID = msgID
         self._do_attributes(**kwargs)
-        self._sign_latlon()
         self._immutable = True  # once initialised, object is immutable
 
     def _do_attributes(self, **kwargs):
@@ -90,25 +90,17 @@ class NMEAMessage:
 
         try:
             self._payload = kwargs.get("payload", [])
-            self._checksum = kwargs.get("checksum", "00")
-
-            # derive NS and EW values if not provided explicitly
-            # (explicit NS or EW values take precedence over lat/lon sign)
-            if "payload" not in kwargs:
-                if "lat" in kwargs and "NS" not in kwargs:
-                    if kwargs["lat"] != "":
-                        kwargs["NS"] = "N" if kwargs["lat"] > 0 else "S"
-                if "lon" in kwargs and "EW" not in kwargs:
-                    if kwargs["lon"] != "":
-                        kwargs["EW"] = "E" if kwargs["lon"] > 0 else "W"
-
+            self._checksum = kwargs.get("checksum", None)
             pdict = self._get_dict(**kwargs)  # get payload definition dict
             for key in pdict.keys():  # process each attribute in dict
                 (pindex, gindex) = self._set_attribute(
                     pindex, pdict, key, gindex, **kwargs
                 )
-            # recalculate checksum for (re)constructed message
-            self._checksum = calc_checksum(self.serialize())
+            # generate checksum for newly-created message
+            if self._checksum is None:
+                self._checksum = generate_checksum(
+                    self._talker, self._msgID, self._payload
+                )
 
         except (
             AttributeError,
@@ -196,7 +188,7 @@ class NMEAMessage:
         :return: pindex
         :rtype: int
         """
-        # pylint: disable=no-member
+        # pylint: disable=no-member, access-member-before-definition, attribute-defined-outside-init
 
         # if attribute is part of a (nested) repeating group, suffix name with group index
         keyr = key
@@ -222,28 +214,16 @@ class NMEAMessage:
             return pindex
 
         setattr(self, keyr, val)  # add attribute to NMEAMessage object
+        # adjust sign of decimal lon (W = -ve) or lat (S = -ve)
+        if att == nmt.LND and hasattr(self, "lon"):
+            if isinstance(self.lon, float) and val == "W":
+                self.lon = -abs(self.lon)
+        elif att == nmt.LAD and hasattr(self, "lat"):
+            if isinstance(self.lat, float) and val == "S":
+                self.lat = -abs(self.lat)
         pindex += 1  # move on to next attribute in payload definition
 
         return pindex
-
-    def _sign_latlon(self):
-        """
-        Adjust sign of decimal lat/lon according to direction (NS/EW) value
-        """
-        # pylint: disable=no-member, E0203
-
-        if hasattr(self, "lat") and hasattr(self, "NS"):
-            if self.lat != "":
-                if (self.NS == "N" and self.lat < 0) or (
-                    self.NS == "S" and self.lat > 0
-                ):
-                    self.lat = self.lat * -1
-        if hasattr(self, "lon") and hasattr(self, "EW"):
-            if self.lon != "":
-                if (self.EW == "E" and self.lon < 0) or (
-                    self.EW == "W" and self.lon > 0
-                ):
-                    self.lon = self.lon * -1
 
     def _get_dict(self, **kwargs) -> dict:
         """
@@ -440,10 +420,7 @@ class NMEAMessage:
         """
 
         val = vals
-        if att in (
-            nmt.CH,
-            nmt.ST,
-        ):  # character, string, hex
+        if att in (nmt.CH, nmt.ST, nmt.LAD, nmt.LND):
             pass
         elif att == nmt.HX:
             val = vals
@@ -478,7 +455,7 @@ class NMEAMessage:
 
         """
 
-        if att in (nmt.CH, nmt.ST):
+        if att in (nmt.CH, nmt.ST, nmt.LAD, nmt.LND):
             vals = str(val)
         elif att == nmt.HX:
             vals = str(val)
@@ -509,6 +486,10 @@ class NMEAMessage:
 
         if att in (nmt.CH, nmt.ST, nmt.LA, nmt.LN):
             val = ""
+        elif att == nmt.LAD:
+            val = "N"
+        elif att == nmt.LND:
+            val = "E"
         elif att == nmt.HX:
             val = "0"
         elif att == nmt.DE:
