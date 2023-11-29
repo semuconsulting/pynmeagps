@@ -170,7 +170,7 @@ class NMEAReader:
         """
 
         data = self._stream.readline()  # NMEA protocol is CRLF terminated
-        if data[-2:] != b"\x0d\x0a":  # EOF
+        if data[-1:] != b"\x0a":  # EOF
             raise EOFError()
         return data
 
