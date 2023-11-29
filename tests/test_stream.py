@@ -367,9 +367,9 @@ class StreamTest(unittest.TestCase):
     def testBADEOF(self):  # stream with premature EOF - should just be tolerated
         EXPECTED_RESULTS = (
             "<NMEA(GNDTM, datum=W84, subDatum=, latOfset=0.0, NS=N, lonOfset=0.0, EW=E, alt=0.0, refDatum=W84)>",
-            "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-2.24041033, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>",
+            "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>",
             "<NMEA(GNVTG, cogt=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.046, sognUnit=N, sogk=0.085, sogkUnit=K, posMode=A)>",
-            "<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.24041033, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>",
+            "<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>",
         )
 
         i = 0
@@ -377,6 +377,7 @@ class StreamTest(unittest.TestCase):
         nmr = NMEAReader(self.streamBADEOF, nmeaonly=False)
         for raw, parsed in nmr:
             if raw is not None:
+                # print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
 
@@ -409,7 +410,7 @@ class StreamTest(unittest.TestCase):
         nmr = NMEAReader(self.streamTRIMBLE, nmeaonly=False)
         for raw, parsed in nmr:
             if raw is not None:
-                print(parsed)
+                # print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
         self.assertEqual(i, 20)

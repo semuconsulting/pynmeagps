@@ -1,9 +1,10 @@
 # pynmeagps Release Notes
 
-### RELEASE CANDIDATE 1.1.0
+### RELEASE CANDIDATE 1.0.32
 
 ENHANCEMENTS:
 
+1. Cater for NMEA streams with LF (b"\x0a") rather than CRLF (b"\x0d\x0a") message terminators.
 
 ### RELEASE 1.0.31
 
