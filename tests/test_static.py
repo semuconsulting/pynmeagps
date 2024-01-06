@@ -8,39 +8,36 @@ Created on 3 Oct 2020
 :author: semuadmin
 """
 
+import datetime
 import os
 import unittest
-import datetime
-from pynmeagps import (
-    NMEAReader,
-    NMEAMessage,
-    NMEAMessageError,
-    NMEATypeError,
-)
-from pynmeagps.nmeatypes_core import GET, POLL
+
+from pynmeagps import NMEAMessage, NMEAMessageError, NMEAReader, NMEATypeError
 from pynmeagps.nmeahelpers import (
-    get_parts,
+    bearing,
     calc_checksum,
+    date2str,
+    date2utc,
+    ddd2dmm,
     deg2dmm,
     deg2dms,
     dmm2ddd,
-    ddd2dmm,
-    date2utc,
-    date2str,
-    time2str,
-    time2utc,
-    knots2spd,
-    msgdesc,
-    haversine,
-    bearing,
     ecef2llh,
-    llh2ecef,
+    generate_checksum,
+    get_gpswnotow,
+    get_parts,
+    haversine,
+    knots2spd,
     latlon2dmm,
     latlon2dms,
+    llh2ecef,
     llh2iso6709,
-    get_gpswnotow,
-    generate_checksum,
+    msgdesc,
+    planar,
+    time2str,
+    time2utc,
 )
+from pynmeagps.nmeatypes_core import GET, POLL
 
 
 class StaticTest(unittest.TestCase):
@@ -469,6 +466,17 @@ class StaticTest(unittest.TestCase):
         self.assertAlmostEqual(res, 10715.371, 3)
         res = haversine(53.45, -2.14, 53.451, -2.141)
         self.assertAlmostEqual(res, 0.1296, 3)
+
+    def testplanar(self):  # test planar
+        res = planar(53, 2, 53.000001, 2.000001)
+        # print(res)
+        self.assertAlmostEqual(res, 0.15113412625873954, 7)
+        res = planar(53, 2, 53.00001, 2.00001)
+        # print(res)
+        self.assertAlmostEqual(res, 1.5113412648256797, 7)
+        res = planar(53, 2, 53.0001, 2.0001)
+        # print(res)
+        self.assertAlmostEqual(res, 15.113412645895695, 7)
 
     def testbearing(self):
         res = bearing(51.23, -2.41, 53.205, -2.34)

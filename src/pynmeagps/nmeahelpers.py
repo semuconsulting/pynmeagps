@@ -473,6 +473,9 @@ def haversine(
     """
     Calculate spherical distance in km between two coordinates using haversine formula.
 
+    NB suitable for coordinates greater than around 50m apart. For
+    smaller separations, use the planar approximation formula.
+
     :param float lat1: lat1
     :param float lon1: lon1
     :param float lat2: lat2
@@ -486,6 +489,36 @@ def haversine(
     dist = radius * acos(
         cos(phi2 - phi1) - cos(phi1) * cos(phi2) * (1 - cos(lambda2 - lambda1))
     )
+
+    return dist
+
+
+def planar(
+    lat1: float,
+    lon1: float,
+    lat2: float,
+    lon2: float,
+    radius: int = WGS84_SMAJ_AXIS,
+) -> float:
+    """
+    Calculate planar distance between two coordinates using planar
+    approximation formula.
+
+    NB suitable for coordinates less than around 50m apart. For
+    larger separations, use the haversine great circle formula.
+
+    :param float lat1: lat1
+    :param float lon1: lon1
+    :param float lat2: lat2
+    :param float lon2: lon2
+    :param float radius: radius in m (Earth = 6378137 m)
+    :return: planar distance in m
+    :rtype: float
+    """
+
+    x = (lon2 - lon1) * cos(lat1) * pi * radius / 180
+    y = (lat2 - lat1) * pi * radius / 180
+    dist = sqrt(x * x + y * y)
 
     return dist
 
