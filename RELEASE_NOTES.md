@@ -1,6 +1,12 @@
 # pynmeagps Release Notes
 
-### RELEASE CANDIDATE 1.0.32
+### RELEASE CANDIDATE 1.0.33
+
+ENHANCEMENTS
+
+1. Add planar formula in `nmeahelpers.py` to calculate approximate planar distance between two sets of coordinates. Complements the haversine formula at smaller scales.
+
+### RELEASE 1.0.32
 
 ENHANCEMENTS:
 
