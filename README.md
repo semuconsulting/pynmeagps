@@ -274,7 +274,8 @@ b'$EIGNQ,RMC*24\r\n'
  - `llh2iso6709` - converts lat/lon and altitude (hMSL) to ISO6709 format e.g. "+27.5916+086.5640+8850CRSWGS_84/"
  - `ecef2llh` - converts ECEF (X, Y, Z) coordinates to geodetic (lat, lon, ellipsoidal height) coordinates
  - `llh2ecef` - converts geodetic (lat, lon, ellipsoidal height) coordinates to ECEF (X, Y, Z) coordinates
- - `haversine` - finds spherical distance in km between two sets of (lat, lon) coordinates
+ - `haversine` - finds great circle distance in km between two sets of (lat, lon) coordinates
+ - `planar` - finds planar distance in m between two sets of (lat, lon) coordinates
  - `bearing` - finds bearing in degrees between two sets of (lat, lon) coordinates
 
 See [Sphinx documentation](https://www.semuconsulting.com/pynmeagps/pynmeagps.html#module-pynmeagaps.nmeahelpers) for details.
