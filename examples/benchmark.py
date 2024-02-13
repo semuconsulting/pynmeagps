@@ -12,7 +12,7 @@ Created on 5 Nov 2021
 # pylint: disable=line-too-long
 
 from sys import argv
-from datetime import datetime
+from time import process_time_ns
 from platform import version as osver, python_version
 from pynmeagps.nmeareader import NMEAReader
 from pynmeagps._version import __version__ as nmeaver
@@ -91,19 +91,19 @@ def benchmark(**kwargs) -> float:
         f"\nTxn per cycle: {txnc:,}",
     )
 
-    start = datetime.now()
+    start = process_time_ns()
     print(f"\nBenchmark test started at {start}")
     for i in range(cyc):
         progbar(i, cyc)
         for msg in NMEAMESSAGES:
             _ = NMEAReader.parse(msg)
-    end = datetime.now()
+    end = process_time_ns()
     print(f"Benchmark test ended at {end}.")
-    duration = (end - start).total_seconds()
-    rate = round(txnt / duration, 2)
+    duration = end - start
+    rate = round(txnt * 1e9 / duration, 2)
 
     print(
-        f"\n{txnt:,} messages processed in {duration:,.3f} seconds = {rate:,.2f} txns/second.\n"
+        f"\n{txnt:,} messages processed in {duration/1e9:,.3f} seconds = {rate:,.2f} txns/second.\n"
     )
 
     return rate
@@ -120,5 +120,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()

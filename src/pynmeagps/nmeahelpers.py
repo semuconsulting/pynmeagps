@@ -8,6 +8,7 @@ Created on 04 Mar 2021
 :copyright: SEMU Consulting © 2021
 :license: BSD 3-Clause
 """
+
 # pylint: disable=invalid-name
 
 from datetime import datetime

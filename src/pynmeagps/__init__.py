@@ -5,6 +5,7 @@ Created on 4 Mar 2021
 :copyright: SEMU Consulting © 2020
 :license: BSD 3-Clause
 """
+
 # pylint: disable=wrong-import-position, invalid-name
 
 from pynmeagps._version import __version__
