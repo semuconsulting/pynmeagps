@@ -559,6 +559,19 @@ NMEA_PAYLOADS_GET = {
     # Trimble Proprietary message types
     # https://receiverhelp.trimble.com/alloy-gnss/en-us/NMEA-0183messages_MessageOverview.html
     # ***************************************************************
+    "ASHR": {
+        "utctime": TM,
+        "trueHdg": DE,
+        "trueHdgInd": CH,  # "T"
+        "roll": DE,
+        "pitch": DE,
+        "reserved": ST,
+        "rollAcc": DE,
+        "pitchAcc": DE,
+        "hdgAcc": DE,
+        "gnssQual": IN,
+        "imuAlign": IN,
+    },
     "ASHRALR": {
         "msgId": ST,  # "ALR"
         "alarmCode": IN,
@@ -683,19 +696,6 @@ NMEA_PAYLOADS_GET = {
         "msgType": ST,
         "lastMsgInt": DE,
         "lastMsgAge": DE,
-    },
-    "ASHRHR": {
-        "utctime": TM,
-        "trueHdg": DE,
-        "trueHdgInd": CH,  # "T"
-        "roll": DE,
-        "pitch": DE,
-        "reserved": ST,
-        "rollAcc": DE,
-        "pitchAcc": DE,
-        "hdgAcc": DE,
-        "gnssQual": IN,
-        "imuAlign": IN,
     },
     "ASHRHPR": {
         "msgId": ST,  # "HPR"

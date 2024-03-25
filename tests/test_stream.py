@@ -403,6 +403,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(PASHRBTS, msgId=BTS, port_01=C, connected_01=1, name_01=btsdev1, addr_01=hs-344-fg, linkQual_01=87, port_02=H, connected_02=1, name_02=btsdev2, addr_02=pc-377xs, linkQual_02=68, port_03=T, connected_03=0, name_03=, addr_03=, linkQual_03=)>",
             "<NMEA(PGPPADV110, msgId=110, lat=39.88113582, lon=-105.07838455, height=1614.125)>",
             "<NMEA(PGPPADV120, msgId=120, prn_01=21, ele_01=76.82, azi_01=68.51, prn_02=29, ele_02=20.66, azi_02=317.47)>",
+            "<NMEA(PASHR, utctime=14:25:09, trueHdg=179.885, trueHdgInd=T, roll=-0.624, pitch=0.245, reserved=, rollAcc=0.029, pitchAcc=0.029, hdgAcc=0.502, gnssQual=2, imuAlign=3)>",
         )
 
         i = 0
@@ -413,7 +414,7 @@ class StreamTest(unittest.TestCase):
                 # print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
-        self.assertEqual(i, 20)
+        self.assertEqual(i, 21)
 
 
 if __name__ == "__main__":
