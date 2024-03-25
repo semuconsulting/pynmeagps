@@ -238,7 +238,10 @@ class NMEAMessage:
             key = self.msgID
             if key in nmt.PROP_MSGIDS:  # proprietary, first element is msgId
                 if "payload" in kwargs:
-                    key += self._payload[0]
+                    if key == "ASHR" and self._payload[0][1].isdigit():
+                        pass  # exception for PASHR pitch and roll sentence without msgId
+                    else:
+                        key += self._payload[0]
                 elif "msgId" in kwargs:
                     key += kwargs["msgId"]
                 else:
@@ -348,7 +351,11 @@ class NMEAMessage:
         :rtype: str
         """
 
-        if self.talker == "P" and self._msgID in nmt.PROP_MSGIDS:
+        if (
+            self.talker == "P"
+            and self._msgID in nmt.PROP_MSGIDS
+            and hasattr(self, "msgId")
+        ):
             return self._talker + self._msgID + self.msgId  # pylint: disable=no-member
         return self._talker + self._msgID
 
