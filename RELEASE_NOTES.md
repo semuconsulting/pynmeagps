@@ -1,8 +1,14 @@
 # pynmeagps Release Notes
 
-### RELEASE CANDIDATE 1.0.33
+### RELEASE 1.0.34
 
-ENHANCEMENTS
+FIXES:
+
+1. Add missing Trimble PASHR Proprietary Pitch and Roll sentence Fixes [#52](https://github.com/semuconsulting/pynmeagps/issues/52).
+
+### RELEASE 1.0.33
+
+ENHANCEMENTS:
 
 1. Add planar formula in `nmeahelpers.py` to calculate approximate planar distance between two sets of coordinates. Complements the haversine formula at smaller scales.
 

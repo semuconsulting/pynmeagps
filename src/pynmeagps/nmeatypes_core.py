@@ -258,6 +258,7 @@ NMEA_MSGIDS_PROP = {
     # ***************************************************************
     # Trimble Proprietary message types
     # ***************************************************************
+    "ASHR": "RT300 Roll and Pitch",
     "ASHRALR": "Alarms",
     "ASHRARA": "True Heading",
     "ASHRARR": "Vector & Accuracy",
@@ -269,7 +270,7 @@ NMEA_MSGIDS_PROP = {
     "ASHRDDM": "Differential Decoder Message",
     "ASHRDDS": "Differential Decoder Status",
     "ASHRHPR": "True Heading",
-    "ASHRHR": "Proprietary Roll and Pitch",
+    # "ASHRHR": "Proprietary Roll and Pitch",
     "ASHRLTN": "Latency",
     "ASHRMDM": "Modem State and Parameter",
     "ASHRPOS": "Position",
