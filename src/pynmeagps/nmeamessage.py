@@ -215,13 +215,14 @@ class NMEAMessage:
             return pindex
 
         setattr(self, keyr, val)  # add attribute to NMEAMessage object
-        # adjust sign of decimal lon (W = -ve) or lat (S = -ve)
+        # override sign of lat/lon according to NS and EW values
+        # NS and EW default to N and E respectively if not specified
         if att == nmt.LND and hasattr(self, "lon"):
-            if isinstance(self.lon, float) and val == "W":
-                self.lon = -abs(self.lon)
-        elif att == nmt.LAD and hasattr(self, "lat"):
-            if isinstance(self.lat, float) and val == "S":
-                self.lat = -abs(self.lat)
+            if isinstance(self.lon, float):
+                self.lon = -abs(self.lon) if val == "W" else abs(self.lon)
+        if att == nmt.LAD and hasattr(self, "lat"):
+            if isinstance(self.lat, float):
+                self.lat = -abs(self.lat) if val == "S" else abs(self.lat)
         pindex += 1  # move on to next attribute in payload definition
 
         return pindex
