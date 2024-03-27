@@ -4,7 +4,7 @@
 
 FIXES:
 
-1. Clarify documentation on creating messages with lat/lon and EW/NS values.
+1. Fixes & simplifies the derivation of NMEA `NS` and `EW` values when creating `NMEAMessage` objects (e.g. GNGLL) using individual keyword arguments. `NS` and `EW` will always be derived from the sign of the provided signed decimal `lat` and `lon` values and need not be provided explicitly. When creating an `NMEAMessage` using a single payload argument (_which is effectively what happens when parsing incoming serial data streams_), the value of `NS` and `EW` in the payload will determine the sign of the decimal `lat`/`lon` values in the `NMEAMessage` object.
 
 ### RELEASE 1.0.34
 
