@@ -207,7 +207,7 @@ The 'msgmode' parameter signifies whether the message payload refers to a:
 
 The message payload can be defined via keyword arguments in one of two ways: 
 1. A single keyword parameter of `payload` containing the full payload as a list of string values (any other keyword parameters will be ignored).
-2. One or more keyword parameters corresponding to individual message attributes. Any attributes not explicitly provided as keyword parameters will be set to a nominal value according to their type.
+2. One or more keyword parameters corresponding to individual message attributes. Any attributes not explicitly provided as keyword parameters will be set to a nominal value according to their type. For position messages, the `NS` or `EW` values will be derived from the sign of the `lat` or `lon` values and need not be provided, e.g. if `lat` = -32.4, `NS` will be "S", if `lon` = -1.34, `EW` will be "W" (_any provided `NS` or `EW` values will be overridden accordingly_). 
 
 e.g. Create a GLL message, passing the entire payload as a list of strings in native NMEA format:
 
@@ -223,7 +223,7 @@ e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as
 
 ```python
 >>> from pynmeagps import NMEAMessage, GET
->>> msg = NMEAMessage('GN', 'GLL', GET, lat=43.5, NS='N', lon=2.75, EW='W', status='A', posMode='A')
+>>> msg = NMEAMessage('GN', 'GLL', GET, lat=43.5, lon=-2.75, status='A', posMode='A')
 >>> print(msg)
 <NMEA(GNGLL, lat=43.5, NS='N', lon=-2.75, EW='W', time='12:04:25.234745', status='A', posMode='A')>
 ```
@@ -235,14 +235,14 @@ e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as
 <NMEA(EIGNQ, msgId=RMC)>
 ```
 
-For position messages, the `NS` or `EW` values will override the sign of `lat` or `lon` values, e.g. if `NS`="S", `lat` will be -ve, if `EW`="W", `lon` will be -ve. The default values if not specified are `NS`="N", `EW`="E". By default, NMEA position message payloads store lat/lon to 5dp of minutes (i.e. (d)ddmm.mmmmm). An optional boolean keyword argument `hpnmeamode` increases this to 7dp (i.e. (d)ddmm.mmmmmmm) when set to True, e.g.
+By default, NMEA position message payloads store lat/lon to 5dp of minutes (i.e. (d)ddmm.mmmmm). An optional boolean keyword argument `hpnmeamode` increases this to 7dp (i.e. (d)ddmm.mmmmmmm) when set to True, e.g.
 
 ```python
 >>> from pynmeagps import NMEAMessage, GET
->>> msgsp = NMEAMessage('GN', 'GLL', GET, lat=43.123456789, NS="N", lon=2.987654321, EW="W", status='A', posMode='A', hpnmeamode=0) # standard precision
+>>> msgsp = NMEAMessage('GN', 'GLL', GET, lat=43.123456789, lon=-2.987654321, status='A', posMode='A', hpnmeamode=0) # standard precision
 >>> msgsp
 NMEAMessage('GN','GLL', 0, payload=['4307.40741', 'N', '00259.25926', 'W', '095045.78', 'A', 'A'])
->>> msghp = NMEAMessage('GN', 'GLL', GET, lat=43.123456789, NS="S", lon=2.987654321, EW="E", status='A', posMode='A', hpnmeamode=1) # high precision
+>>> msghp = NMEAMessage('GN', 'GLL', GET, lat=-43.123456789, lon=2.987654321, status='A', posMode='A', hpnmeamode=1) # high precision
 >>> msghp
 NMEAMessage('GN','GLL', 0, payload=['4307.4074073', 'S', '00259.2592593', 'E', '094824.88', 'A', 'A'])
 ```
