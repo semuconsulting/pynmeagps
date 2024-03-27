@@ -205,7 +205,18 @@ class NMEAMessage:
             # some attribute values have been provided,
             # the rest will be set to a nominal value
             else:
-                val = kwargs.get(keyr, self.nomval(att))
+                if att == nmt.LND and hasattr(self, "lon"):
+                    if isinstance(self.lon, (int, float)):
+                        val = "W" if self.lon < 0 else "E"
+                    else:
+                        val = "E"
+                elif att == nmt.LAD and hasattr(self, "lat"):
+                    if isinstance(self.lat, (int, float)):
+                        val = "S" if self.lat < 0 else "N"
+                    else:
+                        val = "N"
+                else:
+                    val = kwargs.get(keyr, self.nomval(att))
                 vals = self.val2str(val, att, self._hpnmeamode)
                 self._payload.append(vals)
 
@@ -215,13 +226,14 @@ class NMEAMessage:
             return pindex
 
         setattr(self, keyr, val)  # add attribute to NMEAMessage object
-        # adjust sign of decimal lon (W = -ve) or lat (S = -ve)
-        if att == nmt.LND and hasattr(self, "lon"):
-            if isinstance(self.lon, float) and val == "W":
-                self.lon = -abs(self.lon)
-        elif att == nmt.LAD and hasattr(self, "lat"):
-            if isinstance(self.lat, float) and val == "S":
-                self.lat = -abs(self.lat)
+        if "payload" in kwargs:
+            # override sign of lat/lon according to NS and EW values
+            if att == nmt.LND and hasattr(self, "lon"):
+                if isinstance(self.lon, (int, float)):
+                    self.lon = -abs(self.lon) if val == "W" else abs(self.lon)
+            elif att == nmt.LAD and hasattr(self, "lat"):
+                if isinstance(self.lat, (int, float)):
+                    self.lat = -abs(self.lat) if val == "S" else abs(self.lat)
         pindex += 1  # move on to next attribute in payload definition
 
         return pindex

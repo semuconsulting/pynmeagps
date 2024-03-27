@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.35
+
+FIXES:
+
+1. Clarify documentation on creating messages with lat/lon and EW/NS values.
+
 ### RELEASE 1.0.34
 
 FIXES:
