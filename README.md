@@ -112,33 +112,34 @@ Examples:
 * Serial input - this example will ignore any non-NMEA data.
 
 ```python
->>> from serial import Serial
->>> from pynmeagps import NMEAReader
->>> stream = Serial('/dev/tty.usbmodem14101', 9600, timeout=3)
->>> nmr = NMEAReader(stream)
->>> (raw_data, parsed_data) = nmr.read()
->>> print(parsed_data)
+from serial import Serial
+from pynmeagps import NMEAReader
+stream = Serial('/dev/tty.usbmodem14101', 9600, timeout=3)
+nmr = NMEAReader(stream)
+(raw_data, parsed_data) = nmr.read()
+print(parsed_data)
 ```
 
 * File input (using iterator) - this example will produce a `NMEAStreamError` if non-NMEA data is encountered.
 
 ```python
->>> from pynmeagps import NMEAReader
->>> stream = open('nmeadata.log', 'rb')
->>> nmr = NMEAReader(stream, nmeaonly=True)
->>> for (raw_data, parsed_data) in nmr: print(parsed_data)
-...
+from pynmeagps import NMEAReader
+stream = open('nmeadata.log', 'rb')
+nmr = NMEAReader(stream, nmeaonly=True)
+for (raw_data, parsed_data) in nmr: 
+  print(parsed_data)
 ```
 
 Example - Socket input (using iterator):
 
 ```python
->>> import socket
->>> from pynmeagps import NMEAReader
->>> stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
->>> stream.connect(("localhost", 50007))
->>> nmr = NMEAReader(stream)
->>> for (raw_data, parsed_data) in nmr: print(parsed_data)
+import socket
+from pynmeagps import NMEAReader
+stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
+stream.connect(("localhost", 50007))
+nmr = NMEAReader(stream)
+for (raw_data, parsed_data) in nmr:
+  print(parsed_data)
 ```
 
 ---
@@ -160,9 +161,11 @@ The `parse()` function accepts the following optional keyword arguments:
 Example:
 
 ```python
->>> from pynmeagps import NMEAReader
->>> msg = NMEAReader.parse('$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n')
->>> print(msg)
+from pynmeagps import NMEAReader
+msg = NMEAReader.parse('$GNGLL,5327.04319,S,00214.41396,E,223232.00,A,A*68\r\n')
+print(msg)
+```
+```
 <NMEA(GNGLL, lat=-53.45072, NS=S, lon=2.240233, EW=E, time=22:32:32, status=A, posMode=A)>
 ```
 
@@ -171,18 +174,20 @@ e.g. the `RMC` message has the following attributes:
 
 ```python
 from pynmeagps import latlon2dms, latlon2dmm
-...
->>> print(msg)
+print(msg)
+print(msg.msgID)
+print(msg.lat, msg.lon)
+print(msg.spd)
+print(latlon2dms((msg.lat, msg.lon)))
+print(latlon2dmm((msg.lat, msg.lon)))
+
+```
+```
 <NMEA(GNRMC, time=22:18:38, status=A, lat=52.62063, NS=N, lon=-2.16012, EW=W, spd=37.84, cog=, date=2021-03-05, mv=, mvEW=, posMode=A)>
->>> msg.msgID
 'RMC'
->>> msg.lat, msg.lon
 (52.62063, -2.16012)
->>> msg.spd
 37.84
->>> latlon2dms((msg.lat, msg.lon))
 ('52°37′14.268″N', '2°9′36.432″W')
->>> latlon2dmm((msg.lat, msg.lon))
 ('52°37.2378′N', '2°9.6072′W')
 ```
 
@@ -212,38 +217,46 @@ The message payload can be defined via keyword arguments in one of two ways:
 e.g. Create a GLL message, passing the entire payload as a list of strings in native NMEA format:
 
 ```python
->>> from pynmeagps import NMEAMessage, GET
->>> pyld=['4330.00000','N','00245.000000','W','120425.234','A','A']
->>> msg = NMEAMessage('GN', 'GLL', GET, payload=pyld)
+from pynmeagps import NMEAMessage, GET
+pyld=['4330.00000','N','00245.000000','W','120425.234','A','A']
+msg = NMEAMessage('GN', 'GLL', GET, payload=pyld)
 print(msg)
+```
+```
 <NMEA(GNGLL, lat=43.5, NS=N, lon=-2.75, EW=W, time=12:04:25.234000, status=A, posMode=A)>
 ```
 
 e.g. Create GLL (GET) and GNQ (POLL) message, passing individual typed values as keywords, with any omitted keywords defaulting to nominal values (in the GLL example, the 'time' parameter has been omitted and has defaulted to the current time):
 
 ```python
->>> from pynmeagps import NMEAMessage, GET
->>> msg = NMEAMessage('GN', 'GLL', GET, lat=43.5, lon=-2.75, status='A', posMode='A')
->>> print(msg)
+from pynmeagps import NMEAMessage, GET
+msg = NMEAMessage('GN', 'GLL', GET, lat=43.5, lon=-2.75, status='A', posMode='A')
+print(msg)
+```
+```
 <NMEA(GNGLL, lat=43.5, NS='N', lon=-2.75, EW='W', time='12:04:25.234745', status='A', posMode='A')>
 ```
 
 ```python
->>> from pynmeagps import NMEAMessage, POLL
->>> msg = NMEAMessage('EI', 'GNQ', POLL, msgId='RMC')
->>> print(msg)
+from pynmeagps import NMEAMessage, POLL
+msg = NMEAMessage('EI', 'GNQ', POLL, msgId='RMC')
+print(msg)
+```
+```
 <NMEA(EIGNQ, msgId=RMC)>
 ```
 
 By default, NMEA position message payloads store lat/lon to 5dp of minutes (i.e. (d)ddmm.mmmmm). An optional boolean keyword argument `hpnmeamode` increases this to 7dp (i.e. (d)ddmm.mmmmmmm) when set to True, e.g.
 
 ```python
->>> from pynmeagps import NMEAMessage, GET
->>> msgsp = NMEAMessage('GN', 'GLL', GET, lat=43.123456789, lon=-2.987654321, status='A', posMode='A', hpnmeamode=0) # standard precision
->>> msgsp
+from pynmeagps import NMEAMessage, GET
+msgsp = NMEAMessage('GN', 'GLL', GET, lat=43.123456789, lon=-2.987654321, status='A', posMode='A', hpnmeamode=0) # standard precision
+print(msgsp)
+msghp = NMEAMessage('GN', 'GLL', GET, lat=-43.123456789, lon=2.987654321, status='A', posMode='A', hpnmeamode=1) # high precision
+print(msghp)
+```
+```
 NMEAMessage('GN','GLL', 0, payload=['4307.40741', 'N', '00259.25926', 'W', '095045.78', 'A', 'A'])
->>> msghp = NMEAMessage('GN', 'GLL', GET, lat=-43.123456789, lon=2.987654321, status='A', posMode='A', hpnmeamode=1) # high precision
->>> msghp
 NMEAMessage('GN','GLL', 0, payload=['4307.4074073', 'S', '00259.2592593', 'E', '094824.88', 'A', 'A'])
 ```
 
@@ -255,13 +268,15 @@ NMEAMessage('GN','GLL', 0, payload=['4307.4074073', 'S', '00259.2592593', 'E', '
 The `NMEAMessage` class implements a `serialize()` method to convert an `NMEAMessage` object to a bytes array suitable for writing to an output stream.
 
 ```python
->>> from serial import Serial
->>> from pynmeagps import NMEAMessage, POLL
->>> stream = Serial('COM6', 38400, timeout=3)
->>> msg = NMEAMessage('EI','GNQ', POLL, msgId='RMC')
->>> msg.serialize()
+from serial import Serial
+from pynmeagps import NMEAMessage, POLL
+stream = Serial('COM6', 38400, timeout=3)
+msg = NMEAMessage('EI','GNQ', POLL, msgId='RMC')
+print(msg.serialize())
+stream.write(msg.serialize())
+```
+```
 b'$EIGNQ,RMC*24\r\n'
->>> stream.write(msg.serialize())
 ```
 
 ---
