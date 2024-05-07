@@ -114,20 +114,20 @@ Examples:
 ```python
 from serial import Serial
 from pynmeagps import NMEAReader
-stream = Serial('/dev/tty.usbmodem14101', 9600, timeout=3)
-nmr = NMEAReader(stream)
-(raw_data, parsed_data) = nmr.read()
-print(parsed_data)
+with Serial('/dev/tty.usbmodem14101', 9600, timeout=3) as stream:
+  nmr = NMEAReader(stream)
+  raw_data, parsed_data = nmr.read()
+  print(parsed_data)
 ```
 
 * File input (using iterator) - this example will produce a `NMEAStreamError` if non-NMEA data is encountered.
 
 ```python
 from pynmeagps import NMEAReader
-stream = open('nmeadata.log', 'rb')
-nmr = NMEAReader(stream, nmeaonly=True)
-for (raw_data, parsed_data) in nmr: 
-  print(parsed_data)
+with open('nmeadata.log', 'rb') as stream:
+  nmr = NMEAReader(stream, nmeaonly=True)
+  for raw_data, parsed_data in nmr: 
+    print(parsed_data)
 ```
 
 Example - Socket input (using iterator):
@@ -135,11 +135,11 @@ Example - Socket input (using iterator):
 ```python
 import socket
 from pynmeagps import NMEAReader
-stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
-stream.connect(("localhost", 50007))
-nmr = NMEAReader(stream)
-for (raw_data, parsed_data) in nmr:
-  print(parsed_data)
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as stream:
+  stream.connect(("localhost", 50007))
+  nmr = NMEAReader(stream)
+  for raw_data, parsed_data in nmr:
+    print(parsed_data)
 ```
 
 ---
