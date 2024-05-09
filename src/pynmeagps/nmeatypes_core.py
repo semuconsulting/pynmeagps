@@ -24,7 +24,7 @@ ERR_IGNORE = 0
 ERR_LOG = 1
 ERR_RAISE = 2
 # proprietary messages where msgId is first element of payload:
-PROP_MSGIDS = ("UBX", "TNL", "ASHR", "GPPADV")
+PROP_MSGIDS = ("FEC", "UBX", "TNL", "ASHR", "GPPADV")
 
 GNSSLIST = {
     0: "GPS",
@@ -242,9 +242,17 @@ NMEA_MSGIDS_PROP = {
     "GRMW": "Set Additional Waypoint Information",
     "GRMZ": "Altitude",
     # ***************************************************************
-    # JVCKenwood Proprietary message types
+    # JVC Kenwood Proprietary message types
     # ***************************************************************
+    "KLDS": "Position, Speed, Course",
     "KLSH": "FleetSync GNSS sentence",
+    "KNDS": "Position, Speed, Course",
+    "KNSH": "Position",
+    "KWDWPL": "Waypoint Location",
+    # ***************************************************************
+    # Magellan Proprietary message types
+    # ***************************************************************
+    "MGNWPL": "Waypoint Location",
     # ***************************************************************
     # U-BLOX Proprietary message types
     # ***************************************************************
@@ -307,6 +315,11 @@ NMEA_MSGIDS_PROP = {
     "TNLREX": "Rover Extended Output",
     "TNLVGK": "Vector information",
     "TNLVHD": "Heading information",
+    # ***************************************************************
+    # Furuno
+    # ***************************************************************
+    "FECGPATT": "Attitude yaw, pitch, roll",
+    "FECGPHVE": "Heave",
     # ***************************************************************
     # Dummy message for testing only
     # ***************************************************************

@@ -21,41 +21,15 @@ from pynmeagps import (
     ERR_LOG,
 )
 
+DIRNAME = os.path.dirname(__file__)
+
 
 class StreamTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        dirname = os.path.dirname(__file__)
-        self.streamNMEA2 = open(os.path.join(dirname, "pygpsdata-nmea2.log"), "rb")
-        self.streamNMEA4 = open(os.path.join(dirname, "pygpsdata-nmea4.log"), "rb")
-        self.streamMIXED = open(os.path.join(dirname, "pygpsdata-mixed.log"), "rb")
-        self.streamNMEA4SM = open(os.path.join(dirname, "pygpsdata-nmea4sm.log"), "rb")
-        self.streamBADEOF = open(os.path.join(dirname, "pygpsdata-badeof.log"), "rb")
-        self.streamNMEASTARTUP = open(
-            os.path.join(dirname, "pygpsdata-nmeastartup.log"), "rb"
-        )
-        self.streamNMEAFOO1 = open(
-            os.path.join(dirname, "pygpsdata-nmeafoo1.log"), "rb"
-        )
-        self.streamNMEAFOO2 = open(
-            os.path.join(dirname, "pygpsdata-nmeafoo2.log"), "rb"
-        )
-        self.streamNMEABADCK = open(
-            os.path.join(dirname, "pygpsdata-nmeabadck2.log"), "rb"
-        )
-        self.streamTRIMBLE = open(os.path.join(dirname, "trimble_nmea.log"), "rb")
 
     def tearDown(self):
-        self.streamNMEA2.close()
-        self.streamNMEA4.close()
-        self.streamMIXED.close()
-        self.streamNMEA4SM.close()
-        self.streamBADEOF.close()
-        self.streamNMEASTARTUP.close()
-        self.streamNMEAFOO1.close()
-        self.streamNMEAFOO2.close()
-        self.streamNMEABADCK.close()
-        self.streamTRIMBLE.close()
+        pass
 
     def catchio(self):
         """
@@ -92,12 +66,13 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEASTARTUP, nmeaonly=False, validate=1)
-        while raw is not None:
-            (raw, parsed) = nmr.read()
-            if raw is not None:
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-nmeastartup.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, validate=1)
+            while raw is not None:
+                (raw, parsed) = nmr.read()
+                if raw is not None:
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
         self.assertEqual(
             i, 12
         )  # if this fails, may be because log file terminators = LF rather than CRLF
@@ -159,12 +134,13 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEA4, nmeaonly=False, validate=3)
-        while raw is not None:
-            (raw, parsed) = nmr.read()
-            if raw is not None:
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-nmea4.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, validate=3)
+            while raw is not None:
+                (raw, parsed) = nmr.read()
+                if raw is not None:
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
         self.assertEqual(i, 49)
 
     def testNMEA2(self):  # stream of NMEA v2.30 device (u-blox M6N)
@@ -190,12 +166,13 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEA2, nmeaonly=False)
-        while raw is not None:
-            (raw, parsed) = nmr.read()
-            if raw is not None:
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-nmea2.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False)
+            while raw is not None:
+                (raw, parsed) = nmr.read()
+                if raw is not None:
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
         self.assertEqual(i, 17)
 
     def testMIXED(
@@ -221,26 +198,28 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamMIXED, nmeaonly=False)
-        while raw is not None:
-            (raw, parsed) = nmr.read()
-            if raw is not None:
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-mixed.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False)
+            while raw is not None:
+                (raw, parsed) = nmr.read()
+                if raw is not None:
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
         self.assertEqual(i, 15)
 
     def testMIXED2(
         self,
     ):  # stream of mixed NMEA & UBX data with nmea_only set to TRUE - should be rejected
         EXPECTED_ERROR = "Unknown data header b'$\\x11'"
-        with self.assertRaises(NMEAParseError) as context:
-            i = 0
-            raw = 0
-            nmr = NMEAReader(self.streamMIXED, nmeaonly=True, quitonerror=ERR_RAISE)
-            while raw is not None:
-                (raw, _) = nmr.read()
-                if raw is not None:
-                    i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-mixed.log"), "rb") as stream:
+            with self.assertRaises(NMEAParseError) as context:
+                i = 0
+                raw = 0
+                nmr = NMEAReader(stream, nmeaonly=True, quitonerror=ERR_RAISE)
+                while raw is not None:
+                    (raw, _) = nmr.read()
+                    if raw is not None:
+                        i += 1
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEAITER(self):  # NMEAReader iterator
@@ -257,11 +236,12 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEA4SM, nmeaonly=False)
-        for raw, parsed in nmr:
-            if raw is not None:
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-nmea4sm.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
         self.assertEqual(i, 8)
 
     def testNMEAITERATE(self):  # NMEAReader helper method
@@ -278,90 +258,97 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamNMEA4SM, nmeaonly=False)
-        for raw, parsed in nmr:
-            if raw is not None:
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-nmea4sm.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
         self.assertEqual(i, 8)
 
     def testNMEAITERATE_ERR1(
         self,
     ):  # NMEAReader iterator with bad checksum
         EXPECTED_ERROR = "Message GNVTG invalid checksum 3) - should be 30"
-        with self.assertRaises(NMEAParseError) as context:
-            nmr = NMEAReader(
-                self.streamNMEABADCK,
-                nmeaonly=False,
-                validate=VALCKSUM,
-                msgmode=0,
-                quitonerror=ERR_RAISE,
-            )
-            for raw, parsed in nmr:
-                pass
+        with open(os.path.join(DIRNAME, "pygpsdata-nmeabadck2.log"), "rb") as stream:
+            with self.assertRaises(NMEAParseError) as context:
+                nmr = NMEAReader(
+                    stream,
+                    nmeaonly=False,
+                    validate=VALCKSUM,
+                    msgmode=0,
+                    quitonerror=ERR_RAISE,
+                )
+                for raw, parsed in nmr:
+                    pass
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEAITERATE_ERR2(
         self,
     ):  # NMEAReader iterator ignoring bad checksum and passing error handler
         EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0.0, az_01=32, cno_01=, svid_02=10, elv_02=27.0, az_02=310, cno_02=, svid_03=12, elv_03=19.0, az_03=205, cno_03=19, svid_04=13, elv_04=38.0, az_04=134, cno_04=21, signalID=1)>"
-        nmr = NMEAReader(
-            self.streamNMEABADCK,
-            nmeaonly=False,
-            validate=VALCKSUM,
-            msgmode=0,
-            quitonerror=ERR_LOG,
-            errorhandler=lambda e: print(f"I ignored the following error: {e}"),
-        )
-        res = ""
-        for raw, parsed in nmr:
-            res = str(parsed)
-        self.assertEqual(EXPECTED_RESULT, res)
+        with open(os.path.join(DIRNAME, "pygpsdata-nmeabadck2.log"), "rb") as stream:
+            nmr = NMEAReader(
+                stream,
+                nmeaonly=False,
+                validate=VALCKSUM,
+                msgmode=0,
+                quitonerror=ERR_LOG,
+                errorhandler=lambda e: print(f"I ignored the following error: {e}"),
+            )
+            res = ""
+            for raw, parsed in nmr:
+                res = str(parsed)
+            self.assertEqual(EXPECTED_RESULT, res)
 
     def testNMEAITERATE_ERR3(
         self,
     ):  # NMEAReader iterator ignoring bad checksum and continuing
         EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0.0, az_01=32, cno_01=, svid_02=10, elv_02=27.0, az_02=310, cno_02=, svid_03=12, elv_03=19.0, az_03=205, cno_03=19, svid_04=13, elv_04=38.0, az_04=134, cno_04=21, signalID=1)>"
-        nmr = NMEAReader(
-            self.streamNMEABADCK,
-            nmeaonly=False,
-            validate=VALCKSUM,
-            msgmode=0,
-            quitonerror=ERR_IGNORE,
-        )
-        res = ""
-        for raw, parsed in nmr:
-            res = str(parsed)
-        self.assertEqual(EXPECTED_RESULT, res)
+        with open(os.path.join(DIRNAME, "pygpsdata-nmeabadck2.log"), "rb") as stream:
+            nmr = NMEAReader(
+                stream,
+                nmeaonly=False,
+                validate=VALCKSUM,
+                msgmode=0,
+                quitonerror=ERR_IGNORE,
+            )
+            res = ""
+            for raw, parsed in nmr:
+                res = str(parsed)
+            self.assertEqual(EXPECTED_RESULT, res)
 
     def testNMEAFOO1(self):  # stream containing invalid attribute type
         EXPECTED_ERROR = "Unknown attribute type Z2"
-        with self.assertRaises(NMEAParseError) as context:
-            i = 0
-            raw = 0
-            nmr = NMEAReader(
-                self.streamNMEAFOO1,
-                nmeaonly=False,
-                quitonerror=ERR_RAISE,
-            )
-            for raw, parsed in nmr:
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-nmeafoo1.log"), "rb") as stream:
+            with self.assertRaises(NMEAParseError) as context:
+                i = 0
+                raw = 0
+                nmr = NMEAReader(
+                    stream,
+                    nmeaonly=False,
+                    quitonerror=ERR_RAISE,
+                )
+                for raw, parsed in nmr:
+                    i += 1
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEAFOO2(self):  # stream containing invalid value for attribute type
         EXPECTED_ERROR = "Incorrect type for attribute spd in msgID RMC"
-        with self.assertRaises(NMEAParseError) as context:
-            i = 0
-            raw = 0
-            nmr = NMEAReader(self.streamNMEAFOO2, nmeaonly=False, quitonerror=ERR_RAISE)
-            for raw, parsed in nmr:
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-nmeafoo2.log"), "rb") as stream:
+            with self.assertRaises(NMEAParseError) as context:
+                i = 0
+                raw = 0
+                nmr = NMEAReader(stream, nmeaonly=False, quitonerror=ERR_RAISE)
+                for raw, parsed in nmr:
+                    i += 1
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testNMEABADMODE(self):  # invalid stream mode
         EXPECTED_ERROR = "Invalid stream mode 4 - must be 0, 1 or 2."
-        with self.assertRaises(NMEAParseError) as context:
-            NMEAReader(self.streamNMEAFOO1, nmeaonly=False, validate=1, msgmode=4)
+        with open(os.path.join(DIRNAME, "pygpsdata-nmeafoo1.log"), "rb") as stream:
+            with self.assertRaises(NMEAParseError) as context:
+                NMEAReader(stream, nmeaonly=False, validate=1, msgmode=4)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testBADEOF(self):  # stream with premature EOF - should just be tolerated
@@ -374,12 +361,13 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamBADEOF, nmeaonly=False)
-        for raw, parsed in nmr:
-            if raw is not None:
-                # print(parsed)
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
+        with open(os.path.join(DIRNAME, "pygpsdata-badeof.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(parsed)
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
 
     def testNMEATRIMBLE(self):  # test proprietary Trimble messages
         EXPECTED_RESULTS = (
@@ -408,13 +396,51 @@ class StreamTest(unittest.TestCase):
 
         i = 0
         raw = 0
-        nmr = NMEAReader(self.streamTRIMBLE, nmeaonly=False)
-        for raw, parsed in nmr:
-            if raw is not None:
-                # print(parsed)
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
+        with open(os.path.join(DIRNAME, "trimble_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(parsed)
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
         self.assertEqual(i, 21)
+
+    def testNMEAFURUNO(self):  # test proprietary Furuno messages
+        EXPECTED_RESULTS = (
+            "<NMEA(PFECGPatt, msgId=GPatt, yaw=12.345, pitch=23.456, roll=34.567)>",
+            "<NMEA(PFECGPhve, msgId=GPhve, heave=12.345, status=A)>",
+        )
+
+        i = 0
+        raw = 0
+        with open(os.path.join(DIRNAME, "furuno_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, 2)
+
+    def testNMEAKENWOOD(self):  # test proprietary Kenwood messages
+        EXPECTED_RESULTS = (
+            "<NMEA(PKWDWPL, time=15:08:03, status=V, lat=42.619, NS=N, lon=-71.3471666667, EW=W, sog=, cog=, date=2016-03-19, alt=, wpt=test, ts=5)>",
+            "<NMEA(PKLDS, time=00:12:35, status=A, lat=35.7444166667, NS=N, lon=139.6698333333, EW=E, sog=15.0, cog=38.8, dat=1998-04-11, declination=10.8, dec_dir=W00, fleet=100.0, senderid=2000, senderstatus=15.0, reserved=0.0)>",
+            "<NMEA(PKNDS, time=12:46:40, status=A, lat=49.90243, NS=N, lon=-119.39332, EW=W, sog=0.0, cog=0.0, date=2023-02-12, declination=19.2, dec_dir=W00, senderid=U00002, senderstatus=207.0, reserved=0.0)>",
+            "<NMEA(PKLSH, lat=40.0, NS=N, lon=135.0, EW=E, time=02:17:20, status=A, fleetId=100, deviceId=2000)>",
+            "<NMEA(PKNSH, lat=40.0, NS=N, lon=135.0, EW=E, time=02:17:20, status=A, senderid=U00001)>",
+        )
+
+        i = 0
+        raw = 0
+        with open(os.path.join(DIRNAME, "kenwood_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, 5)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.36
+
+ENHANCEMENTS:
+
+1. Add further proprietary message definitions.
+
 ### RELEASE 1.0.35
 
 FIXES:

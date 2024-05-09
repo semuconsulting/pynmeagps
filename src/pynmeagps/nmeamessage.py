@@ -261,6 +261,7 @@ class NMEAMessage:
                         f"P{key} message definitions must "
                         + "include payload or msgId keyword arguments."
                     )
+            key = key.upper()
             if self._mode == nmt.POLL:
                 return nmp.NMEA_PAYLOADS_POLL[key]
             if self._mode == nmt.SET:
@@ -363,12 +364,14 @@ class NMEAMessage:
         :rtype: str
         """
 
+        # pylint: disable=no-member
+
         if (
-            self.talker == "P"
+            self._talker == "P"
             and self._msgID in nmt.PROP_MSGIDS
             and hasattr(self, "msgId")
         ):
-            return self._talker + self._msgID + self.msgId  # pylint: disable=no-member
+            return self._talker + self._msgID + self.msgId
         return self._talker + self._msgID
 
     @property
