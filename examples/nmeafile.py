@@ -5,9 +5,15 @@ This example illustrates a simple implementation of a
 NMEAMessage logfile reader using the
 NMEAReader iterator functions and an external error handler.
 
+Usage:
+
+python3 nmeafile.py filename="nmeadata.log"
+
 Created on 7 Mar 2021
 @author: semuadmin
 """
+
+from sys import argv
 
 from pynmeagps.nmeareader import NMEAReader
 
@@ -20,29 +26,27 @@ def errhandler(err):
     print(f"\nERROR: {err}\n")
 
 
-def read(stream, errorhandler):
+def main(**kwargs):
     """
-    Reads and parses UBX message data from stream.
+    Main routine.
     """
-    # pylint: disable=unused-variable
 
-    msgcount = 0
+    filename = kwargs.get("filename", "nmeadata.log")
 
-    nmr = NMEAReader(
-        stream, nmeaonly=False, quitonerror=False, errorhandler=errorhandler
-    )
-    for raw, parsed_data in nmr:
-        print(parsed_data)
-        msgcount += 1
+    count = 0
+    print(f"\nOpening file {filename}...\n")
+    with open(filename, "rb") as stream:
+        nmr = NMEAReader(
+            stream, nmeaonly=False, quitonerror=False, errorhandler=errhandler
+        )
+        for raw, parsed_data in nmr:
+            print(parsed_data)
+            count += 1
 
-    print(f"\n{msgcount} messages read.\n")
+    print(f"\n{count} messages read.\n")
+    print("\nProcessing Complete")
 
 
 if __name__ == "__main__":
-    print("\nEnter fully qualified name of file containing raw NMEA data: ", end="")
-    filename = input().strip('"')
 
-    print(f"\nOpening file {filename}...\n")
-    with open(filename, "rb") as fstream:
-        read(fstream, errhandler)
-    print("\nProcessing Complete")
+    main(**dict(arg.split("=") for arg in argv[1:]))

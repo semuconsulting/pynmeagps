@@ -1,8 +1,10 @@
 """
 Simple CLI utility which creates a GPX track file
-from a binary NMEA dump.
+from a binary NMEA dump. Dump must contain NMEA GGA messages.
 
-Dump must contain NMEA GGA messages.
+Usage:
+
+python3 gpxtracker.py infile="pygpsdata.log" outdir="."
 
 There are a number of free online GPX viewers
 e.g. https://gpx-viewer.com/view
@@ -14,11 +16,15 @@ Created on 7 Mar 2021
 @author: semuadmin
 """
 
+# pylint: disable=consider-using-with
+
 import os
 from datetime import datetime
+from sys import argv
 from time import strftime
-from pynmeagps.nmeareader import NMEAReader
+
 import pynmeagps.exceptions as nme
+from pynmeagps.nmeareader import NMEAReader
 
 XML_HDR = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 
@@ -79,7 +85,7 @@ class NMEATracker:
 
         self.write_gpx_hdr()
 
-        for (_, msg) in self._nmeareader:  # invokes iterator method
+        for _, msg in self._nmeareader:  # invokes iterator method
             try:
                 if msg.msgID == "GGA":
                     dat = datetime.now()
@@ -126,7 +132,7 @@ class NMEATracker:
 
         timestamp = strftime("%Y%m%d%H%M%S")
         self._trkfname = os.path.join(self._outdir, f"gpxtrack-{timestamp}.gpx")
-        self._trkfile = open(self._trkfname, "a")
+        self._trkfile = open(self._trkfname, "a", encoding="utf-8")
 
         date = datetime.now().isoformat() + "Z"
         gpxtrack = (
@@ -187,16 +193,22 @@ class NMEATracker:
         self._trkfile.close()
 
 
-if __name__ == "__main__":
+def main(**kwargs):
+    """
+    Main routine.
+    """
 
-    print("NMEA datalog to GPX file converter\n")
-    infilep = input("Enter input NMEA datalog file: ").strip('"')
-    outdirp = input("Enter output directory: ").strip('"')
-    #     infilep = "C:\\Users\\username\\Downloads\\pygpsdata-test.log"
-    #     outdirp = "C:\\Users\\username\\Downloads"
-    tkr = NMEATracker(infilep, outdirp)
-    print(f"\nProcessing file {infilep}...")
+    infile = kwargs.get("infile", "pygpsdata-test.log")
+    outdir = kwargs.get("outdir", ".")
+    print("NMEA datalog to GPX file converter")
+    tkr = NMEATracker(infile, outdir)
+    print(f"\nProcessing file {infile}...")
     tkr.open()
     tkr.reader()
     tkr.close()
     print("\nOperation Complete")
+
+
+if __name__ == "__main__":
+
+    main(**dict(arg.split("=") for arg in argv[1:]))

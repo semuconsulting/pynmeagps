@@ -4,6 +4,10 @@ nmeaserver.py
 This illustrates a simple HTTP wrapper around the 
 pynmneagps NMEAStreamer streaming and parsing example.
 
+Usage:
+
+python3 nmeaserver.py ipaddress=localhost ipport=8080 serport=/dev/ttyACM1 baudrate=38400 timeout=0.1
+
 It displays selected GPS data on a dynamically updated web page 
 using the native Python 3 http.server library and a RESTful API
 implemented by the pynmeagps streaming and parsing service.
@@ -20,7 +24,7 @@ Created on 17 May 2021
 :license: (c) SEMU Consulting 2021 - BSD 3-Clause License
 """
 
-from sys import platform
+from sys import argv
 from io import BufferedReader
 from threading import Thread, Event
 from time import sleep
@@ -31,9 +35,9 @@ from pynmeagps import NMEAReader, GET
 import pynmeagps.exceptions as nme
 
 
-class NMEAStreamer:
+class GNSSStreamer:
     """
-    NMEAStreamer class.
+    GNSSStreamer class.
     """
 
     def __init__(self, port, baudrate, timeout, nmea_only=0, validate=1):
@@ -156,7 +160,7 @@ class NMEAStreamer:
 
     def set_data(self, parsed_data):
         """
-        Set GPS data dictionary from RMC, GGA and GSA sentences.
+        Set GPS data dictionary from NMEA RMC, GGA and GSA sentences.
         """
 
         # print(parsed_data)
@@ -167,14 +171,14 @@ class NMEAStreamer:
             self.gpsdata["longitude"] = parsed_data.lon
             self.gpsdata["speed"] = parsed_data.spd
             self.gpsdata["track"] = parsed_data.cog
-        if parsed_data.msgID == "GGA":
+        elif parsed_data.msgID == "GGA":
             self.gpsdata["time"] = str(parsed_data.time)
             self.gpsdata["latitude"] = parsed_data.lat
             self.gpsdata["longitude"] = parsed_data.lon
             self.gpsdata["elevation"] = parsed_data.alt
             self.gpsdata["siv"] = parsed_data.numSV
             self.gpsdata["hdop"] = parsed_data.HDOP
-        if parsed_data.msgID == "GSA":
+        elif parsed_data.msgID == "GSA":
             self.gpsdata["fix"] = parsed_data.navMode
             self.gpsdata["pdop"] = parsed_data.PDOP
             self.gpsdata["hdop"] = parsed_data.HDOP
@@ -191,31 +195,24 @@ class NMEAStreamer:
         return json.dumps(self.gpsdata)
 
 
-if __name__ == "__main__":
+def main(**kwargs):
+    """
+    Main routine.
+    """
 
-    ADDRESS = "localhost"
-    TCPPORT = 8080
-    # set port, baudrate and timeout to suit your device configuration
-    if platform == "win32":  # Windows
-        port = "COM13"
-    elif platform == "darwin":  # MacOS
-        port = "/dev/tty.usbmodem14101"
-    else:  # Linux
-        port = "/dev/ttyACM1"
-    baudrate = 9600
-    timeout = 0.1
+    ipaddress = kwargs.get("ipaddress", "localhost")
+    ipport = int(kwargs.get("ipport", 8080))
+    serport = kwargs.get("serport", "/dev/ttyACM0")
+    baudrate = int(kwargs.get("baudrate", 38400))
+    timeout = float(kwargs.get("timeout", 0.1))
 
-    gps = NMEAStreamer(port, baudrate, timeout)
-    httpd = GPSHTTPServer((ADDRESS, TCPPORT), GPSHTTPHandler, gps)
+    gps = GNSSStreamer(serport, baudrate, timeout)
+    httpd = GPSHTTPServer((ipaddress, ipport), GPSHTTPHandler, gps)
 
     if gps.connect():
         gps.start_read_thread()
         print(
-            "\nStarting HTTP Server on http://"
-            + ADDRESS
-            + ":"
-            + str(TCPPORT)
-            + " ...\nPress Ctrl-C to terminate.\n"
+            f"\nStarting HTTP Server on http://{ipaddress}:{ipport}...\nPress Ctrl-C to terminate.\n"
         )
         httpd_thread = Thread(target=httpd.serve_forever, daemon=True)
         httpd_thread.start()
@@ -231,3 +228,8 @@ if __name__ == "__main__":
         sleep(2)  # wait for shutdown
         gps.disconnect()
         print("\nProcessing Complete")
+
+
+if __name__ == "__main__":
+
+    main(**dict(arg.split("=") for arg in argv[1:]))

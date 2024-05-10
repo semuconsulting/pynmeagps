@@ -5,6 +5,10 @@ This example illustrates how to read, write and display NMEA messages
 "concurrently" using threads and queues. This represents a useful
 generic pattern for many end user applications.
 
+Usage:
+
+python3 nmeapoller.py port=/dev/ttyACM0 baudrate=38400 timeout=3
+
 It implements two threads which run concurrently:
 1) an I/O thread which continuously reads NMEA data from the
 receiver and sends any queued outbound command or poll messages.
@@ -24,11 +28,10 @@ Created on 07 Aug 2021
 :copyright: SEMU Consulting © 2021
 :license: BSD 3-Clause
 """
-# pylint: disable=invalid-name
 
 from queue import Queue
-from sys import platform
-from threading import Event, Lock, Thread
+from sys import argv
+from threading import Event, Thread
 from time import sleep
 
 from serial import Serial
@@ -83,21 +86,18 @@ def process_data(queue: Queue, stop: Event):
             queue.task_done()
 
 
-if __name__ == "__main__":
-    # set port, baudrate and timeout to suit your device configuration
-    if platform == "win32":  # Windows
-        port = "COM13"
-    elif platform == "darwin":  # MacOS
-        port = "/dev/tty.usbmodem1101"
-    else:  # Linux
-        port = "/dev/ttyACM1"
-    baudrate = 38400
-    timeout = 0.1
+def main(**kwargs):
+    """
+    Main routine.
+    """
+
+    port = kwargs.get("serport", "/dev/ttyACM0")
+    baudrate = int(kwargs.get("baudrate", 38400))
+    timeout = float(kwargs.get("timeout", 3))
 
     with Serial(port, baudrate, timeout=timeout) as serial_stream:
         nmeareader = NMEAReader(serial_stream)
 
-        serial_lock = Lock()
         read_queue = Queue()
         send_queue = Queue()
         stop_event = Event()
@@ -149,3 +149,8 @@ if __name__ == "__main__":
         io_thread.join()
         process_thread.join()
         print("\nProcessing complete")
+
+
+if __name__ == "__main__":
+
+    main(**dict(arg.split("=") for arg in argv[1:]))
