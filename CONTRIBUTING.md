@@ -20,9 +20,9 @@ Please help us keep our issue list small by adding fixes: #{$ISSUE_NO} to the co
 * Avoid external library dependencies unless there's a compelling reason not to.
 * We use and recommend [Visual Studio Code](https://code.visualstudio.com/) with the [Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) for development and testing.
 * Code should be documented in accordance with [Sphinx](https://www.sphinx-doc.org/en/master/) docstring conventions.
-* Code should formatted using [black](https://pypi.org/project/black/) (>= 23.0.0).
-* We use and recommend [pylint](https://pypi.org/project/pylint/) (>=3.0.0) for code analysis.
-* We use and recommend [bandit](https://pypi.org/project/bandit/) (>=1.7.0) for security vulnerability analysis.
+* Code should formatted using [black](https://pypi.org/project/black/) (>= 24.4).
+* We use and recommend [pylint](https://pypi.org/project/pylint/) (>=3.0.1) for code analysis.
+* We use and recommend [bandit](https://pypi.org/project/bandit/) (>=1.7.5) for security vulnerability analysis.
 * Commits must be [signed](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits).
 
 ## Testing
@@ -33,10 +33,10 @@ We use python's native pytest framework for local unit testing, complemented by 
 
 Please write pytest examples for new code you create and add them to the `/tests` folder following the naming convention `test_*.py`.
 
-We test on the following platforms using a variety of u-blox devices including NEO-M7, NEO-M8, NEO-M9, NEO-M10s and ZED-F9P:
-* Windows (10 & 11)
+We test on the following platforms using a variety of u-blox devices from Generation 7 throught Generation 10:
+* Windows 11
 * MacOS (Ventura & Sonoma, Intel & Apple Silicon)
-* Linux (Ubuntu 22.04 LTS Jammy, 23.04 Kinetic, 23.10 Mantic)
+* Linux (Ubuntu 22.04 LTS Jammy Jellyfish, 24.04 LTS Noble Numbat)
 * Raspberry Pi OS (32-bit & 64-bit)
 
 ## Submitting changes
