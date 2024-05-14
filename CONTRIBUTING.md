@@ -41,7 +41,7 @@ We test on the following platforms using a variety of u-blox devices from Genera
 
 ## Submitting changes
 
-Please send a [GitHub Pull Request to pyubx2](https://github.com/semuconsulting/pyubx2/pulls) with a clear list of what you've done (read more about [pull requests](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/about-pull-requests)). Please follow our coding conventions (above) and make sure all of your commits are atomic (one feature per commit).
+Please send a [GitHub Pull Request to pynmeagps](https://github.com/semuconsulting/pynmeagps/pulls) with a clear list of what you've done (read more about [pull requests](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/about-pull-requests)). Please follow our coding conventions (above) and make sure all of your commits are atomic (one feature per commit).
 
 Please sign all commits - see [Signing GitHub Commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits) for instructions.
 
