@@ -117,7 +117,8 @@ from pynmeagps import NMEAReader
 with Serial('/dev/tty.usbmodem14101', 9600, timeout=3) as stream:
   nmr = NMEAReader(stream)
   raw_data, parsed_data = nmr.read()
-  print(parsed_data)
+  if parsed_data is not None:
+    print(parsed_data)
 ```
 
 * File input (using iterator) - this example will produce a `NMEAStreamError` if non-NMEA data is encountered.
