@@ -10,7 +10,15 @@ Created on 4 Mar 2021
 """
 
 import unittest
-from pynmeagps import NMEAReader, NMEAParseError, SET, VALCKSUM, VALMSGID
+from pynmeagps import (
+    NMEAReader,
+    NMEAMessageError,
+    NMEAParseError,
+    ERR_RAISE,
+    SET,
+    VALCKSUM,
+    VALMSGID,
+)
 
 
 class ParseTest(unittest.TestCase):

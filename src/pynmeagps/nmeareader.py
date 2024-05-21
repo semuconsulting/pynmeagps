@@ -21,6 +21,7 @@ Created on 4 Mar 2021
 :license: BSD 3-Clause
 """
 
+from logging import getLogger
 from socket import socket
 
 import pynmeagps.exceptions as nme
@@ -55,10 +56,11 @@ class NMEAReader:
         """Constructor.
 
         :param stream stream: input data stream (e.g. Serial or binary File)
-        :param int msgmode: 0 = GET (default), 1 = SET, 2 = POLL
-        :param int validate: bitfield validation flags - VALCKSUM (default), VALMSGID
+        :param int msgmode: 0=GET, 1=SET, 2=POLL (0)
+        :param int validate: validation flags - VALNONE (0), VALCKSUM (1), VALMSGID (2) (1)
         :param bool nmeaonly: True = error on non-NMEA data, False = ignore non-NMEA data
-        :param int quitonerror: 0 = ignore, 1 = log and continue, 2 = (re)raise (1)
+        :param int quitonerror: ERR_IGNORE (0) = ignore errors,  ERR_LOG (1) = log continue,
+            ERR_RAISE (2) = (re)raise (1)
         :param int bufsize: socket recv buffer size (4096)
         :param object errorhandler: error handling object or function (None)
         :raises: NMEAParseError (if mode is invalid)
@@ -78,6 +80,7 @@ class NMEAReader:
         self._nmea_only = nmeaonly
         self._validate = validate
         self._mode = msgmode
+        self._logger = getLogger(__name__)
 
     def __iter__(self):
         """Iterator."""
@@ -113,8 +116,8 @@ class NMEAReader:
         raw_data = None
         parsed_data = None
 
-        try:
-            while parsing:  # loop until end of valid NMEA message or EOF
+        while parsing:  # loop until end of valid NMEA message or EOF
+            try:
                 byte1 = self._read_bytes(1)  # read 1st byte
                 if byte1 != b"\x24":  # not NMEA, discard and continue
                     continue
@@ -124,24 +127,26 @@ class NMEAReader:
                     byten = self._read_line()  # NMEA protocol is CRLF terminated
                     raw_data = bytehdr + byten
                     parsed_data = self.parse(
-                        raw_data, validate=self._validate, msgmode=self._mode
+                        raw_data,
+                        msgmode=self._mode,
+                        validate=self._validate,
                     )
                     parsing = False
                 else:  # it's not a NMEA message (UBX or something else)
                     if self._nmea_only:  # raise error and quit
-                        raise nme.NMEAParseError(f"Unknown data header {bytehdr}.")
+                        raise nme.NMEAParseError(f"Unknown protocol header {bytehdr}.")
 
-        except EOFError:
-            return (None, None)
-        except (
-            nme.NMEAMessageError,
-            nme.NMEATypeError,
-            nme.NMEAParseError,
-            nme.NMEAStreamError,
-        ) as err:
-            if self._quitonerror:
-                self._do_error(str(err))
-            parsed_data = str(err)
+            except EOFError:
+                return (None, None)
+            except (
+                nme.NMEAMessageError,
+                nme.NMEATypeError,
+                nme.NMEAParseError,
+                nme.NMEAStreamError,
+            ) as err:
+                if self._quitonerror:
+                    self._do_error(err)
+                continue
 
         return (raw_data, parsed_data)
 
@@ -156,38 +161,48 @@ class NMEAReader:
         """
 
         data = self._stream.read(size)
-        if len(data) < size:  # EOF
-            raise EOFError()
+        if len(data) == 0:  # EOF
+            raise EOFError()  # pragma: no cover
+        if 0 < len(data) < size:  # truncated stream
+            raise nme.NMEAStreamError(  # pragma: no cover
+                "Serial stream terminated unexpectedly. "
+                f"{size} bytes requested, {len(data)} bytes returned."
+            )
         return data
 
     def _read_line(self) -> bytes:
         """
-        Read until end of line (CRLF).
+        Read bytes until LF (0x0a) terminator.
 
         :return: bytes
         :rtype: bytes
         :raises: EOFError if stream ends prematurely
         """
 
-        data = self._stream.readline()  # NMEA protocol is CRLF terminated
-        if data[-1:] != b"\x0a":  # EOF
-            raise EOFError()
+        data = self._stream.readline()  # NMEA protocol is CRLF-terminated
+        if len(data) == 0:  # EOF
+            raise EOFError()  # pragma: no cover
+        if data[-1:] != b"\x0a":  # truncated stream
+            raise nme.NMEAStreamError(  # pragma: no cover
+                "Serial stream terminated unexpectedly. "
+                f"Line requested, {len(data)} bytes returned."
+            )
         return data
 
-    def _do_error(self, err: str):
+    def _do_error(self, err: Exception):
         """
         Handle error.
 
-        :param str err: error message
-        :raises: UBXParseError if quitonerror = 2
+        :param Exception err: error message
+        :raises: Exception if quitonerror = 2
         """
 
         if self._quitonerror == ERR_RAISE:
-            raise nme.NMEAParseError(err)
+            raise err from err
         if self._quitonerror == ERR_LOG:
             # pass to error handler if there is one
             if self._errorhandler is None:
-                print(err)
+                self._logger.error(err)
             else:
                 self._errorhandler(err)
 
@@ -212,11 +227,11 @@ class NMEAReader:
         Parse NMEA byte stream to NMEAMessage object.
 
         :param bytes message: bytes message to parse
-        :param int msgmode: 0 = GET (default), 1 = SET, 2 = POLL
+        :param int msgmode: 0=GET, 1=SET, 2=POLL (0)
         :param int validate: 1 VALCKSUM (default), 2 VALMSGID (can be OR'd)
         :return: NMEAMessage object (or None if unknown message and VALMSGID is not set)
         :rtype: NMEAMessage
-        :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
+        :raises: Exception (if data stream contains invalid data or unknown message type)
 
         """
 
