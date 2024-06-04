@@ -470,13 +470,13 @@ class StaticTest(unittest.TestCase):
     def testplanar(self):  # test planar
         res = planar(53, 2, 53.000001, 2.000001)
         # print(res)
-        self.assertAlmostEqual(res, 0.15113412625873954, 7)
+        self.assertAlmostEqual(res, 0.12992378701316823, 7)
         res = planar(53, 2, 53.00001, 2.00001)
         # print(res)
-        self.assertAlmostEqual(res, 1.5113412648256797, 7)
+        self.assertAlmostEqual(res, 1.299237873027932, 7)
         res = planar(53, 2, 53.0001, 2.0001)
         # print(res)
-        self.assertAlmostEqual(res, 15.113412645895695, 7)
+        self.assertAlmostEqual(res, 12.992378723687828, 7)
 
     def testbearing(self):
         res = bearing(51.23, -2.41, 53.205, -2.34)
