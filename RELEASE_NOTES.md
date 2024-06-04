@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.37
+
+ENHANCEMENTS:
+
+1. Correct `planar()` helper function.
+1. Internal logging & exception handling enhancements.
+
 ### RELEASE 1.0.36
 
 ENHANCEMENTS:

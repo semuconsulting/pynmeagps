@@ -99,13 +99,10 @@ Individual input NMEA messages can then be read using the `NMEAReader.read()` fu
 
 The constructor accepts the following optional keyword arguments:
 
-
-* `nmeaonly`: True = raise error if stream contains non-NMEA data, False = ignore non-NMEA data (default)
-* `validate`: bitfield validation flags (can be used in combination):
-- `VALCKSUM` (0x01) = validate checksum (default)
-- `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `msgmode`: 0 = GET (default, i.e. output _from_ receiver), 1 = SET (i.e. input _to_ receiver), 2 = POLL (i.e. query _to_ receiver in anticipation of response back)
-
+* `nmeaonly`: True = raise error if stream contains non-NMEA data, False = ignore non-NMEA data (default)
+* `validate`: validation flags `VALCKSUM` (0x01) = validate checksum (default), `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
+* `quitonerror`: `ERR_IGNORE` (0) = ignore errors,  `ERR_LOG` (1) = log continue, `ERR_RAISE` (2) = (re)raise (1)
 
 Examples:
 
@@ -154,10 +151,9 @@ Attributes within repeating groups are parsed with a two-digit suffix (svid_01, 
 
 The `parse()` function accepts the following optional keyword arguments:
 
-* `validate`: bitfield validation flags (can be used in combination):
-- `VALCKSUM` (0x01) = validate checksum (default)
-- `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `msgmode`: 0 = GET (default), 1 = SET, 2 = POLL
+* `validate`: validation flags `VALCKSUM` (0x01) = validate checksum (default), `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
+* `quitonerror`: `ERR_IGNORE` (0) = ignore errors,  `ERR_LOG` (1) = log continue, `ERR_RAISE` (2) = (re)raise (1)
 
 Example:
 

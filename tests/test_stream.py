@@ -11,10 +11,12 @@ Created on 4 Mar 2021
 import os
 import sys
 import unittest
+from logging import ERROR
 
 from pynmeagps import (
     NMEAReader,
     NMEAParseError,
+    NMEATypeError,
     VALCKSUM,
     ERR_RAISE,
     ERR_IGNORE,
@@ -210,7 +212,7 @@ class StreamTest(unittest.TestCase):
     def testMIXED2(
         self,
     ):  # stream of mixed NMEA & UBX data with nmea_only set to TRUE - should be rejected
-        EXPECTED_ERROR = "Unknown data header b'$\\x11'"
+        EXPECTED_ERROR = "Unknown protocol header b'$\\x11'"
         with open(os.path.join(DIRNAME, "pygpsdata-mixed.log"), "rb") as stream:
             with self.assertRaises(NMEAParseError) as context:
                 i = 0
@@ -321,7 +323,7 @@ class StreamTest(unittest.TestCase):
     def testNMEAFOO1(self):  # stream containing invalid attribute type
         EXPECTED_ERROR = "Unknown attribute type Z2"
         with open(os.path.join(DIRNAME, "pygpsdata-nmeafoo1.log"), "rb") as stream:
-            with self.assertRaises(NMEAParseError) as context:
+            with self.assertRaises(NMEATypeError) as context:
                 i = 0
                 raw = 0
                 nmr = NMEAReader(
@@ -336,7 +338,7 @@ class StreamTest(unittest.TestCase):
     def testNMEAFOO2(self):  # stream containing invalid value for attribute type
         EXPECTED_ERROR = "Incorrect type for attribute spd in msgID RMC"
         with open(os.path.join(DIRNAME, "pygpsdata-nmeafoo2.log"), "rb") as stream:
-            with self.assertRaises(NMEAParseError) as context:
+            with self.assertRaises(NMEATypeError) as context:
                 i = 0
                 raw = 0
                 nmr = NMEAReader(stream, nmeaonly=False, quitonerror=ERR_RAISE)
@@ -441,6 +443,36 @@ class StreamTest(unittest.TestCase):
                     self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                     i += 1
         self.assertEqual(i, 5)
+
+    def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
+        EXPECTED_ERROR = "Unknown protocol header b'$&'."
+        with self.assertRaises(NMEAParseError) as context:
+            i = 0
+            with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+                ubr = NMEAReader(stream, quitonerror=ERR_RAISE, nmeaonly=True)
+                for _, _ in ubr:
+                    i += 1
+        self.assertTrue(EXPECTED_ERROR in str(context.exception))
+
+    def testBADHDR_LOG(self):  # invalid header in data with quitonerror = 1
+        i = 0
+        with self.assertLogs(level=ERROR) as log:
+            with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+                ubr = NMEAReader(stream, quitonerror=ERR_LOG, nmeaonly=True)
+                for raw, parsed in ubr:
+                    i += 1
+            self.assertEqual(
+                ["ERROR:pynmeagps.nmeareader:Unknown protocol header b'$&'."],
+                log.output,
+            )
+
+    def testBADHDR_IGNORE(self):  # invalid header in data with quitonerror = 0
+        i = 0
+        with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+            ubr = NMEAReader(stream, quitonerror=ERR_IGNORE, nmeaonly=True)
+            for raw, parsed in ubr:
+                i += 1
+            self.assertEqual(i, 15)
 
 
 if __name__ == "__main__":

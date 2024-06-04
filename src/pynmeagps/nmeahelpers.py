@@ -517,9 +517,10 @@ def planar(
     :rtype: float
     """
 
-    x = (lon2 - lon1) * cos(lat1) * pi * radius / 180
-    y = (lat2 - lat1) * pi * radius / 180
-    dist = sqrt(x * x + y * y)
+    phi1, lambda1, phi2, lambda2 = [c * pi / 180 for c in (lat1, lon1, lat2, lon2)]
+    dlambda = (lambda2 - lambda1) * cos(phi1)
+    dphi = phi2 - phi1
+    dist = radius * sqrt(dlambda * dlambda + dphi * dphi)
 
     return dist
 
