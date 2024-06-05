@@ -78,7 +78,7 @@ deactivate
 For [Conda](https://docs.conda.io/en/latest/) users, `pynmeagps` is also available from [conda forge](https://github.com/conda-forge/pynmeagps-feedstock):
 
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pynmeagps/badges/version.svg)](https://anaconda.org/conda-forge/pynmeagps)
-[![Anaconda-Server Badge](https://anaconda.org/conda-forge/pynmeagps/badges/downloads.svg)](https://anaconda.org/conda-forge/pynmeagps)
+[![Anaconda-Server Badge](https://img.shields.io/conda/dn/conda-forge/pynmeagps)](https://anaconda.org/conda-forge/pynmeagps)
 
 ```shell
 conda install -c conda-forge pynmeagps
