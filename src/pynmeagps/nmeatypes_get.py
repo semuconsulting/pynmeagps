@@ -1270,6 +1270,51 @@ NMEA_PAYLOADS_GET = {
         "heave": DE,
         "status": CH,  # 'A'
     },
+    # ***************************************************************
+    # Locosys Proprietary Messages GET
+    # https://www.locosystech.com/Templates/att/LS2303x-UDG_datasheet_v0.6.pdf?lng=en
+    # ***************************************************************
+    "LSR": {
+        "msgType": ST,  # e.g. "SLOPE", "MEMS", "ATTIT"
+        "value": IN,  # e.g. 0
+        "response": ST,  # e.g. "OK"
+    },
+    "LSVD": {
+        "velE": DE,  # cm/s
+        "velN": DE,  # cm/s
+        "velD": DE,  # cm/s
+        "velEdev": DE,  # cm/s deviation
+        "velNdev": DE,  # cm/s deviation
+        "velDdev": DE,  # cm/s deviation
+    },
+    "INVMINR": {
+        "status": CH,  # 0 uninitialized; 1、2 calibrating/initializing; 3 calibration done
+    },
+    "INVMSTR": {
+        "value": IN,
+    },
+    "INVMSLOPE": {
+        "slope": DE,  # degrees
+        "altDiff": DE,  # meters
+        "moveDist": DE,  # meters
+        "slopeAccu": DE,  # degrees
+        "altDiffAccu": DE,  # meters
+        "moveDistAccu": DE,  # meters
+    },
+    "INVMIMU": {
+        "timeSecond": DE,  # sec timestamp
+        "accelX": DE,  # m/s^2
+        "accelY": DE,  # m/s^2
+        "accelZ": DE,  # m/s^2
+        "gyroX": DE,  # degree/s
+        "gyroY": DE,  # degree/s
+        "gyroZ": DE,  # degree/s
+    },
+    "INVMATTIT": {
+        "roll": DE,  # degree
+        "pitch": DE,  # degree
+        "yaw": DE,  # degree heading
+    },
     # *********************************************
     # Dummy message for error testing
     # *********************************************

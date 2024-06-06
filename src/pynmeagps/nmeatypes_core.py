@@ -321,6 +321,20 @@ NMEA_MSGIDS_PROP = {
     "FECGPATT": "Attitude yaw, pitch, roll",
     "FECGPHVE": "Heave",
     # ***************************************************************
+    # Locosys Proprietary Messages (GET and SET)
+    # ***************************************************************
+    "INVCRES": "Clear the NVM data",
+    "INVCSTR": "Start session",
+    "INVMATTIT": "ATTIT information",
+    "INVMIMU": "MEMS RAW-DATA message information",
+    "INVMINR": "Calibration status",
+    "INVMSTR": "Session Status",
+    "INVMSLOPE": "SLOPE information",
+    "LSC": "Set status/poll version",
+    "LSR": "Set status response",
+    "LSVD": "Attitude yaw, pitch, roll",
+    # "MTKnnn": "Proprietary command sets - not implemented",
+    # ***************************************************************
     # Dummy message for testing only
     # ***************************************************************
     "FOO": "Dummy message",

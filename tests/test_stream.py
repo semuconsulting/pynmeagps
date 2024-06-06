@@ -21,6 +21,7 @@ from pynmeagps import (
     ERR_RAISE,
     ERR_IGNORE,
     ERR_LOG,
+    SET,
 )
 
 DIRNAME = os.path.dirname(__file__)
@@ -443,6 +444,54 @@ class StreamTest(unittest.TestCase):
                     self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                     i += 1
         self.assertEqual(i, 5)
+
+    def testNMEALOCOSYSGET(self):  # test proprietary Locosys GET messages
+        EXPECTED_RESULTS = (
+            "<NMEA(PLSVD, velE=1.0, velN=0.0, velD=-16.0, velEdev=16.0, velNdev=15.0, velDdev=13.0)>",
+            "<NMEA(PLSR, msgType=SLOPE, value=1, response=OK)>",
+            "<NMEA(PLSR, msgType=SLOPE, value=0, response=OK)>",
+            "<NMEA(PLSR, msgType=MEMS, value=1, response=OK)>",
+            "<NMEA(PLSR, msgType=MEMS, value=0, response=OK)>",
+            "<NMEA(PLSR, msgType=ATTIT, value=1, response=OK)>",
+            "<NMEA(PLSR, msgType=ATTIT, value=0, response=OK)>",
+            "<NMEA(PINVMSTR, value=0)>",
+            "<NMEA(PINVMSLOPE, slope=-3.13, altDiff=-0.05, moveDist=0.93, slopeAccu=54.42, altDiffAccu=2.6, moveDistAccu=1.86)>",
+            "<NMEA(PINVMIMU, timeSecond=1114.106, accelX=-0.3699, accelY=1.51074, accelZ=9.81383, gyroX=0.67139, gyroY=0.61035, gyroZ=-0.30518)>",
+            "<NMEA(PINVMATTIT, roll=-20.652, pitch=32.265, yaw=0.0)>",
+        )
+        i = 0
+        raw = 0
+        with open(os.path.join(DIRNAME, "locosys_get_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, 11)
+
+    def testNMEALOCOSYSSET(self):  # test proprietary Locosys SET messages
+        EXPECTED_RESULTS = (
+            "<NMEA(PINVCRES, value=0)>",
+            "<NMEA(PINVCSTR, value=14)>",
+            "<NMEA(PLSC, msgType=SLOPE, value=1)>",
+            "<NMEA(PLSC, msgType=SLOPE, value=0)>",
+            "<NMEA(PLSC, msgType=MEMS, value=1)>",
+            "<NMEA(PLSC, msgType=MEMS, value=0)>",
+            "<NMEA(PLSC, msgType=ATTIT, value=1)>",
+            "<NMEA(PLSC, msgType=ATTIT, value=0)>",
+            "<NMEA(PLSC, msgType=VER)>",
+        )
+        i = 0
+        raw = 0
+        with open(os.path.join(DIRNAME, "locosys_set_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2, msgmode=SET)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, 9)
 
     def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
         EXPECTED_ERROR = "Unknown protocol header b'$&'."
