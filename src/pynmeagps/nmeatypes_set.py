@@ -107,4 +107,34 @@ NMEA_PAYLOADS_SET = {
         "baudRate": IN,
         "autobauding": IN,
     },
+    # ***************************************************************
+    # Locosys Proprietary Messages SET
+    # https://www.locosystech.com/Templates/att/LS2303x-UDG_datasheet_v0.6.pdf?lng=en
+    # ***************************************************************
+    "LSC": {
+        "msgType": ST,  # e.g. "SLOPE", "MEMS", "ATTIT", "VER"
+        "value": IN,  # e.g. 0 (not present if msgType == "VER")
+    },
+    "INVCRES": {
+        "value": IN,  # 0 = clear data
+    },
+    "INVCSTR": {
+        "value": IN,  # 14 = start session
+    },
+    "INVMSLOPE": {
+        "status": IN,  # 0 = disable, 1 =  enable
+    },
+    # Proprietary Locosys command sets not yet implemented, e.g.
+    # Perform a Cold start $PMTK103*30
+    # Perform a Warm start $PMTK102*31
+    # Perform a Hot start $PMTK101*32
+    # Perform a Full Cold start $PMTK104*37
+    # Disable GLL message $PMTK314,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0*29
+    # Disable GSV message $PMTK314,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29
+    # Disable GLL & GSV message $PMTK314,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28
+    # Factory default output message $PMTK314,-1*04
+    # Navigate with GPS+GALILEO $PMTK353,1,0,1,0,0*2B
+    # Navigate with GPS+GLONASS+GALILEO $PMTK353,1,1,1,0,0*2A
+    # Navigate with GPS+BEIDOU $PMTK353,1,0,0,0,1*2B
+    # Entering Standby Mode1 $PMTK161,0*28
 }

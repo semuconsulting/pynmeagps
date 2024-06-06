@@ -4,6 +4,20 @@
 
 ENHANCEMENTS:
 
+1. Add Locosys proprietary NMEA GET and SET messages:
+   - $PINVCRES: Clear the NVM data
+   - $PINVCSTR: Start session
+   - $PINVMATTIT: ATTIT information
+   - $PINVMIMU: MEMS RAW-DATA message information
+   - $PINVMINR: Calibration status
+   - $PINVMSTR: Session Status
+   - $PINVMSLOPE: SLOPE information
+   - $PLSC: Set status/poll version
+   - $PLSR: Set status response
+   - $PLSVD: Attitude yaw, pitch, roll
+   
+   NB: $PMTKnnn: proprietary command message sets not yet implemented
+
 ### RELEASE 1.0.37
 
 ENHANCEMENTS:
