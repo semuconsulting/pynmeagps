@@ -48,17 +48,15 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 ---
 ## <a name="installation">Installation</a>
 
-`pynmeagps` is compatible with Python >=3.8 and has no third-party library dependencies.
-
-In the following, `python3` & `pip` refer to the Python 3 executables. You may need to type 
-`python` or `pip3`, depending on your particular environment.
-
 ![Python version](https://img.shields.io/pypi/pyversions/pynmeagps.svg?style=flat)
 [![PyPI version](https://img.shields.io/pypi/v/pynmeagps.svg?style=flat)](https://pypi.org/project/pynmeagps/)
 ![PyPI downloads](https://img.shields.io/pypi/dm/pynmeagps.svg?style=flat)
 
-The recommended way to install the latest version of `pynmeagps` is with
-[pip](http://pypi.python.org/pypi/pip/):
+`pynmeagps` is compatible with Python 3.8 - 3.13 and has no third-party library dependencies.
+
+In the following, `python3` & `pip` refer to the Python 3 executables. You may need to substitute `python` for `python3`, depending on your particular environment (*on Windows it's generally `python`*).
+
+The recommended way to install the latest version of `pynmeagps` is with [pip](http://pypi.python.org/pypi/pip/):
 
 ```shell
 python3 -m pip install --upgrade pynmeagps
@@ -70,7 +68,7 @@ If required, `pynmeagps` can also be installed into a virtual environment, e.g.:
 python3 -m pip install --user --upgrade virtualenv
 python3 -m virtualenv env
 source env/bin/activate (or env\Scripts\activate on Windows)
-(env) python3 -m pip install --upgrade pynmeagps
+python3 -m pip install --upgrade pynmeagps
 ...
 deactivate
 ```
