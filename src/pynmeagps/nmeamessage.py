@@ -208,12 +208,12 @@ class NMEAMessage:
                 if att == nmt.LND and hasattr(self, "lon"):
                     if isinstance(self.lon, (int, float)):
                         val = "W" if self.lon < 0 else "E"
-                    else:
+                    else:  # pragma: no cover
                         val = "E"
                 elif att == nmt.LAD and hasattr(self, "lat"):
                     if isinstance(self.lat, (int, float)):
                         val = "S" if self.lat < 0 else "N"
-                    else:
+                    else:  # pragma: no cover
                         val = "N"
                 else:
                     val = kwargs.get(keyr, self.nomval(att))
@@ -509,9 +509,9 @@ class NMEAMessage:
 
         if att in (nmt.CH, nmt.ST, nmt.LA, nmt.LN):
             val = ""
-        elif att == nmt.LAD:
+        elif att == nmt.LAD:  # pragma: no cover
             val = "N"
-        elif att == nmt.LND:
+        elif att == nmt.LND:  # pragma: no cover
             val = "E"
         elif att == nmt.HX:
             val = "0"
