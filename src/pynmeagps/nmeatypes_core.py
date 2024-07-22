@@ -60,7 +60,7 @@ LND = "LND"  # Longitude direction (E/W)
 ST = "ST"  # String
 TM = "TM"  # Time hhmmss.ss
 
-VALID_TYPES = (CH, DE, DT, HX, IN, LA, LAD, LN, LND, ST, TM)
+VALID_TYPES = (CH, DE, DM, DT, HX, IN, LA, LAD, LN, LND, ST, TM)
 
 # *****************************************
 # THESE ARE THE NMEA V4 PROTOCOL TALKER IDS
