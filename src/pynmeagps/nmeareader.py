@@ -244,7 +244,7 @@ class NMEAReader:
             content, talker, msgid, payload, checksum = get_parts(message)
             if validate & VALCKSUM:
                 ccksum = calc_checksum(content)
-                if checksum != ccksum:
+                if checksum.upper() != ccksum:
                     raise nme.NMEAParseError(
                         f"Message {talker}{msgid} invalid checksum {checksum}"
                         f" - should be {ccksum}."
