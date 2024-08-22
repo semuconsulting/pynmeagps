@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.39
+
+ENHANCEMENTS:
+
+1. Add support for NMEA streams with lower case hex checksums
+
 ### RELEASE 1.0.38
 
 ENHANCEMENTS:

@@ -523,6 +523,23 @@ class StreamTest(unittest.TestCase):
                 i += 1
             self.assertEqual(i, 15)
 
+    def testLCCHECKSUM(self):  # lower case checksum bytes
+        EXPECTED_RESULTS = (
+            "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.2404103333, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
+            "<NMEA(GNZDA, time=10:36:07, day=6, month=3, year=2021, ltzh=00, ltzn=00)>",
+            "<NMEA(GNGBS, time=10:36:07, errLat=15.1, errLon=24.2, errAlt=31.0, svid=, prob=, bias=, stddev=, systemId=, signalId=)>",
+            "<NMEA(GNVLW, twd=, twdUnit=N, wd=, wdUnit=N, tgd=0.0, tgdUnit=N, gd=0.0, gdUnit=N)>",
+        )
+        i = 0
+        with open(os.path.join(DIRNAME, "pygpsdata-nmea4lc.log"), "rb") as stream:
+            ubr = NMEAReader(stream, quitonerror=ERR_RAISE)
+            for raw, parsed in ubr:
+                # print(f'"{parsed}",')
+                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                i += 1
+            self.assertEqual(i, 5)
+
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
