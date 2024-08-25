@@ -35,7 +35,7 @@ from pynmeagps.nmeatypes_core import (
     VALCKSUM,
     VALMSGID,
 )
-from pynmeagps.socket_stream import SocketStream
+from pynmeagps.socket_wrapper import SocketWrapper
 
 
 class NMEAReader:
@@ -68,7 +68,7 @@ class NMEAReader:
         # pylint: disable=too-many-arguments
 
         if isinstance(stream, socket):
-            self._stream = SocketStream(stream, bufsize=bufsize)
+            self._stream = SocketWrapper(stream, bufsize=bufsize)
         else:
             self._stream = stream
         if msgmode not in (0, 1, 2):

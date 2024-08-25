@@ -13,18 +13,39 @@ has been collated from public domain sources.
 from datetime import datetime
 
 INPUT = 1
+"""Input message type"""
 OUTPUT = 0
+"""Output message type"""
 GET = 0
+"""GET (receive, response) message types"""
 SET = 1
+"""SET (command) message types"""
 POLL = 2
+"""POLL (query) message types"""
+SETPOLL = 3
+"""SETPOLL (SET or POLL) message types"""
 VALNONE = 0
+"""Do not validate checksum or msgid"""
 VALCKSUM = 1
+"""Validate checksum"""
 VALMSGID = 2
-ERR_IGNORE = 0
-ERR_LOG = 1
+"""Validate message id"""
+NMEA_PROTOCOL = 1
+"""NMEA Protocol"""
+UBX_PROTOCOL = 2
+"""UBX Protocol"""
+RTCM3_PROTOCOL = 4
+"""RTCM3 Protocol"""
 ERR_RAISE = 2
+"""Raise error and quit"""
+ERR_LOG = 1
+"""Log errors"""
+ERR_IGNORE = 0
+"""Ignore errors"""
+
 # proprietary messages where msgId is first element of payload:
 PROP_MSGIDS = ("FEC", "UBX", "TNL", "ASHR", "GPPADV")
+"""Proprietary message prefixes"""
 
 GNSSLIST = {
     0: "GPS",
@@ -36,13 +57,27 @@ GNSSLIST = {
     6: "GLONASS",
     7: "NAVIC",
 }
+"""GNSS code"""
+FIXTYPE_GGA = {
+    0: "NO FIX",
+    1: "3D",
+    2: "3D",
+    4: "RTK FIXED",
+    5: "RTK FLOAT",
+    6: "DR",
+}
+"""Fix type from GGA"""
 
 GPSEPOCH0 = datetime(1980, 1, 6)
+"""GPS epoch base date"""
 # Geodetic datum spheroid values:
 # WGS84, ETRS89, EPSG4326
 WGS84 = "WGS_84"
+"""WGS84 datum descriptor"""
 WGS84_SMAJ_AXIS = 6378137.0  # semi-major axis
+"""WGS84 semi-major axis"""
 WGS84_FLATTENING = 298.257223563  # flattening
+"""WGS84 flattening"""
 
 # ***************************************************
 # THESE ARE THE NMEA PROTOCOL PAYLOAD ATTRIBUTE TYPES
