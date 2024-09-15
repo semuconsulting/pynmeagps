@@ -81,7 +81,6 @@ class NMEAMessage:
                 raise nme.NMEAMessageError(err)
             else:
                 self._unknown = True
-                self._logger.debug(err)
 
         self._mode = msgmode
         # high precision NMEA mode returns NMEA lat/lon to 7dp rather than 5dp
