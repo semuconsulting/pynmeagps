@@ -92,7 +92,7 @@ class ParseTest(unittest.TestCase):
     def testParseNK2(
         self,
     ):  # unknown message identifier with validate VALCKSUM only - should just be ignored.
-        EXPECTED_RESULT = "<NMEA(GNXXX, NOMINAL, field_00=5327.04319, field_01=S, field_02=00214.41396, field_03=E, field_04=223232.00, field_05=A, field_06=A)>"
+        EXPECTED_RESULT = "<NMEA(GNXXX, NOMINAL, field_01=5327.04319, field_02=S, field_03=00214.41396, field_04=E, field_05=223232.00, field_06=A, field_07=A)>"
         res = NMEAReader.parse(self.messageNK, validate=VALCKSUM)
         self.assertEqual(str(res), EXPECTED_RESULT)
 

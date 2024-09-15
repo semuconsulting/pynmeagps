@@ -63,7 +63,7 @@ class NMEAMessage:
         super().__setattr__("_immutable", False)
         self._logger = getLogger(__name__)
         self._validate = validate
-        self._unknown = False
+        self._nominal = False  # flag for unrecognised NMEA sentence types
 
         if msgmode not in (0, 1, 2):
             raise nme.NMEAMessageError(
@@ -76,11 +76,10 @@ class NMEAMessage:
             and msgID not in (nmt.NMEA_MSGIDS_PROP)
             and msgID not in (nmt.PROP_MSGIDS)
         ):
-            err = f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
             if self._validate & nmt.VALMSGID:
-                raise nme.NMEAMessageError(err)
-            else:
-                self._unknown = True
+                raise nme.NMEAMessageError(
+                    f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
+                )
 
         self._mode = msgmode
         # high precision NMEA mode returns NMEA lat/lon to 7dp rather than 5dp
@@ -262,8 +261,9 @@ class NMEAMessage:
         :param list payload: payload as list
         """
 
+        self._nominal = True
         for i, fld in enumerate(payload):
-            setattr(self, f"field_{i:02d}", fld)
+            setattr(self, f"field_{i+1:02d}", fld)
 
     def _get_dict(self, **kwargs) -> dict:
         """
@@ -298,8 +298,7 @@ class NMEAMessage:
             erm = f"Unknown msgID {key} msgmode {('GET', 'SET', 'POLL')[self._mode]}."
             if self._validate & nmt.VALMSGID:
                 raise nme.NMEAMessageError(erm) from err
-            else:  # message not yet implemented
-                return None
+            return None  # message not yet implemented
 
     def _calc_num_repeats(
         self, attd: dict, payload: list, pindex: int, pindexend: int = 0
@@ -329,8 +328,8 @@ class NMEAMessage:
 
         stg = f"<NMEA({self.identity}"
         stg += ", "
-        if self._unknown:
-            stg += f"NOMINAL, "
+        if self._nominal:
+            stg += "NOMINAL, "
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]

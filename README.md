@@ -195,7 +195,7 @@ msg = NMEAReader.parse('$GNACN,103607.00,ECN,E,A,W,A,test,C*67\r\n', validate=VA
 print(msg)
 ```
 ```
-<NMEA(GNACN, NOMINAL, field_00=103607.00, field_01=ECN, field_02=E, field_03=A, field_04=W, field_05=A, field_06=test, field_07=C)>
+<NMEA(GNACN, NOMINAL, field_01=103607.00, field_02=ECN, field_03=E, field_04=A, field_05=W, field_06=A, field_07=test, field_08=C)>
 ```
 
 ---
