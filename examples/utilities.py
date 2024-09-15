@@ -13,6 +13,7 @@ Created on 14 Jan 2023
 from datums import DATUMS  # assumes this is in same folder
 
 from pynmeagps import (
+    area,
     bearing,
     ecef2llh,
     haversine,
@@ -44,21 +45,21 @@ print(
     f" {LAT2}, {LON2} using default WGS84 datum...",
 )
 dist = haversine(LAT1, LON1, LAT2, LON2)
-print(f"Distance: {dist} km")
+print(f"Distance: {dist:.4f} km")
 
 print(
     f"\nFind planar distance between {LAT1}, {LON1} and",
     f" {LAT3}, {LON3} using default WGS84 datum...",
 )
 dist = planar(LAT1, LON1, LAT3, LON3)
-print(f"Distance: {dist} m")
+print(f"Distance: {dist:.4f} m")
 
 print(
     f"\nFind bearing between {LAT1}, {LON1} and",
     f" {LAT2}, {LON2} using default WGS84 datum...",
 )
 brng = bearing(LAT1, LON1, LAT2, LON2)
-print(f"Bearing: {brng} degrees")
+print(f"Bearing: {brng:.4f} degrees")
 
 X, Y, Z = 3822566.3113, -144427.5123, 5086857.1208
 print(f"\nConvert ECEF X: {X}, Y: {Y}, Z: {Z} to geodetic using default WGS84 datum...")
@@ -82,7 +83,14 @@ print(
     f"{LAT2}, {LON2} using alternate {DATUM} ({ellipsoid}) datum...",
 )
 dist = haversine(LAT1, LON1, LAT2, LON2, a / 1000)
-print(f"Distance: {dist} km")
+print(f"Distance: {dist:.4f} km")
+
+print(
+    f"\nFind spherical area bound by {LAT1}, {LON1} and",
+    f"{LAT2}, {LON2}...",
+)
+bbarea = area(LAT1, LON1, LAT2, LON2)
+print(f"Area: {bbarea:.4f} km²")
 
 print(
     f"\nConvert ECEF X: {X}, Y: {Y}, Z: {Z} to",

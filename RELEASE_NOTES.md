@@ -1,5 +1,13 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.40
+
+CHANGES:
+
+1. Add area() helper method to calculate spherical area of bounding box.
+1. Sphinx documentation and docstrings enhanced to include global constants and decodes.
+1. `socket_stream.SocketStream` class renamed to `socket_wrapper.SocketWrapper` class for clarity.
+
 ### RELEASE 1.0.39
 
 ENHANCEMENTS:

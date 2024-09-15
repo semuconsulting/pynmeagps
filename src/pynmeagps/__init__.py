@@ -20,6 +20,6 @@ from pynmeagps.nmeamessage import NMEAMessage
 from pynmeagps.nmeareader import NMEAReader
 from pynmeagps.nmeatypes_core import *
 from pynmeagps.nmeatypes_get import *
-from pynmeagps.socket_stream import SocketStream
+from pynmeagps.socket_wrapper import SocketWrapper
 
 version = __version__

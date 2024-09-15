@@ -546,6 +546,29 @@ def bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return brng
 
 
+def area(
+    lat1: float,
+    lon1: float,
+    lat2: float,
+    lon2: float,
+    radius: int = WGS84_SMAJ_AXIS / 1000,
+) -> float:
+    """
+    Calculate spherical area bounded by two coordinates.
+
+    :param float lat1: lat1
+    :param float lon1: lon1
+    :param float lat2: lat2
+    :param float lon2: lon2
+    :param float radius: radius in km (Earth = 6378.137 km)
+    :return: area in km²
+    :rtype: float
+    """
+
+    phi1, phi2 = [c * pi / 180 for c in (lat1, lat2)]
+    return pow(radius, 2) * pi * abs(sin(phi1) - sin(phi2)) * abs(lon1 - lon2) / 180
+
+
 def get_gpswnotow(dat: datetime) -> tuple:
     """
     Get GPS Week number (Wno) and Time of Week (Tow)

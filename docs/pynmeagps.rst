@@ -68,10 +68,10 @@ pynmeagps.nmeatypes\_set module
    :undoc-members:
    :show-inheritance:
 
-pynmeagps.socket\_stream module
--------------------------------
+pynmeagps.socket\_wrapper module
+--------------------------------
 
-.. automodule:: pynmeagps.socket_stream
+.. automodule:: pynmeagps.socket_wrapper
    :members:
    :undoc-members:
    :show-inheritance:
