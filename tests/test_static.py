@@ -14,6 +14,7 @@ import unittest
 
 from pynmeagps import NMEAMessage, NMEAMessageError, NMEAReader, NMEATypeError
 from pynmeagps.nmeahelpers import (
+    area,
     bearing,
     calc_checksum,
     date2str,
@@ -487,6 +488,16 @@ class StaticTest(unittest.TestCase):
         self.assertAlmostEqual(res, 88.58134073451902, 4)
         res = bearing(-12.645, 34.867, -34.1745, 48.27846)
         self.assertAlmostEqual(res, 152.70835788275326, 4)
+
+    def testarea(self):
+        res = area(51.23, -2.41, 53.205, -2.34)
+        self.assertAlmostEqual(res, 1049.5657, 4)
+        res = area(53.48280729, -2.24225376, 53.46814647, -2.20192543)
+        self.assertAlmostEqual(res, 4.3606, 4)
+        res = area(53.69865772, -2.68269539, 53.22939103, -1.39218885)
+        self.assertAlmostEqual(res, 4467.6282, 4)
+        res = area(-12.645, 34.867, -34.1745, 48.27846)
+        self.assertAlmostEqual(res, 3264291.8230, 4)
 
     def testgpsweek(self):
         dats = [

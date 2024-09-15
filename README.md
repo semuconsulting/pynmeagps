@@ -287,6 +287,7 @@ b'$EIGNQ,RMC*24\r\n'
  - `haversine` - finds great circle distance in km between two sets of (lat, lon) coordinates
  - `planar` - finds planar distance in m between two sets of (lat, lon) coordinates
  - `bearing` - finds bearing in degrees between two sets of (lat, lon) coordinates
+ - `area` - finds spherical area bounded by two sets of (lat, lon) coordinates
 
 See [Sphinx documentation](https://www.semuconsulting.com/pynmeagps/pynmeagps.html#module-pynmeagaps.nmeahelpers) for details.
 
