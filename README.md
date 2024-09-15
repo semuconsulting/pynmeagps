@@ -126,7 +126,7 @@ with open('nmeadata.log', 'rb') as stream:
     print(parsed_data)
 ```
 
-Example - Socket input (using iterator):
+* Socket input (using iterator):
 
 ```python
 import socket
@@ -186,6 +186,18 @@ print(latlon2dmm((msg.lat, msg.lon)))
 ('52°37.2378′N', '2°9.6072′W')
 ```
 
+If the NMEA sentence type is unrecognised or not yet implemented (*e.g. due to definition not yet being in the public domain*) and the `VALMSGID` validation flag is *NOT* set,
+ `NMEAMessage` will parse the message to a NOMINAL structure e.g.:
+
+```python
+from pynmeagps import NMEAReader, VALCKSUM
+msg = NMEAReader.parse('$GNACN,103607.00,ECN,E,A,W,A,test,C*67\r\n', validate=VALCKSUM)
+print(msg)
+```
+```
+<NMEA(GNACN, NOMINAL, field_01=103607.00, field_02=ECN, field_03=E, field_04=A, field_05=W, field_06=A, field_07=test, field_08=C)>
+```
+
 ---
 ## <a name="generating">Generating</a>
 
@@ -195,9 +207,9 @@ class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, msgmode: int, *
 
 You can create an `NMEAMessage` object by calling the constructor with the following parameters:
 1. talker (must be a valid talker from `pynmeagps.NMEA_TALKERS`)
-1. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS` or `pynmeagps.NMEA_MSGIDS_PROP`)
-2. msgmode (0=GET, 1=SET, 2=POLL)
-3. (optional) a series of keyword parameters representing the message payload
+2. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS` or `pynmeagps.NMEA_MSGIDS_PROP`)
+3. msgmode (0=GET, 1=SET, 2=POLL)
+4. (optional) a series of keyword parameters representing the message payload
 
 The 'msgmode' parameter signifies whether the message payload refers to a:
 

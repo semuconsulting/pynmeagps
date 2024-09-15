@@ -10,7 +10,16 @@ Created on 4 Mar 2021
 
 import unittest
 from datetime import datetime
-from pynmeagps import NMEAMessage, NMEAReader, GET, SET, POLL, NMEAMessageError
+from pynmeagps import (
+    NMEAMessage,
+    NMEAReader,
+    GET,
+    SET,
+    POLL,
+    NMEAMessageError,
+    VALCKSUM,
+    VALMSGID,
+)
 
 
 class FillTest(unittest.TestCase):
@@ -191,7 +200,7 @@ class FillTest(unittest.TestCase):
     def testFill_UNKNOWN(self):  # test GET constructor with unknown msgId
         EXPECTED_ERROR = "Unknown msgID GNXXX, msgmode GET."
         with self.assertRaises(NMEAMessageError) as context:
-            NMEAMessage("GN", "XXX", GET, payload=[0, 0, 0])
+            NMEAMessage("GN", "XXX", GET, payload=[0, 0, 0], validate=VALMSGID)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
     def testFill_UNKNOWN2(self):  # test GET constructor with unknown talker
@@ -203,8 +212,12 @@ class FillTest(unittest.TestCase):
     def testFill_UNKNOWN3(self):  # test GET constructor with unknown UBX msgid
         EXPECTED_ERROR = "Unknown msgID UBX08 msgmode GET."
         with self.assertRaises(NMEAMessageError) as context:
-            NMEAMessage("GN", "UBX", GET, payload=["08", 0, 0])
+            NMEAMessage("GN", "UBX", GET, payload=["08", 0, 0], validate=VALMSGID)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
+
+    def testFill_UNKNOWN4(self):  # test GET constructor with unknown msgId
+        EXPECTED_ERROR = "Unknown msgID GNXXX, msgmode GET."
+        msg = NMEAMessage("GN", "XXX", GET, payload=[0, 0, 0], validate=VALCKSUM)
 
 
 if __name__ == "__main__":
