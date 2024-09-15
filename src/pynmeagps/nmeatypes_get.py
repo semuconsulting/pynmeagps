@@ -52,6 +52,21 @@ NMEA_PAYLOADS_GET = {
         "bearP2Du": CH,
         "wpt": ST,
     },
+    "ALF": {
+        "numMsg": IN,
+        "msgNum": IN,
+        "seqmsgId": IN,
+        "timelastchange": TM,
+        "alertcat": CH,  # A, B, C
+        "alertpriority": CH,  # E, A W, C
+        "alertstate": CH,  # A, S, N, O, U, V
+        "manufacturercode": ST,
+        "alertId": ST,
+        "alertinst": ST,
+        "revisionctr": ST,
+        "escalationctr": ST,
+        "alerttxt": ST,  # max 16 chars
+    },
     "APB": {
         "LCgwarn": CH,
         "LCcwarn": CH,

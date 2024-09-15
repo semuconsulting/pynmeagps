@@ -1,8 +1,42 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.41
+
+ENHANCEMENTS:
+
+1. Enhance NMEAMessage to parse unrecognised* NMEA sentence types to a nominal `<NMEA(TTXXX, NOMINAL, field_01=x...)>` message structure if `VALMSGID` validation flag is *not* set, rather than raise a `NMEAParseMessage` error e.g.:
+
+   A. with the `VALMSGID` flag *not* set (*the new default behaviour*):
+
+   ```shell
+   from pynmeagps import NMEAReader
+   msg = NMEAReader.parse("$GNACN,103607.00,ECN,E,A,W,A,test,C*67\r\n")
+   print(msg)
+   ```
+   ```
+   <NMEA(GNACN, NOMINAL, field_00=103607.00, field_01=ECN, field_02=E, field_03=A, field_04=W, field_05=A, field_06=test, field_07=C)>
+   ```
+
+   B. with the `VALMSGID flag` set:
+
+   ```shell
+   from pynmeagps import NMEAReader, VALMSGID
+   msg = NMEAReader.parse("$GNACN,103607.00,ECN,E,A,W,A,test,C*67\r\n", validate=VALMSGID)
+   print(msg)
+   ```
+   ```
+   pynmeagps.exceptions.NMEAParseError: Unknown msgID GNACN, msgmode GET.
+   ```
+
+   \* unrecognised message types include those with unknown or invalid NMEA msgIDs (*but valid payloads and checksums*), or valid NMEA sentences whose payload definitions are not yet in the public domain (e.g. those currently commented-out in [`NMEA_MSGIDS`](https://github.com/semuconsulting/pynmeagps/blob/master/src/pynmeagps/nmeatypes_core.py#L207)).
+
+1. Add NMEA ALF sentence definition.
+1. Add `validate` argument to `NMEAMessage` and carry forward from `NMEAReader`
+1. Add logger to `NMEAMessage`.
+
 ### RELEASE 1.0.40
 
-CHANGES:
+ENHANCEMENTS:
 
 1. Add area() helper method to calculate spherical area of bounding box.
 1. Sphinx documentation and docstrings enhanced to include global constants and decodes.

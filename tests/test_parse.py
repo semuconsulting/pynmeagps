@@ -92,8 +92,9 @@ class ParseTest(unittest.TestCase):
     def testParseNK2(
         self,
     ):  # unknown message identifier with validate VALCKSUM only - should just be ignored.
+        EXPECTED_RESULT = "<NMEA(GNXXX, NOMINAL, field_00=5327.04319, field_01=S, field_02=00214.41396, field_03=E, field_04=223232.00, field_05=A, field_06=A)>"
         res = NMEAReader.parse(self.messageNK, validate=VALCKSUM)
-        self.assertEqual(res, None)
+        self.assertEqual(str(res), EXPECTED_RESULT)
 
     def testParseBADMODE(self):  # invalid mode setting
         EXPECTED_ERROR = "Invalid parse mode 4 - must be 0, 1 or 2."

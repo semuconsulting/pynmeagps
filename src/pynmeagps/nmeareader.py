@@ -250,10 +250,15 @@ class NMEAReader:
                         f" - should be {ccksum}."
                     )
             return NMEAMessage(
-                talker, msgid, msgmode, payload=payload, checksum=checksum
+                talker,
+                msgid,
+                msgmode,
+                payload=payload,
+                checksum=checksum,
+                validate=validate,
             )
 
         except nme.NMEAMessageError as err:
-            if not validate & VALMSGID:
-                return None
-            raise nme.NMEAParseError(err)
+            if validate & VALMSGID:
+                raise nme.NMEAParseError(err)
+            return None

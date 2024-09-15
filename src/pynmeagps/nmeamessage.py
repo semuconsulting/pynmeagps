@@ -12,6 +12,7 @@ Created on 04 Mar 2021
 
 import struct
 from datetime import datetime, timezone
+from logging import getLogger
 
 import pynmeagps.exceptions as nme
 import pynmeagps.nmeatypes_core as nmt
@@ -33,7 +34,13 @@ class NMEAMessage:
     """NMEA GNSS/GPS Message Class."""
 
     def __init__(
-        self, talker: str, msgID: str, msgmode: int, hpnmeamode: bool = False, **kwargs
+        self,
+        talker: str,
+        msgID: str,
+        msgmode: int,
+        hpnmeamode: bool = False,
+        validate: int = nmt.VALCKSUM,
+        **kwargs,
     ):
         """Constructor.
 
@@ -47,12 +54,16 @@ class NMEAMessage:
         :param str msgID: message ID e.g. "GGA"
         :param int msgmode: mode (0=GET, 1=SET, 2=POLL)
         :param bool hpnmeamode: high precision lat/lon mode (7dp rather than 5dp) (False)
+        :param int validate: validation flags - VALNONE (0), VALCKSUM (1), VALMSGID (2) (1)
         :param kwargs: keyword arg(s) representing all or some payload attributes
         :raises: NMEAMessageError
         """
 
         # object is mutable during initialisation only
         super().__setattr__("_immutable", False)
+        self._logger = getLogger(__name__)
+        self._validate = validate
+        self._unknown = False
 
         if msgmode not in (0, 1, 2):
             raise nme.NMEAMessageError(
@@ -65,9 +76,12 @@ class NMEAMessage:
             and msgID not in (nmt.NMEA_MSGIDS_PROP)
             and msgID not in (nmt.PROP_MSGIDS)
         ):
-            raise nme.NMEAMessageError(
-                f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
-            )
+            err = f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
+            if self._validate & nmt.VALMSGID:
+                raise nme.NMEAMessageError(err)
+            else:
+                self._unknown = True
+                self._logger.debug(err)
 
         self._mode = msgmode
         # high precision NMEA mode returns NMEA lat/lon to 7dp rather than 5dp
@@ -93,6 +107,10 @@ class NMEAMessage:
             self._payload = kwargs.get("payload", [])
             self._checksum = kwargs.get("checksum", None)
             pdict = self._get_dict(**kwargs)  # get payload definition dict
+            if pdict is None:  # definition not yet implemented
+                if "payload" in kwargs:
+                    self._set_attribute_nominal(kwargs["payload"])
+                return
             for key in pdict.keys():  # process each attribute in dict
                 (pindex, gindex) = self._set_attribute(
                     pindex, pdict, key, gindex, **kwargs
@@ -238,6 +256,16 @@ class NMEAMessage:
 
         return pindex
 
+    def _set_attribute_nominal(self, payload: list):
+        """
+        Set nominal attributes for unrecognised NMEA sentence types.
+
+        :param list payload: payload as list
+        """
+
+        for i, fld in enumerate(payload):
+            setattr(self, f"field_{i:02d}", fld)
+
     def _get_dict(self, **kwargs) -> dict:
         """
         Get payload dictionary.
@@ -268,9 +296,11 @@ class NMEAMessage:
                 return nms.NMEA_PAYLOADS_SET[key]
             return nmg.NMEA_PAYLOADS_GET[key]
         except KeyError as err:
-            raise nme.NMEAMessageError(
-                f"Unknown msgID {key} msgmode {('GET', 'SET', 'POLL')[self._mode]}."
-            ) from err
+            erm = f"Unknown msgID {key} msgmode {('GET', 'SET', 'POLL')[self._mode]}."
+            if self._validate & nmt.VALMSGID:
+                raise nme.NMEAMessageError(erm) from err
+            else:  # message not yet implemented
+                return None
 
     def _calc_num_repeats(
         self, attd: dict, payload: list, pindex: int, pindexend: int = 0
@@ -300,6 +330,8 @@ class NMEAMessage:
 
         stg = f"<NMEA({self.identity}"
         stg += ", "
+        if self._unknown:
+            stg += f"NOMINAL, "
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
