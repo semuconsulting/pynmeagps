@@ -1,8 +1,8 @@
 """
-NMEA Protocol Output payload definitions
+NMEA Protocol Proprietary Output payload definitions
 
-THESE ARE THE PAYLOAD DEFINITIONS FOR _GET_ MESSAGES _FROM_ THE RECEIVER
-(e.g. Periodic Navigation Data; Poll Responses; Info messages).
+THESE ARE THE PAYLOAD DEFINITIONS FOR PROPRIETARY _GET_ MESSAGES _FROM_
+THE RECEIVER (e.g. Periodic Navigation Data; Poll Responses; Info messages).
 
 NB: Attribute names must be unique within each message id.
 NB: Avoid reserved names 'msgID', 'talker', 'payload', 'checksum'.
