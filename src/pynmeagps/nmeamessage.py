@@ -520,7 +520,7 @@ class NMEAMessage:
             vals = ddd2dmm(val, att, hpmode)
         elif att == nmt.TM:
             vals = time2str(val)
-        elif att in (nmt.DT, nmt.DM):
+        elif att in (nmt.DT, nmt.DTL, nmt.DM):
             vals = date2str(val, att)
         else:
             raise nme.NMEATypeError(f"Unknown attribute type {att}.")
@@ -551,7 +551,7 @@ class NMEAMessage:
             val = 0
         elif att == nmt.TM:
             val = datetime.now(timezone.utc).time()
-        elif att == nmt.DT:
+        elif att in (nmt.DT, nmt.DTL, nmt.DM):
             val = datetime.now(timezone.utc).date()
         else:
             raise nme.NMEATypeError(f"Unknown attribute type {att}.")

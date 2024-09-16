@@ -18,6 +18,7 @@ import pynmeagps.exceptions as nme
 from pynmeagps.nmeatypes_core import (
     DM,
     DT,
+    DTL,
     GPSEPOCH0,
     LA,
     LN,
@@ -150,13 +151,18 @@ def date2utc(dates: str, form: str = DT) -> datetime.date:
     Convert NMEA Date to UTC datetime.
 
     :param str dates: NMEA date
-    :param str form: date format DT = ddmmyy, DM = mmddyy (DT)
+    :param str form: date format DT = ddmmyy, DTL = ddmmyyyy, DM = mmddyy (DT)
     :return: UTC date YYyy:mm:dd
     :rtype: datetime.date
     """
 
     try:
-        dform = "%m%d%y" if form == DM else "%d%m%y"
+        if form == "DM":
+            dform = "%m%d%y"
+        elif form == "DTL":
+            dform = "%d%m%Y"
+        else:
+            dform = "%d%m%y"
         utc = datetime.strptime(dates, dform)
         return utc.date()
     except (TypeError, ValueError):
@@ -201,13 +207,18 @@ def date2str(dat: datetime.date, form: str = DT) -> str:
     Convert datetime.date to NMEA formatted string.
 
     :param datetime.date dat: date
-    :param str form: date format DT = ddmmyy, DM = mmddyy (DT)
+    :param str form: date format DT = ddmmyy, DTL = ddmmyyyy, DM = mmddyy (DT)
     :return: NMEA formatted date string
     :rtype: str
     """
 
     try:
-        dform = "%m%d%y" if form == DM else "%d%m%y"
+        if form == DM:
+            dform = "%m%d%y"
+        elif form == DTL:
+            dform = "%d%m%Y"
+        else:
+            dform = "%d%m%y"
         return dat.strftime(dform)
     except (AttributeError, TypeError, ValueError):
         return ""

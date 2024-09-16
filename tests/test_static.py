@@ -12,7 +12,17 @@ import datetime
 import os
 import unittest
 
-from pynmeagps import NMEAMessage, NMEAMessageError, NMEAReader, NMEATypeError
+from pynmeagps import (
+    NMEAMessage,
+    NMEAMessageError,
+    NMEAReader,
+    NMEATypeError,
+    NMEA_MSGIDS,
+    NMEA_MSGIDS_PROP,
+    NMEA_PAYLOADS_GET,
+    NMEA_PAYLOADS_POLL,
+    NMEA_PAYLOADS_SET,
+)
 from pynmeagps.nmeahelpers import (
     area,
     bearing,
@@ -61,6 +71,19 @@ class StaticTest(unittest.TestCase):
     # *******************************************
     # Helper methods
     # *******************************************
+
+    def testMissingDefs(self):  # sanity check for missing payload definitions
+        for msg in NMEA_MSGIDS:
+            self.assertTrue(
+                msg in NMEA_PAYLOADS_GET.keys()
+                or msg in NMEA_PAYLOADS_POLL
+                or msg in NMEA_PAYLOADS_SET
+            )
+
+    def testMissingCodes(self):  # sanity check for missing sentence IDs
+        for msg in NMEA_PAYLOADS_GET:
+            print(msg)
+            self.assertTrue(msg in NMEA_MSGIDS.keys() or msg in NMEA_MSGIDS_PROP.keys())
 
     def testGetParts(self):
         res = get_parts(self.messageGLL)
@@ -146,6 +169,8 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, datetime.date(2020, 3, 12))
         res = date2utc("031220", "DM")
         self.assertEqual(res, datetime.date(2020, 3, 12))
+        res = date2utc("12032020", "DTL")
+        self.assertEqual(res, datetime.date(2020, 3, 12))
 
     def testTime2UTC(self):
         res = time2utc("")
@@ -162,6 +187,8 @@ class StaticTest(unittest.TestCase):
     def testDate2str(self):
         res = date2str(datetime.date(2021, 3, 7))
         self.assertEqual(res, "070321")
+        res = date2str(datetime.date(2021, 3, 7), "DTL")
+        self.assertEqual(res, "07032021")
         res = date2str(datetime.date(2021, 3, 7), "DM")
         self.assertEqual(res, "030721")
         res = date2str("wsdfasdf")
