@@ -17,6 +17,7 @@ from logging import getLogger
 import pynmeagps.exceptions as nme
 import pynmeagps.nmeatypes_core as nmt
 import pynmeagps.nmeatypes_get as nmg
+import pynmeagps.nmeatypes_get_prop as nmgp
 import pynmeagps.nmeatypes_poll as nmp
 import pynmeagps.nmeatypes_set as nms
 from pynmeagps.nmeahelpers import (
@@ -64,6 +65,7 @@ class NMEAMessage:
         self._logger = getLogger(__name__)
         self._validate = validate
         self._nominal = False  # flag for unrecognised NMEA sentence types
+        self._proprietary = False  # proprietary message definition
 
         if msgmode not in (0, 1, 2):
             raise nme.NMEAMessageError(
@@ -71,11 +73,11 @@ class NMEAMessage:
             )
         if talker not in nmt.NMEA_TALKERS:
             raise nme.NMEAMessageError(f"Unknown talker {talker}.")
-        if (
-            msgID not in (nmt.NMEA_MSGIDS)
-            and msgID not in (nmt.NMEA_MSGIDS_PROP)
-            and msgID not in (nmt.PROP_MSGIDS)
-        ):
+        if msgID in nmt.NMEA_MSGIDS:
+            self._proprietary = False
+        elif msgID in nmt.NMEA_MSGIDS_PROP or msgID in nmt.PROP_MSGIDS:
+            self._proprietary = True
+        else:
             if self._validate & nmt.VALMSGID:
                 raise nme.NMEAMessageError(
                     f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
@@ -293,6 +295,8 @@ class NMEAMessage:
                 return nmp.NMEA_PAYLOADS_POLL[key]
             if self._mode == nmt.SET:
                 return nms.NMEA_PAYLOADS_SET[key]
+            if self._proprietary:
+                return nmgp.NMEA_PAYLOADS_GET_PROP[key]
             return nmg.NMEA_PAYLOADS_GET[key]
         except KeyError as err:
             erm = f"Unknown msgID {key} msgmode {('GET', 'SET', 'POLL')[self._mode]}."

@@ -52,6 +52,14 @@ pynmeagps.nmeatypes\_get module
    :undoc-members:
    :show-inheritance:
 
+pynmeagps.nmeatypes\_get\_prop module
+-------------------------------------
+
+.. automodule:: pynmeagps.nmeatypes_get_prop
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pynmeagps.nmeatypes\_poll module
 --------------------------------
 

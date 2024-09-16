@@ -43,10 +43,6 @@ ERR_LOG = 1
 ERR_IGNORE = 0
 """Ignore errors"""
 
-# proprietary messages where msgId is first element of payload:
-PROP_MSGIDS = ("FEC", "UBX", "TNL", "ASHR", "GPPADV")
-"""Proprietary message prefixes"""
-
 GNSSLIST = {
     0: "GPS",
     1: "SBAS",
@@ -297,7 +293,6 @@ NMEA_MSGIDS = {
     "LR3": "AIS long-range reply sentence 3",
     "LRF": "AIS long-range function",
     "LRI": "AIS long-range interrogation",
-    "LLQ": "Leica local position and quality",
     "MOB": "Man over board notification",
     "MSK": "MSK receiver interface",
     "MSS": "MSK receiver signal status",
@@ -364,6 +359,10 @@ NMEA_MSGIDS = {
     "ZDL": "Time and distance to variable point",
     "ZFO": "UTC and time from origin waypoint",
     "ZTG": "UTC and time to destination waypoint",
+    # ***************************************************************
+    # Dummy message for testing only
+    # ***************************************************************
+    "FOO": "Dummy message",
 }
 NMEA_MSGIDS_PROP = {
     # ***************************************************************
@@ -478,8 +477,8 @@ NMEA_MSGIDS_PROP = {
     "LSR": "Set status response",
     "LSVD": "Attitude yaw, pitch, roll",
     # "MTKnnn": "Proprietary command sets - not implemented",
-    # ***************************************************************
-    # Dummy message for testing only
-    # ***************************************************************
-    "FOO": "Dummy message",
 }
+
+# proprietary messages where msgId is first element of payload:
+PROP_MSGIDS = ("FEC", "UBX", "TNL", "ASHR", "GPPADV")
+"""Proprietary message prefixes"""
