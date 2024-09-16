@@ -223,8 +223,7 @@ NMEA_HDR = {b"\x24" + i[0:1].encode("utf-8") for i in NMEA_TALKERS}
 # Payloads for each of these identities are defined in the nmeatypes_* modules
 # Commented-out entries are those which have not yet been implemented,
 # principally because no public domain definition has yet been identified.
-# Full definitions can be found in NMEA 0183—Version 4.30 and IEC 61162-1:2024,
-# but these are copyrighted.
+# Full specifications can be found in NMEA 0183—v4.30, IEC 61162-1:2024.
 # ****************************************************************************
 NMEA_MSGIDS = {
     "AAM": "Waypoint arrival alarm",
