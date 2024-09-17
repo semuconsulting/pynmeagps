@@ -82,7 +82,6 @@ class StaticTest(unittest.TestCase):
 
     def testMissingCodes(self):  # sanity check for missing sentence IDs
         for msg in NMEA_PAYLOADS_GET:
-            print(msg)
             self.assertTrue(msg in NMEA_MSGIDS.keys() or msg in NMEA_MSGIDS_PROP.keys())
 
     def testGetParts(self):
