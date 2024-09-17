@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.42
+
+ENHANCEMENTS:
+
+1. Add additional maritime talker IDs and NMEA sentence definitions.
+1. Add `DTL` date format ddmmyyyy.
+
 ### RELEASE 1.0.41
 
 ENHANCEMENTS:

@@ -86,7 +86,7 @@ class StreamTest(unittest.TestCase):
         EXPECTED_RESULTS = (
             "<NMEA(GNDTM, datum=W84, subDatum=, latOfset=0.0, NS=N, lonOfset=0.0, EW=E, alt=0.0, refDatum=W84)>",
             "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.2404103333, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>",
-            "<NMEA(GPRTE, numMsg=2, msgNum=1, status=c, active=0, wpt_01=PBRCPK, wpt_02=PBRTO, wpt_03=PTELGR, wpt_04=PPLAND, wpt_05=PYAMBU, wpt_06=PPFAIR, wpt_07=PWARRN, wpt_08=PMORTL, wpt_09=PLISMR)>",
+            "<NMEA(GPRTE, numMsg=2, msgNum=1, status=c, routeid=0, wpt_01=PBRCPK, wpt_02=PBRTO, wpt_03=PTELGR, wpt_04=PPLAND, wpt_05=PYAMBU, wpt_06=PPFAIR, wpt_07=PWARRN, wpt_08=PMORTL, wpt_09=PLISMR)>",
             "<NMEA(GNRLM, beacon=00000078A9FBAD5, time=08:35:59, code=3, body=C45B)>",
             "<NMEA(GNVTG, cogt=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.046, sognUnit=N, sogk=0.085, sogkUnit=K, posMode=A)>",
             "<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>",
@@ -122,15 +122,15 @@ class StreamTest(unittest.TestCase):
             "<NMEA(PGRMM, dtm=NAD27 Canada)>",
             "<NMEA(PGRMZ, alt=246.0, altUnit=f, fix=3)>",
             "<NMEA(GPXTE, gwarn=A, LCcwarn=A, ctrkerr=4.07, dirs=L, disUnit=N)>",
-            "<NMEA(GPVBW, wlspd=12.3, wtspd=0.07, wstatus=A, glspd=11.78, gtspd=0.12, gstatus=A)>",
+            "<NMEA(GPVBW, longwaterspd=12.3, transwaterspd=0.07, waterspdstatus=A, longgroundspd=11.78, transgroundspd=0.12, groundspdstatus=A)>",
             "<NMEA(GPSTN, talkerId=34)>",
-            "<NMEA(GPBWC, fixutc=220516, lat=51.5003333333, NS=N, lon=-0.7723333333, EW=W, bearT=213.8, bearTu=T, bearM=218.0, bearMu=M, dist=4.6, distUnit=N, wpt=EGLM)>",
+            "<NMEA(GPBWC, fixutc=22:05:16, lat=51.5003333333, NS=N, lon=-0.7723333333, EW=W, bearT=213.8, bearTu=T, bearM=218.0, bearMu=M, dist=4.6, distUnit=N, wpt=EGLM)>",
             "<NMEA(GPBOD, bearT=97.0, bearTu=T, bearM=103.2, bearMu=M, wptD=POINTB, wptO=POINTA)>",
             "<NMEA(GPBOD, bearT=99.3, bearTu=T, bearM=105.6, bearMu=M, wptD=POINTB, wptO=)>",
             "<NMEA(GPAAM, arrce=A, perp=A, crad=0.1, cUnit=N, wpt=WPTNME)>",
             "<NMEA(GPAPB, LCgwarn=A, LCcwarn=A, ctrkerr=0.1, dirs=R, ctrkUnit=N, aalmcirc=V, aalmperp=V, bearO2D=11.0, bearO2Du=M, wpt=DEST, bearD=11.0, bearDu=M, bearS=11.0, bearSu=M)>",
             "<NMEA(GPMSK, freq=318.0, fmode=A, beacbps=100, bpsmode=M, MMSfreq=2.0)>",
-            "<NMEA(GPMSS, strength=55, snr=27, freq=318.0, beacbps=100)>",
+            "<NMEA(GPMSS, strength=55, snr=27, freq=318.0, beacbps=100, channel=)>",
             "<NMEA(GBGSV, numMsg=2, msgNum=2, numSV=6, svid_01=14, elv_01=55.0, az_01=175, cno_01=46, svid_02=40, elv_02=29.0, az_02=43, cno_02=18, signalID=B)>",
             "<NMEA(INGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
         )
@@ -224,6 +224,35 @@ class StreamTest(unittest.TestCase):
                     if raw is not None:
                         i += 1
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
+
+    def testNMEAMARITIME(self):  # test NMEA maritime messages
+        EXPECTED_RESULTS = (
+            "<NMEA(IIALF, numSen=1, senNum=1, seqmid=0, timelastchange=12:43:04.500000, alertcat=A, alertpriority=W, alertstate=A, mfrcode=, alertid=192, alertinst=1, revisionctr=1, escalationctr=0, alerttxt=LOST TARGET)>",
+            "<NMEA(IIALF, numSen=2, senNum=1, seqmid=1, timelastchange=08:19:50.100000, alertcat=B, alertpriority=A, alertstate=S, mfrcode=XYZ, alertid=0512, alertinst=1, revisionctr=2, escalationctr=0, alerttxt=HEADING LOST)>",
+            "<NMEA(IIALF, numSen=2, senNum=2, seqmid=1, timelastchange=, alertcat=, alertpriority=, alertstate=, mfrcode=XYZ, alertid=0512, alertinst=1, revisionctr=2, escalationctr=0, alerttxt=NO SYSTEM HEADING AVAILABLE)>",
+            "<NMEA(AIEPV, status=R, equipmenttype=AI, equipmentid=503123450, propertyid=101, value=38400)>",
+            "<NMEA(VRGEN, index=0000, time=01:12:00, data_01=0123, data_02=4567, data_03=89AB, data_04=CDEF, data_05=0123, data_06=4567, data_07=89AB, data_08=CDEF)>",
+            "<NMEA(VRGEN, index=0008, time=01:12:00, data_01=0123, data_02=4567)>",
+            "<NMEA(INNRM, function=2, freqtable=1, txcovermask=00001E1F, msgtypemask=00000023, status=C)>",
+            "<NMEA(CRNRX, numSen=7, senNum=1, seqid=0, msgcode=IE69, freqtable=1, time=13:56:00, day=27, month=6, year=2001, totalchar=241.0, totalbad=3.0, status=A, body=============================)>",
+            "<NMEA(CRNRX, numSen=7, senNum=2, seqid=0, msgcode=, freqtable=, time=, day=, month=, year=, totalchar=, totalbad=, status=, body=========^0D^0AISSUED ON SATURDAY 06 JANUARY 2001.)>",
+            "<NMEA(CSSM3, MSIstatus=123456, msgnum=5213, LESseqnum=798, LESid=0, oceanregioncode=3, prioritycode=14, servicecode=0, presentationcode=2012, year=4, month=5, day=14, hour=30, minute=3400, circarealat=, circareaNS=076, circarealon=, circareaEW=300)>",
+            "<NMEA(CSSMB, numSen=8, senNum=1, seqid=0, msgnum=123456, body=FROM:Maritime Rescue Coordination Centre xxx^0D)0ATO:)>",
+            "<NMEA(IISPW, pwdprotectsentence=EPV, id=211000001, pwdlevel=2, password=SESAME)>",
+            "<NMEA(IIEPV, status=C, equipmenttype=AI, equipmentid=211000001, propertyid=111, value=HEUREKA143)>",
+            "<NMEA(AIEPV, status=R, equipmenttype=AI, equipmentid=211000001, propertyid=111, value=HEUREKA143)>",
+        )
+
+        i = 0
+        raw = 0
+        with open(os.path.join(DIRNAME, "pygpsdata-maritime.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=True, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, 14)
 
     def testNMEAITER(self):  # NMEAReader iterator
         EXPECTED_RESULTS = (
