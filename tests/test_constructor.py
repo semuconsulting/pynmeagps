@@ -206,16 +206,23 @@ class FillTest(unittest.TestCase):
     def testFill_UNKNOWN2(self):  # test GET constructor with unknown talker
         EXPECTED_ERROR = "Unknown talker XX."
         with self.assertRaises(NMEAMessageError) as context:
-            NMEAMessage("XX", "XXX", GET, payload=[0, 0, 0])
+            NMEAMessage(
+                "XX", "XXX", GET, payload=[0, 0, 0], validate=VALCKSUM | VALMSGID
+            )
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
-    def testFill_UNKNOWN3(self):  # test GET constructor with unknown UBX msgid
+    def testFill_UNKNOWN3(self):  # test GET constructor with unknown talker
+        EXPECTED_RESULT = "<NMEA(XXXXX, NOMINAL, field_01=0, field_02=0, field_03=0)>"
+        res = NMEAMessage("XX", "XXX", GET, payload=[0, 0, 0], validate=VALCKSUM)
+        self.assertEqual(str(res), EXPECTED_RESULT)
+
+    def testFill_UNKNOWN4(self):  # test GET constructor with unknown UBX msgid
         EXPECTED_ERROR = "Unknown msgID UBX08 msgmode GET."
         with self.assertRaises(NMEAMessageError) as context:
             NMEAMessage("GN", "UBX", GET, payload=["08", 0, 0], validate=VALMSGID)
         self.assertTrue(EXPECTED_ERROR in str(context.exception))
 
-    def testFill_UNKNOWN4(self):  # test GET constructor with unknown msgId
+    def testFill_UNKNOWN5(self):  # test GET constructor with unknown msgId
         EXPECTED_ERROR = "Unknown msgID GNXXX, msgmode GET."
         msg = NMEAMessage("GN", "XXX", GET, payload=[0, 0, 0], validate=VALCKSUM)
 
