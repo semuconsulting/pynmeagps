@@ -240,6 +240,7 @@ class NMEAReader:
         :param int msgmode: 0=GET, 1=SET, 2=POLL (0)
         :param int validate: VALNONE (0), VALCKSUM (1), VALMSGID (2),
             (can be OR'd) (1)
+        :param dict userdefined: user-defined payload definition dictionary (None)
         :return: NMEAMessage object (or None if unknown message and VALMSGID is not set)
         :rtype: NMEAMessage
         :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
