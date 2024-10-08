@@ -101,6 +101,7 @@ The constructor accepts the following optional keyword arguments:
 * `nmeaonly`: True = raise error if stream contains non-NMEA data, False = ignore non-NMEA data (default)
 * `validate`: validation flags `VALCKSUM` (0x01) = validate checksum (default), `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `quitonerror`: `ERR_IGNORE` (0) = ignore errors,  `ERR_LOG` (1) = log continue, `ERR_RAISE` (2) = (re)raise (1)
+* `userdefined`: An optional user-defined payload definition dictionary, supplementing the existing `NMEA_PAYLOADS_GET` and `NMEA_PAYLOADS_GET_PROP` dictionaries (None).
 
 Examples:
 
@@ -152,6 +153,7 @@ The `parse()` function accepts the following optional keyword arguments:
 * `msgmode`: 0 = GET (default), 1 = SET, 2 = POLL
 * `validate`: validation flags `VALCKSUM` (0x01) = validate checksum (default), `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `quitonerror`: `ERR_IGNORE` (0) = ignore errors,  `ERR_LOG` (1) = log continue, `ERR_RAISE` (2) = (re)raise (1)
+* `userdefined`: An optional user-defined payload definition dictionary, supplementing the existing `NMEA_PAYLOADS_GET` and `NMEA_PAYLOADS_GET_PROP` dictionaries (None).
 
 Example:
 
