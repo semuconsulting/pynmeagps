@@ -300,11 +300,11 @@ class NMEAMessage:
                 return nmp.NMEA_PAYLOADS_POLL[key]
             if self._mode == nmt.SET:
                 return nms.NMEA_PAYLOADS_SET[key]
-            if self._defsource == 1:  # proprietary
+            if self._defsource == nmt.DEF_PROP:  # proprietary
                 return nmgp.NMEA_PAYLOADS_GET_PROP[key]
-            if self._defsource == 2:  # user definition
+            if self._defsource == nmt.DEF_USER:  # user defined
                 return self._userdefined[key]
-            return nmg.NMEA_PAYLOADS_GET[key]
+            return nmg.NMEA_PAYLOADS_GET[key]  # standard
         except KeyError as err:
             erm = f"Unknown msgID {key} msgmode {('GET', 'SET', 'POLL')[self._mode]}."
             if self._validate & nmt.VALMSGID:
