@@ -56,6 +56,7 @@ class NMEAReader:
         quitonerror: int = ERR_LOG,
         bufsize: int = 4096,
         errorhandler: object = None,
+        userdefined: dict = None,
     ):
         """Constructor.
 
@@ -68,6 +69,7 @@ class NMEAReader:
             ERR_RAISE (2) = (re)raise (1)
         :param int bufsize: socket recv buffer size (4096)
         :param object errorhandler: error handling object or function (None)
+        :param dict userdefined: user-defined payload definition dictionary (None)
         :raises: NMEAParseError (if mode is invalid)
         """
         # pylint: disable=too-many-arguments
@@ -85,6 +87,7 @@ class NMEAReader:
         self._nmea_only = nmeaonly
         self._validate = validate
         self._mode = msgmode
+        self._userdefined = userdefined
         self._logger = getLogger(__name__)
 
     def __iter__(self):
@@ -135,6 +138,7 @@ class NMEAReader:
                         raw_data,
                         msgmode=self._mode,
                         validate=self._validate,
+                        userdefined=self._userdefined,
                     )
                     parsing = False
                 else:  # it's not a NMEA message (UBX or something else)
@@ -227,6 +231,7 @@ class NMEAReader:
         message: bytes,
         msgmode: int = GET,
         validate: int = VALCKSUM,
+        userdefined: dict = None,
     ) -> object:
         """
         Parse NMEA byte stream to NMEAMessage object.
@@ -262,6 +267,7 @@ class NMEAReader:
                 payload=payload,
                 checksum=checksum,
                 validate=validate,
+                userdefined=userdefined,
             )
 
         except nme.NMEAMessageError as err:

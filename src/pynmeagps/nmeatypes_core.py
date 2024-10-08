@@ -42,6 +42,14 @@ ERR_LOG = 1
 """Log errors"""
 ERR_IGNORE = 0
 """Ignore errors"""
+DEF_STND = 0
+"""Standard message definition"""
+DEF_PROP = 1
+"""Proprietary message definition"""
+DEF_USER = 2
+"""User-defined message definition"""
+DEF_UNKN = 3
+"""Unknown (not public domain) message definition"""
 
 GNSSLIST = {
     0: "GPS",
