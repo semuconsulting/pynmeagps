@@ -56,7 +56,8 @@ html_title = "<project> v<version> documentation."
 # html_static_path = ["_static"]
 html_last_updated_fmt = "%b %d %Y"
 html_theme_options = {
-    "display_version": True,
+    "version_selector": True,
+    "language_selector": True,
 }
 
 autodoc_default_options = {
