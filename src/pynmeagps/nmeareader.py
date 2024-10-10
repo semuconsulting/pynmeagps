@@ -7,7 +7,9 @@ any stream which supports a read(n) -> bytes method.
 Can also read from socket via SocketStream wrapper.
 
 Returns both the raw binary data (as bytes) and the parsed
-data (as a NMEAMessage object).
+data (as an NMEAMessage object).
+
+Implements an iterator: `for raw, parsed in NMEAReader(stream):`
 
 If the 'nmeaonly' kwarg is set to 'True', the reader
 will raise a NMEAParseError if it encounters any non-NMEA
@@ -20,6 +22,8 @@ Created on 4 Mar 2021
 :copyright: SEMU Consulting © 2021
 :license: BSD 3-Clause
 """
+
+# pylint: disable=too-many-positional-arguments
 
 from logging import getLogger
 from socket import socket
@@ -52,17 +56,20 @@ class NMEAReader:
         quitonerror: int = ERR_LOG,
         bufsize: int = 4096,
         errorhandler: object = None,
+        userdefined: dict = None,
     ):
         """Constructor.
 
         :param stream stream: input data stream (e.g. Serial or binary File)
         :param int msgmode: 0=GET, 1=SET, 2=POLL (0)
-        :param int validate: validation flags - VALNONE (0), VALCKSUM (1), VALMSGID (2) (1)
+        :param int validate: VALNONE (0), VALCKSUM (1), VALMSGID (2),
+            (can be OR'd) (1)
         :param bool nmeaonly: True = error on non-NMEA data, False = ignore non-NMEA data
         :param int quitonerror: ERR_IGNORE (0) = ignore errors,  ERR_LOG (1) = log continue,
             ERR_RAISE (2) = (re)raise (1)
         :param int bufsize: socket recv buffer size (4096)
         :param object errorhandler: error handling object or function (None)
+        :param dict userdefined: user-defined payload definition dictionary (None)
         :raises: NMEAParseError (if mode is invalid)
         """
         # pylint: disable=too-many-arguments
@@ -80,6 +87,7 @@ class NMEAReader:
         self._nmea_only = nmeaonly
         self._validate = validate
         self._mode = msgmode
+        self._userdefined = userdefined
         self._logger = getLogger(__name__)
 
     def __iter__(self):
@@ -130,6 +138,7 @@ class NMEAReader:
                         raw_data,
                         msgmode=self._mode,
                         validate=self._validate,
+                        userdefined=self._userdefined,
                     )
                     parsing = False
                 else:  # it's not a NMEA message (UBX or something else)
@@ -222,16 +231,19 @@ class NMEAReader:
         message: bytes,
         msgmode: int = GET,
         validate: int = VALCKSUM,
+        userdefined: dict = None,
     ) -> object:
         """
         Parse NMEA byte stream to NMEAMessage object.
 
         :param bytes message: bytes message to parse
         :param int msgmode: 0=GET, 1=SET, 2=POLL (0)
-        :param int validate: 1 VALCKSUM (default), 2 VALMSGID (can be OR'd)
+        :param int validate: VALNONE (0), VALCKSUM (1), VALMSGID (2),
+            (can be OR'd) (1)
+        :param dict userdefined: user-defined payload definition dictionary (None)
         :return: NMEAMessage object (or None if unknown message and VALMSGID is not set)
         :rtype: NMEAMessage
-        :raises: Exception (if data stream contains invalid data or unknown message type)
+        :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
 
         """
 
@@ -256,6 +268,7 @@ class NMEAReader:
                 payload=payload,
                 checksum=checksum,
                 validate=validate,
+                userdefined=userdefined,
             )
 
         except nme.NMEAMessageError as err:

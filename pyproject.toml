@@ -7,10 +7,10 @@ name = "pynmeagps"
 authors = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 maintainers = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 description = "NMEA protocol parser and generator"
-version = "1.0.42"
+version = "1.0.43"
 license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Operating System :: OS Independent",
     "Development Status :: 5 - Production/Stable",
@@ -22,7 +22,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Intended Audience :: End Users/Desktop",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -56,10 +55,10 @@ test = [
 ]
 
 [tool.black]
-target-version = ['py38']
+target-version = ['py39']
 
 [tool.isort]
-py_version = 38
+py_version = 39
 profile = "black"
 
 [tool.bandit]
@@ -70,7 +69,7 @@ skips = []
 jobs = 0
 recursive = "y"
 reports = "y"
-py-version = "3.8"
+py-version = "3.9"
 fail-under = "9.8"
 fail-on = "E,F"
 clear-cache-post-run = "y"

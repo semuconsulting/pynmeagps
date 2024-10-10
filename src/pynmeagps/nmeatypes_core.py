@@ -42,6 +42,14 @@ ERR_LOG = 1
 """Log errors"""
 ERR_IGNORE = 0
 """Ignore errors"""
+DEF_STND = 0
+"""Standard message definition"""
+DEF_PROP = 1
+"""Proprietary message definition"""
+DEF_USER = 2
+"""User-defined message definition"""
+DEF_UNKN = 3
+"""Unknown (not public domain) message definition"""
 
 GNSSLIST = {
     0: "GPS",
@@ -210,6 +218,7 @@ NMEA_TALKERS = {
     "ZQ": "Quartz",
     "ZV": "Radio Update",
 }
+"""Recognised NMEA Talkers."""
 
 # format list of permissible NMEA 2-byte header sequences
 NMEA_HDR = {b"\x24" + i[0:1].encode("utf-8") for i in NMEA_TALKERS}
@@ -364,6 +373,14 @@ NMEA_MSGIDS = {
     # ***************************************************************
     "FOO": "Dummy message",
 }
+"""
+Recognised Standard NMEA Message Identifiers.
+
+Payload definitions for standard GET messages are defined in 
+`NMEA_PAYLOADS_GET`. Standard POLL messages are defined in
+`NMEA_PAYLOADS_POLL`.
+"""
+
 NMEA_MSGIDS_PROP = {
     # ***************************************************************
     # NMEA Proprietary message types
@@ -478,7 +495,21 @@ NMEA_MSGIDS_PROP = {
     "LSVD": "Attitude yaw, pitch, roll",
     # "MTKnnn": "Proprietary command sets - not implemented",
 }
+"""
+Recognised Proprietary NMEA Message Identifiers.
 
-# proprietary messages where msgId is first element of payload:
-PROP_MSGIDS = ("FEC", "UBX", "TNL", "ASHR", "GPPADV")
-"""Proprietary message prefixes"""
+Payload definitions for proprietary GET messages are defined in 
+`NMEA_PAYLOADS_GET_PROP`. Proprietary SET and POLL messages are defined
+in `NMEA_PAYLOADS_SET` and `NMEA_PAYLOADS_POLL`.
+"""
+
+NMEA_PREFIX_PROP = ("FEC", "UBX", "TNL", "ASHR", "GPPADV")
+"""
+Proprietary NMEA Message Prefixes where `msgId` is part of payload.
+
+For proprietary messages with these prefixes, the `msgId` is defined as
+the first element of the payload. The unique payload dictionary key is
+therefore a combination of `prefix` + `msgId`.
+
+NB: There are some exceptions which require special handling e.g. `PASHR`.
+"""

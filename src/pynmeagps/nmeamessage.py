@@ -8,7 +8,7 @@ Created on 04 Mar 2021
 :license: BSD 3-Clause
 """
 
-# pylint: disable=invalid-name, too-many-instance-attributes
+# pylint: disable=invalid-name, too-many-instance-attributes, too-many-positional-arguments
 
 import struct
 from datetime import datetime, timezone
@@ -41,6 +41,7 @@ class NMEAMessage:
         msgmode: int,
         hpnmeamode: bool = False,
         validate: int = nmt.VALCKSUM,
+        userdefined: dict = None,
         **kwargs,
     ):
         """Constructor.
@@ -55,7 +56,9 @@ class NMEAMessage:
         :param str msgID: message ID e.g. "GGA"
         :param int msgmode: mode (0=GET, 1=SET, 2=POLL)
         :param bool hpnmeamode: high precision lat/lon mode (7dp rather than 5dp) (False)
-        :param int validate: validation flags - VALNONE (0), VALCKSUM (1), VALMSGID (2) (1)
+        :param int validate: VALNONE (0), VALCKSUM (1), VALMSGID (2),
+            (can be OR'd) (1)
+        :param dict userdefined: user-defined payload definition dictionary (None)
         :param kwargs: keyword arg(s) representing all or some payload attributes
         :raises: NMEAMessageError
         """
@@ -64,20 +67,23 @@ class NMEAMessage:
         super().__setattr__("_immutable", False)
         self._logger = getLogger(__name__)
         self._validate = validate
-        self._nominal = False  # flag for unrecognised NMEA sentence types
-        self._proprietary = False  # proprietary message definition
+        self._userdefined = {} if userdefined is None else userdefined
 
         if msgmode not in (0, 1, 2):
             raise nme.NMEAMessageError(
                 f"Invalid msgmode {msgmode} - must be 0, 1 or 2."
             )
         if talker not in nmt.NMEA_TALKERS:
-            raise nme.NMEAMessageError(f"Unknown talker {talker}.")
+            if self._validate & nmt.VALMSGID:
+                raise nme.NMEAMessageError(f"Unknown talker {talker}.")
         if msgID in nmt.NMEA_MSGIDS:
-            self._proprietary = False
-        elif msgID in nmt.NMEA_MSGIDS_PROP or msgID in nmt.PROP_MSGIDS:
-            self._proprietary = True
+            self._defsource = nmt.DEF_STND  # standard
+        elif msgID in nmt.NMEA_MSGIDS_PROP or msgID in nmt.NMEA_PREFIX_PROP:
+            self._defsource = nmt.DEF_PROP  # proprietary
+        elif msgID in self._userdefined:
+            self._defsource = nmt.DEF_USER  # user-defined
         else:
+            self._defsource = nmt.DEF_UNKN  # unrecognised
             if self._validate & nmt.VALMSGID:
                 raise nme.NMEAMessageError(
                     f"Unknown msgID {talker}{msgID}, msgmode {('GET','SET','POLL')[msgmode]}."
@@ -263,7 +269,6 @@ class NMEAMessage:
         :param list payload: payload as list
         """
 
-        self._nominal = True
         for i, fld in enumerate(payload):
             setattr(self, f"field_{i+1:02d}", fld)
 
@@ -277,7 +282,7 @@ class NMEAMessage:
 
         try:
             key = self.msgID
-            if key in nmt.PROP_MSGIDS:  # proprietary, first element is msgId
+            if key in nmt.NMEA_PREFIX_PROP:  # proprietary, first element is msgId
                 if "payload" in kwargs:
                     if key == "ASHR" and self._payload[0][1].isdigit():
                         pass  # exception for PASHR pitch and roll sentence without msgId
@@ -288,16 +293,18 @@ class NMEAMessage:
                 else:
                     raise nme.NMEAMessageError(
                         f"P{key} message definitions must "
-                        + "include payload or msgId keyword arguments."
+                        "include payload or msgId keyword arguments."
                     )
             key = key.upper()
             if self._mode == nmt.POLL:
                 return nmp.NMEA_PAYLOADS_POLL[key]
             if self._mode == nmt.SET:
                 return nms.NMEA_PAYLOADS_SET[key]
-            if self._proprietary:
+            if self._defsource == nmt.DEF_PROP:  # proprietary
                 return nmgp.NMEA_PAYLOADS_GET_PROP[key]
-            return nmg.NMEA_PAYLOADS_GET[key]
+            if self._defsource == nmt.DEF_USER:  # user defined
+                return self._userdefined[key]
+            return nmg.NMEA_PAYLOADS_GET[key]  # standard
         except KeyError as err:
             erm = f"Unknown msgID {key} msgmode {('GET', 'SET', 'POLL')[self._mode]}."
             if self._validate & nmt.VALMSGID:
@@ -332,7 +339,7 @@ class NMEAMessage:
 
         stg = f"<NMEA({self.identity}"
         stg += ", "
-        if self._nominal:
+        if self._defsource == nmt.DEF_UNKN:
             stg += "NOMINAL, "
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
@@ -402,7 +409,7 @@ class NMEAMessage:
 
         if (
             self._talker == "P"
-            and self._msgID in nmt.PROP_MSGIDS
+            and self._msgID in nmt.NMEA_PREFIX_PROP
             and hasattr(self, "msgId")
         ):
             return self._talker + self._msgID + self.msgId

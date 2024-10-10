@@ -52,7 +52,7 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 [![PyPI version](https://img.shields.io/pypi/v/pynmeagps.svg?style=flat)](https://pypi.org/project/pynmeagps/)
 ![PyPI downloads](https://img.shields.io/pypi/dm/pynmeagps.svg?style=flat)
 
-`pynmeagps` is compatible with Python 3.8 - 3.13 and has no third-party library dependencies.
+`pynmeagps` is compatible with Python 3.9 - 3.13 and has no third-party library dependencies.
 
 In the following, `python3` & `pip` refer to the Python 3 executables. You may need to substitute `python` for `python3`, depending on your particular environment (*on Windows it's generally `python`*).
 
@@ -101,6 +101,7 @@ The constructor accepts the following optional keyword arguments:
 * `nmeaonly`: True = raise error if stream contains non-NMEA data, False = ignore non-NMEA data (default)
 * `validate`: validation flags `VALCKSUM` (0x01) = validate checksum (default), `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `quitonerror`: `ERR_IGNORE` (0) = ignore errors,  `ERR_LOG` (1) = log continue, `ERR_RAISE` (2) = (re)raise (1)
+* `userdefined`: An optional user-defined payload definition dictionary, supplementing the existing `NMEA_PAYLOADS_GET` and `NMEA_PAYLOADS_GET_PROP` dictionaries (None).
 
 Examples:
 
@@ -152,6 +153,7 @@ The `parse()` function accepts the following optional keyword arguments:
 * `msgmode`: 0 = GET (default), 1 = SET, 2 = POLL
 * `validate`: validation flags `VALCKSUM` (0x01) = validate checksum (default), `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `quitonerror`: `ERR_IGNORE` (0) = ignore errors,  `ERR_LOG` (1) = log continue, `ERR_RAISE` (2) = (re)raise (1)
+* `userdefined`: An optional user-defined payload definition dictionary, supplementing the existing `NMEA_PAYLOADS_GET` and `NMEA_PAYLOADS_GET_PROP` dictionaries (None).
 
 Example:
 
@@ -207,9 +209,12 @@ class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, msgmode: int, *
 
 You can create an `NMEAMessage` object by calling the constructor with the following parameters:
 1. talker (must be a valid talker from `pynmeagps.NMEA_TALKERS`)
-2. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS` or `pynmeagps.NMEA_MSGIDS_PROP`)
-3. msgmode (0=GET, 1=SET, 2=POLL)
-4. (optional) a series of keyword parameters representing the message payload
+1. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS` or `pynmeagps.NMEA_MSGIDS_PROP`)
+1. msgmode (0=GET, 1=SET, 2=POLL)
+1. hpnmeamode - boolean flag to signify high-precision NMEA mode (7 dp rather than 5) (False)
+1. validate - integer flag for checksum and/or message type validation (0=VALNONE, 1=VALCKSUM, 2=VALMSGID) (1)
+1. userdefined - an optional user-defined payload definition dictionary (None)
+1. (optional) a series of keyword parameters representing the message payload
 
 The 'msgmode' parameter signifies whether the message payload refers to a:
 

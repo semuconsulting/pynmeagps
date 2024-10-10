@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.43
+
+ENHANCEMENTS:
+
+1. Add provision for user-defined payload definition dictionary, supplementing the existing `NMEA_PAYLOADS_GET` and `NMEA_PAYLOADS_GET_PROP` dictionaries. Format should mirror that used in `NMEA_PAYLOADS_GET`. Can be used for proprietary product development purposes or for standard payload definitions which are not yet in the public domain.
+1. Drop active support for Python 3.8 - now End of Life as at October 2024.
+
 ### RELEASE 1.0.42
 
 ENHANCEMENTS:

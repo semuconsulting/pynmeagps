@@ -22,6 +22,12 @@ from pynmeagps import (
     ERR_IGNORE,
     ERR_LOG,
     SET,
+    TM,
+    LA,
+    LAD,
+    LN,
+    LND,
+    ST,
 )
 
 DIRNAME = os.path.dirname(__file__)
@@ -568,6 +574,26 @@ class StreamTest(unittest.TestCase):
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
             self.assertEqual(i, 5)
+
+    def testuserdefined(self):  # test user-defined payload definition dictionary
+        EXPECTED_RESULTS = (
+            "<NMEA(U1XYZ, fixutc=10:29:29, lat=44.4506706667, NS=N, lon=-1.24026, EW=W)>",
+            "<NMEA(U2ZYX, fixutc=10:38:29, data1=somedata, data2=somemoredata)>",
+        )
+        USERDEFINED = {
+            "XYZ": {"fixutc": TM, "lat": LA, "NS": LAD, "lon": LN, "EW": LND},
+            "ZYX": {"fixutc": TM, "data1": ST, "data2": ST},
+        }
+        i = 0
+        with open(os.path.join(DIRNAME, "pygpsdata-userdefined.log"), "rb") as stream:
+            ubr = NMEAReader(
+                stream, quitonerror=ERR_RAISE, nmeaonly=True, userdefined=USERDEFINED
+            )
+            for raw, parsed in ubr:
+                # print(f'"{parsed}",')
+                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                i += 1
+            self.assertEqual(i, 2)
 
 
 if __name__ == "__main__":
