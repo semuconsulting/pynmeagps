@@ -209,9 +209,12 @@ class pynmeagps.nmeamessage.NMEAMessage(talker: str, msgID: str, msgmode: int, *
 
 You can create an `NMEAMessage` object by calling the constructor with the following parameters:
 1. talker (must be a valid talker from `pynmeagps.NMEA_TALKERS`)
-2. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS` or `pynmeagps.NMEA_MSGIDS_PROP`)
-3. msgmode (0=GET, 1=SET, 2=POLL)
-4. (optional) a series of keyword parameters representing the message payload
+1. message id (must be a valid id from `pynmeagps.NMEA_MSGIDS` or `pynmeagps.NMEA_MSGIDS_PROP`)
+1. msgmode (0=GET, 1=SET, 2=POLL)
+1. hpnmeamode - boolean flag to signify high-precision NMEA mode (7 dp rather than 5) (False)
+1. validate - integer flag for checksum and/or message type validation (0=VALNONE, 1=VALCKSUM, 2=VALMSGID) (1)
+1. userdefined - an optional user-defined payload definition dictionary (None)
+1. (optional) a series of keyword parameters representing the message payload
 
 The 'msgmode' parameter signifies whether the message payload refers to a:
 
