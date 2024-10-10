@@ -160,23 +160,6 @@
             "problemMatcher": []
         },
         {
-            "label": "Sphinx Deploy to S3", // needs AWS credentials
-            "type": "process",
-            "command": "aws",
-            "args": [
-                "s3",
-                "cp",
-                "${workspaceFolder}/docs/_build/html",
-                "s3://www.semuconsulting.com/${config:modulename}/",
-                "--recursive"
-            ],
-            "dependsOrder": "sequence",
-            "dependsOn": [
-                "Sphinx HTML"
-            ],
-            "problemMatcher": []
-        },
-        {
             "label": "Install No Depends",
             "type": "process",
             "command": "${config:python.defaultInterpreterPath}",
