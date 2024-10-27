@@ -20,6 +20,7 @@ assignees: semuadmin
 A clear and concise description of what the bug is.
 
 Please specify the pynmeagps version (`>>> pynmeagps.version`) and, where possible, include:
+- The **complete** Python script.
 - The error message and full traceback.
 - A binary / hexadecimal dump of the incoming NMEA data stream (e.g. from PuTTY or screen).
 
@@ -35,8 +36,8 @@ A clear and concise description of what you expected to happen.
 
 **Desktop (please complete the following information):**
 
-- The operating system you're using [e.g. Windows 11, MacOS Ventura, Ubuntu Lunar]
-- The version of Python you're using (e.g. Python 3.11.4)
+- The operating system you're using [e.g. Windows 11, MacOS Sequoia, Ubuntu Noble]
+- The version of Python you're using (e.g. Python 3.12.4)
 - The type of serial connection [e.g. USB, UART1]
 
 **GNSS/GPS Device (please complete the following information as best you can):**
