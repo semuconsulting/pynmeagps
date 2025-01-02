@@ -182,7 +182,7 @@
                 "install",
                 "--user",
                 "--force-reinstall",
-                "*whl"
+                "*.whl"
             ],
             "dependsOrder": "sequence",
             "dependsOn": [
