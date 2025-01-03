@@ -11,6 +11,7 @@ Created on 04 Mar 2021
 
 # pylint: disable=invalid-name
 
+import re
 from datetime import datetime
 from math import acos, asin, atan2, cos, pi, sin, sqrt
 
@@ -344,6 +345,43 @@ def deg2dmm(degrees: float, att: str) -> str:
         return f"{int(degrees)}\u00b0{round(minutes,7)}\u2032{sfx}"
     except (TypeError, ValueError):
         return ""
+
+
+def dms2deg(
+    dmsstr: str,
+    rnd: int = 7,
+) -> float:
+    """
+    Convert degrees, minutes, seconds string to decimal degrees.
+
+    Expects degrees and (optional) minutes and seconds to be delimited by
+    non-numeric char, e.g.
+
+    '51°20′45.6″N' -> 51.346
+
+    '51°30.0′' -> 51.5
+
+    :param str dmsstr: d,m,s string
+    :param int rnd: decimal places (7)
+    :return: degrees as d.dd
+    :rtype: float
+    :raises: ValueError if invalid dms string format
+    """
+
+    if (
+        re.match(
+            r"^([\d.]+[^\d.]{1}){1}([\d.]+[^\d.]{1})?([\d.]+[^\d.]{1})?[NSEW]?$", dmsstr
+        )
+        is None
+    ):
+        raise ValueError(f"Invalid dms string format {dmsstr}")
+
+    sign = -1 if dmsstr.find("S") >= 0 or dmsstr.find("W") >= 0 else 1
+    dms = re.split(r"[^\d.]", dmsstr, maxsplit=3)
+    ddd = 0.0
+    for x in range(len(dms) - 1):
+        ddd += 0.0 if dms[x] == "" else float(dms[x]) / pow(60, x)
+    return round(ddd * sign, rnd)
 
 
 def llh2iso6709(lat: float, lon: float, alt: float, crs: str = WGS84) -> str:
