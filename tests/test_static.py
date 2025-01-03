@@ -33,6 +33,7 @@ from pynmeagps.nmeahelpers import (
     deg2dmm,
     deg2dms,
     dmm2ddd,
+    dms2deg,
     ecef2llh,
     generate_checksum,
     get_gpswnotow,
@@ -160,6 +161,42 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, "12807.4074073")
         res = ddd2dmm("", "LN", True)
         self.assertEqual(res, "")
+
+    def testDMS2DEG(self):
+        res = dms2deg("51°20′45.6″N")
+        self.assertEqual(res, 51.346)
+        self.assertEqual(deg2dms(res, "LA"), "51°20′45.6″N")
+        res = dms2deg("51°30′0.0″N")
+        self.assertEqual(res, 51.5)
+        self.assertEqual(deg2dms(res, "LA"), "51°30′0.0″N")
+        res = dms2deg("51°30.00′")
+        self.assertEqual(res, 51.5)
+        self.assertEqual(deg2dms(res, "LA"), "51°30′0.0″N")
+        res = dms2deg("2°20′45.6″W")
+        self.assertEqual(res, -2.346)
+        self.assertEqual(deg2dms(res, "LN"), "2°20′45.6″W")
+        res = dms2deg("33°45′0.0″S")
+        self.assertEqual(res, -33.75)
+        self.assertEqual(deg2dms(res, "LA"), "33°45′0.0″S")
+        res = dms2deg("33°45′N")
+        self.assertEqual(res, 33.75)
+        self.assertEqual(deg2dms(res, "LN"), "33°45′0.0″E")
+        res = dms2deg("33°45.3564′N")
+        self.assertEqual(res, 33.75594)
+        self.assertEqual(deg2dms(res, "LA"), "33°45′21.384″N")
+        res = dms2deg("28°S")
+        self.assertEqual(res, -28.0)
+        self.assertEqual(deg2dms(res, "LA"), "28°0′0.0″S")
+        res = dms2deg("45.1234°")
+        self.assertEqual(res, 45.1234)
+        with self.assertRaises(ValueError) as context:
+            res = dms2deg("51°°20′45.6″")
+        with self.assertRaises(ValueError) as context:
+            res = dms2deg("51°20′45.6″Z")
+        with self.assertRaises(ValueError) as context:
+            res = dms2deg("51°20′45.6″34.25`N")
+        with self.assertRaises(ValueError) as context:
+            res = dms2deg("xx°yy′zz.6″N")
 
     def testDate2UTC(self):
         res = date2utc("")

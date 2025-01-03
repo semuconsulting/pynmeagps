@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.44
+
+ENHANCEMENTS:
+
+1. dms2deg helper method added to convert d.m.s or d.m to d.dd format.
+
 ### RELEASE 1.0.43
 
 ENHANCEMENTS:
