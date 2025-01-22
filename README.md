@@ -52,9 +52,7 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 [![PyPI version](https://img.shields.io/pypi/v/pynmeagps.svg?style=flat)](https://pypi.org/project/pynmeagps/)
 ![PyPI downloads](https://img.shields.io/pypi/dm/pynmeagps.svg?style=flat)
 
-`pynmeagps` is compatible with Python 3.9 - 3.13 and has no third-party library dependencies.
-
-In the following, `python3` & `pip` refer to the Python 3 executables. You may need to substitute `python` for `python3`, depending on your particular environment (*on Windows it's generally `python`*).
+`pynmeagps` is compatible with Python 3.9 - 3.13. In the following, `python3` & `pip` refer to the Python 3 executables. You may need to substitute `python` for `python3`, depending on your particular environment (*on Windows it's generally `python`*).
 
 The recommended way to install the latest version of `pynmeagps` is with [pip](http://pypi.python.org/pypi/pip/):
 
