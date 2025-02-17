@@ -175,7 +175,7 @@ class StaticTest(unittest.TestCase):
         res = dms2deg("2°20′45.6″W")
         self.assertEqual(res, -2.346)
         self.assertEqual(deg2dms(res, "LN"), "2°20′45.6″W")
-        res = dms2deg("33°45′0.0″S")
+        res = dms2deg("33° 45′ 0.0″S")
         self.assertEqual(res, -33.75)
         self.assertEqual(deg2dms(res, "LA"), "33°45′0.0″S")
         res = dms2deg("33°45′N")

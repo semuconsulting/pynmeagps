@@ -368,6 +368,7 @@ def dms2deg(
     :raises: ValueError if invalid dms string format
     """
 
+    dmsstr = dmsstr.replace(" ", "")
     if (
         re.match(
             r"^([\d.]+[^\d.]{1}){1}([\d.]+[^\d.]{1})?([\d.]+[^\d.]{1})?[NSEW]?$", dmsstr
