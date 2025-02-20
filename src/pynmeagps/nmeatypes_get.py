@@ -756,7 +756,7 @@ NMEA_PAYLOADS_GET = {
         "status": CH,
     },
     "NAK": {
-        "talker": ST,
+        "talkerid": ST,
         "formatter": ST,
         "identifier": ST,
         "reason": ST,
