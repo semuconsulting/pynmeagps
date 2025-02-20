@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.45
+
+FIXES:
+
+1. Fix NAK message talker attribute name - fixes #71
+
 ### RELEASE 1.0.44
 
 ENHANCEMENTS:
