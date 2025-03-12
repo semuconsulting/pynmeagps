@@ -944,4 +944,91 @@ NMEA_PAYLOADS_GET_PROP = {
         "pitch": DE,  # degree
         "yaw": DE,  # degree heading
     },
+    # ***************************************************************
+    # Sepentrio X5 Proprietary message types
+    # https://www.septentrio.com/en/products/gnss-receivers/gnss-receiver-modules/mosaic-x5#resources
+    # ***************************************************************
+    "SSNHRP": {
+        "msgId": ST,  # "HRP"
+        "utc": TM,
+        "date": DT,
+        "hdg": DE,  # degrees True
+        "roll": DE,
+        "pitch": DE,
+        "hdgstd": DE,
+        "rollstd": DE,
+        "pitchstd": DE,
+        "sip": IN,
+        "attmode": CH,
+        "magvar": DE,
+        "magvardir": LND,
+    },
+    "SSNRBD": {
+        "msgId": ST,  # "RBD"
+        "utc": TM,
+        "date": DT,
+        "azi": DE,
+        "ele": DE,
+        "sip": IN,
+        "quality": CH,
+        "basemode": CH,
+        "corrage": DE,
+        "roverserial": ST,
+        "baseid": ST,
+    },
+    "SSNRBP": {
+        "msgId": ST,  # "RBP"
+        "utc": TM,
+        "date": DT,
+        "baseN": DE,  # meters
+        "baseE": DE,
+        "baseU": DE,
+        "sip": IN,
+        "quality": CH,
+        "basemode": CH,
+        "corrage": DE,
+        "roverserial": ST,
+        "baseid": ST,
+    },
+    "SSNRBV": {
+        "msgId": ST,  # "RBV"
+        "utc": TM,
+        "date": DT,
+        "baserocN": DE,
+        "baserocE": DE,
+        "baserocU": DE,
+        "sip": IN,
+        "quality": CH,
+        "basemode": CH,
+        "corrage": DE,
+        "roverserial": ST,
+        "baseid": ST,
+    },
+    "SSNSNC": {
+        "msgId": ST,  # "SNC"
+        # "[",
+        "rev": CH,
+        "tim": IN,  # milliseconds
+        "week": IN,
+        "group": (
+            "None",
+            {
+                # "[",
+                "cdidx": ST,
+                "status": ST,
+                "errcode": ST,
+                "info": ST,
+                # "]",
+            },
+        ),
+        # "]",
+    },
+    "SSNTFM": {
+        "msgId": ST,  # "TFM"
+        "utc": TM,
+        "heightind": ST,
+        "usage2122": ST,
+        "usage2324": ST,
+        "usage252627": ST,
+    },
 }

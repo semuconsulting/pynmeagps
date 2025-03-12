@@ -529,6 +529,24 @@ class StreamTest(unittest.TestCase):
                     i += 1
         self.assertEqual(i, 9)
 
+    def testNMEASEPX5GET(self):  # test proprietary Sepentrio X5 GET messages
+        EXPECTED_RESULTS = (
+            "<NMEA(PSSNHRP, msgId=HRP, utc=10:47:51, date=2024-03-23, hdg=23.455, roll=1.954, pitch=0.0125, hdgstd=0.123, rollstd=0.0234, pitchstd=0.03765, sip=11, attmode=0, magvar=4.56453, magvardir=W)>",
+            "<NMEA(PSSNTFM, msgId=TFM, utc=10:47:51, heightind=2, usage2122=1021, usage2324=1023, usage252627=1025)>",
+            "<NMEA(PSSNSNC, msgId=SNC, rev=0, tim=379359000, week=1840, cdidx_01=1, status_01=2, errcode_01=0, info_01=0)>",
+            "<NMEA(PSSNSNC, msgId=SNC, rev=0, tim=379359123, week=1841, cdidx_01=1, status_01=2, errcode_01=0, info_01=0, cdidx_02=2, status_02=3, errcode_02=0, info_02=0)>",
+        )
+        i = 0
+        raw = 0
+        with open(os.path.join(DIRNAME, "sepentriox5_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, 4)
+
     def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
         EXPECTED_ERROR = "Unknown protocol header b'$&'."
         with self.assertRaises(NMEAParseError) as context:

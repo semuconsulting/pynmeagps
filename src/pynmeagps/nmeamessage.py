@@ -224,6 +224,11 @@ class NMEAMessage:
         try:
             # all attribute values have been provided
             if "payload" in kwargs:
+                # remove group delimiters in proprietary PSSNSNC message
+                if self.identity == "PSSNSNC":
+                    self._payload[pindex] = (
+                        self._payload[pindex].replace("[", "").replace("]", "")
+                    )
                 val = self._payload[pindex]
                 val = self.str2val(val, att)
             # some attribute values have been provided,
