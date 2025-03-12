@@ -414,6 +414,15 @@ NMEA_MSGIDS_PROP = {
     # ***************************************************************
     "MGNWPL": "Waypoint Location",
     # ***************************************************************
+    # Sepentrio X5 Proprietary message types
+    # ***************************************************************
+    "SSNHRP": "Heading, Roll, Pitch",
+    "SSNRBD": "Rover Base Direction",
+    "SSNRBP": "Rover Base Position",
+    "SSNRBV": "Rover Base Velocity",
+    "SSNSNC": "NTRIP Client Status",
+    "SSNTFM": "Used RTCM Coordinate Transformation Messages",
+    # ***************************************************************
     # U-BLOX Proprietary message types
     # ***************************************************************
     "UBX00": "PUBX-POSITION Lat/Long Position Data",
@@ -503,7 +512,7 @@ Payload definitions for proprietary GET messages are defined in
 in `NMEA_PAYLOADS_SET` and `NMEA_PAYLOADS_POLL`.
 """
 
-NMEA_PREFIX_PROP = ("FEC", "UBX", "TNL", "ASHR", "GPPADV")
+NMEA_PREFIX_PROP = ("ASHR", "GPPADV", "FEC", "SSN", "TNL", "UBX")
 """
 Proprietary NMEA Message Prefixes where `msgId` is part of payload.
 
