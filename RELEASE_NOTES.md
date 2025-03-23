@@ -4,7 +4,7 @@
 
 ENHANCEMENTS:
 
-1. Add support for proprietary Sepentrio X5 NMEA sentences.
+1. Add support for proprietary Septentrio X5 NMEA sentences.
 
 ### RELEASE 1.0.45
 

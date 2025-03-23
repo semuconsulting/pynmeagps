@@ -1,5 +1,5 @@
 """
-NMEA Protocol Proprietary Output payload definitions
+NMEA Protocol Proprietary Output (GET) payload definitions
 
 THESE ARE THE PAYLOAD DEFINITIONS FOR PROPRIETARY _GET_ MESSAGES _FROM_
 THE RECEIVER (e.g. Periodic Navigation Data; Poll Responses; Info messages).
@@ -27,7 +27,23 @@ has been collated from public domain sources.
 :author: semuadmin
 """
 
-from pynmeagps.nmeatypes_core import CH, DE, DM, DT, HX, IN, LA, LAD, LN, LND, ST, TM
+# pylint: disable=too-many-lines, duplicate-code
+
+from pynmeagps.nmeatypes_core import (
+    CH,
+    DE,
+    DM,
+    DT,
+    HX,
+    IN,
+    LA,
+    LAD,
+    LN,
+    LND,
+    QS,
+    ST,
+    TM,
+)
 
 NMEA_PAYLOADS_GET_PROP = {
     # *********************************************
@@ -945,7 +961,265 @@ NMEA_PAYLOADS_GET_PROP = {
         "yaw": DE,  # degree heading
     },
     # ***************************************************************
-    # Sepentrio X5 Proprietary message types
+    # Quectel LG290P Proprietary message types
+    # https://quectel.com/content/uploads/2024/09/Quectel_LG290P03_GNSS_Protocol_Specification_V1.0.pdf
+    #
+    # status attribute must be set to:
+    # 'R' for POLL messages (queries)
+    # 'W' for SET messages (commands)
+    # 'OK' for GET acknowledgements (ACK)
+    # 'ERROR' for GET errors (NAK)
+    # ***************************************************************
+    "QTMACK": {
+        "status": QS,  # OK
+    },
+    "QTMNAK": {
+        "status": QS,  # ERROR
+        "errcode": IN,  # 1 = invalid parms, 2 = failed exec, 3 = unsupported
+    },
+    "QTMCFGCNST": {
+        "status": QS,
+        "gps": IN,
+        "glonass": IN,
+        "galileo": IN,
+        "beidou": IN,
+        "qzss": IN,
+        "navic": IN,
+    },
+    "QTMCFGFIXRATE": {
+        "status": QS,
+        "fixinterval": IN,
+    },
+    "QTMCFGGEOFENCE": {
+        "status": QS,
+        "index": IN,
+        "geofencemode": IN,
+        "reserved": IN,
+        "shape": IN,
+        "lat0": DE,
+        "lon0": DE,
+        "radiuslat1": DE,  # use for radius or lat1
+        "lon1": DE,
+        "lat2": DE,
+        "lon2": DE,
+        "lat3": DE,
+        "lon3": DE,
+    },
+    "QTMCFGMSGRATE": {
+        "status": QS,
+        "msgname": ST,
+        "rate": IN,
+        "msgver": IN,  # or offset
+    },
+    "QTMCFGNMEADP": {
+        "status": QS,
+        "utcdp": IN,
+        "posdp": IN,
+        "altdp": IN,
+        "dopdp": IN,
+        "spddp": IN,
+        "cogdp": IN,
+    },
+    "QTMCFGODO": {
+        "status": QS,
+        "state": IN,  # 0 disabled, 1 enabled
+        "initdist": DE,
+    },
+    "QTMCFGPPS": {
+        "status": QS,
+        "index": IN,
+        "enable": IN,
+        "duration": IN,
+        "ppsmode": IN,
+        "polarity": IN,
+        "reserved": IN,
+    },
+    "QTMCFGPROT": {
+        "status": QS,
+        "porttype": IN,
+        "portid": IN,
+        "inputprot": HX,
+        "outputprot": HX,
+    },
+    "QTMCFGRCVRMODE": {
+        "status": QS,
+        "rcvrmode": IN,  # 0 unknown, 1 rover, 2 base
+    },
+    "QTMCFGRSID": {
+        "status": QS,
+        "rsid": IN,
+    },
+    "QTMCFGRTCM": {
+        "status": QS,
+        "msmtype": IN,
+        "msmmode": IN,
+        "msmelevthd": DE,
+        "reserved1": IN,
+        "reserved2": IN,
+        "ephmode": IN,
+        "ephinterval": IN,
+    },
+    "QTMCFGRTK": {
+        "status": QS,
+        "diffmode": IN,  # 0 disable, 1 auto, 2 RTD only
+        "relmode": IN,  # 1 absolute, 2 relative
+    },
+    "QTMCFGSAT": {
+        "status": QS,
+        "systemid": IN,
+        "signalid": HX,
+        "masklow": HX,
+        "maskhigh": HX,
+    },
+    "QTMCFGSIGNAL": {
+        "status": QS,
+        "gpssig": HX,  # default 0x07
+        "glonasssig": HX,  # default 0x03
+        "galileosig": HX,  # default 0x0F
+        "beidousig": HX,  # default 0x3F
+        "qzsssig": HX,  # default 0x07
+        "navicsig": HX,  # default 0x01
+    },
+    "QTMCFGSVIN": {
+        "status": QS,
+        "svinmode": IN,
+        "cfgcnt": IN,
+        "acclimit": DE,
+        "ecefx": DE,
+        "ecefy": DE,
+        "ecefz": DE,
+    },
+    "QTMCFGUART": {
+        "status": QS,
+        "portid": IN,
+        "baudrate": IN,
+        "databit": IN,
+        "parity": IN,
+        "stopbit": IN,
+        "flowctrl": IN,
+    },
+    "QTMDEBUGON": {"status": ST},
+    "QTMDEBUGOFF": {"status": ST},
+    "QTMDOP": {
+        "msgver": IN,  # always 1 for this version
+        "tow": IN,
+        "gdop": DE,
+        "pdop": DE,
+        "tdop": DE,
+        "vdop": DE,
+        "hdop": DE,
+        "ndop": DE,
+        "edop": DE,
+    },
+    "QTMEPE": {
+        "msgver": IN,  # always 2 for this version
+        "epenorth": DE,
+        "epeeast": DE,
+        "epedown": DE,
+        "epe2d": DE,
+        "epe3d": DE,
+    },
+    "QTMGEOFENCESTATUS": {"msgver": IN, "time": TM, "group": (4, {"staten": IN})},
+    "QTMGNSSSTART": {"status": ST},
+    "QTMGNSSSTOP": {"status": ST},
+    "QTMODO": {
+        "msgver": IN,  # always 1 for this version
+        "time": TM,
+        "state": IN,  # 0 disabled, 1 enabled
+        "dist": DE,
+    },
+    "QTMPL": {
+        "msgver": IN,  # always 1 for this version
+        "tow": IN,
+        "pul": DE,
+        "reserved1": IN,
+        "reserved2": IN,
+        "plposn": DE,
+        "plpose": DE,
+        "plposd": DE,
+        "plveln": DE,
+        "plvele": DE,
+        "plveld": DE,
+        "reserved3": IN,
+        "reserved4": IN,
+        "pltime": IN,
+    },
+    "QTMPVT": {
+        "msgver": IN,  # always 1 for this version
+        "tow": IN,
+        "date": ST,  # yyyymmdd
+        "time": TM,
+        "reserved": IN,
+        "fixtype": IN,
+        "numsv": IN,
+        "leaps": IN,
+        "lat": DE,
+        "lon": DE,
+        "alt": DE,
+        "sep": DE,
+        "veln": DE,
+        "vele": DE,
+        "veld": DE,
+        "spd": DE,
+        "hdg": DE,
+        "hdop": DE,
+        "pdop": DE,
+    },
+    "QTMRESETODO": {"status": ST},
+    "QTMRESTOREPAR": {"status": ST},
+    "QTMSAVEPAR": {"status": ST},
+    "QTMSVINSTATUS": {
+        "msgver": IN,  # always 1 for this version
+        "tow": IN,
+        "valid": IN,
+        "reserved0": IN,
+        "reserved1": IN,
+        "obs": IN,
+        "cfgdur": IN,
+        "meanx": DE,
+        "meany": DE,
+        "meanz": DE,
+        "meanacc": DE,
+    },
+    "QTMTXT": {
+        "msgver": IN,  # always 1 for this version
+        "totalsennum": IN,
+        "sennum": IN,
+        "textid": IN,
+        "text": ST,
+    },
+    "QTMUNIQID": {
+        "status": QS,
+        "length": IN,
+        "ID": HX,
+    },
+    "QTMVEL": {
+        "msgver": IN,  # always 1 for this version
+        "time": TM,
+        "veln": DE,
+        "vele": DE,
+        "veld": DE,
+        "gndspd": DE,
+        "spd": DE,
+        "hdg": DE,
+        "gndspdacc": DE,
+        "spdacc": DE,
+        "hdgacc": DE,
+    },
+    "QTMVER": {
+        "msgver": IN,  # always 1 for this version
+        "vername": ST,
+        "verstr": ST,
+        "builddate": ST,  # yyyy/mm/dd
+        "buildtime": ST,  # hh:mm:ss
+    },
+    "QTMVERNO": {
+        "verstr": ST,
+        "builddate": ST,  # yyyy/mm/dd
+        "buildtime": ST,  # hh:mm:ss
+    },
+    # ***************************************************************
+    # Septentrio X5 Proprietary message types
     # https://www.septentrio.com/en/products/gnss-receivers/gnss-receiver-modules/mosaic-x5#resources
     # ***************************************************************
     "SSNHRP": {
@@ -1015,7 +1289,7 @@ NMEA_PAYLOADS_GET_PROP = {
             {
                 # "[",
                 "cdidx": ST,
-                "status": ST,
+                "status": QS,
                 "errcode": ST,
                 "info": ST,
                 # "]",
