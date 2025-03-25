@@ -33,7 +33,7 @@ from time import sleep
 
 from serial import Serial
 
-from pynmeagps import POLL, SET, NMEAMessage, NMEAReader
+from pynmeagps import POLL, SET, NMEAMessage, NMEAReader, hex2str
 
 # standard NMEA messages which can be set using PQTMCFGMSGRATE
 # NB don't need msgver with these message types
@@ -60,8 +60,26 @@ LG290P_PROPRIETARY_MESSAGES = [
 ]
 
 
+def convert2preset(desc: str, msg: NMEAMessage) -> str:
+    """
+    Convert NMEAMessage to format suitable for adding to user-defined
+    preset list `nmeapresets_l` in PyGPSClient *.json configuration files.
+
+    The format is:
+    "<description>; <talker>; <msgID>; <msgmode>; <payload as comma separated list>"
+
+    e.g. "Configure Signals; P; QTMCFGSIGNAL; 1; W,7,3,F,3F,7,1"
+
+    :param str desc: preset description
+    :param NMEAMessage msg: message
+    :return: preset string
+    :rtype: str
+    """
+
+    return f"{desc}; {msg.talker}; {msg.msgID}; {msg.msgmode}; {','.join(msg.payload)}"
+
+
 def io_data(
-    stream: object,
     nmr: NMEAReader,
     readqueue: Queue,
     sendqueue: Queue,
@@ -78,7 +96,6 @@ def io_data(
 
     while not stop.is_set():
         try:
-            # if stream.in_waiting:
             (raw_data, parsed_data) = nmr.read()
             if parsed_data:
                 readqueue.put((raw_data, parsed_data))
@@ -138,7 +155,6 @@ def main(**kwargs):
         io_thread = Thread(
             target=io_data,
             args=(
-                serial_stream,
                 nmeareader,
                 read_queue,
                 send_queue,
@@ -161,6 +177,15 @@ def main(**kwargs):
         try:
             # COMMENT/UNCOMMMENT LG290P COMMANDS (SET) OR QUERIES (POLL) HERE...
 
+            # *******************************************************************
+            # Refer to testConstructors_QUECTEL() in tests\test_quectel.py
+            # for a complete set of example LG290P message constructors
+            # *******************************************************************
+
+            # query version number
+            msg = NMEAMessage("P", "QTMVERNO", POLL)
+            send(send_queue, msg)
+
             # do factory reset (NB only takes effect after restart)
             # msg = NMEAMessage("P", "QTMRESTOREPAR", SET)
             # send(send_queue, msg)
@@ -181,7 +206,7 @@ def main(**kwargs):
             msg = NMEAMessage("P", "QTMCFGRCVRMODE", POLL)
             send(send_queue, msg)
 
-            # set fix rate to 1Hz (TODO GET OK RESPONSE BUT DOESN'T APPEAR TO HAVE ANY EFFECT?)
+            # set fix rate to 1Hz (NB requires hot restart PQTMHOT to take effect)
             msg = NMEAMessage("P", "QTMCFGFIXRATE", SET, fixinterval=1000)
             send(send_queue, msg)
 
@@ -205,13 +230,28 @@ def main(**kwargs):
             # msg = NMEAMessage("P", "QTMWARM", SET)
             # send(send_queue, msg)
 
-            # do hot start (required after setting fix rate)
-            msg = NMEAMessage("P", "QTMHOT", SET)
-            send(send_queue, msg, 1)
+            # set satellite mask (see also PQTMCFGCNST)
+            NMEAMessage(
+                "P",
+                "QTMCFGSAT",
+                SET,
+                systemid=1,
+                signalid=1,
+                masklow=hex2str(0xFFFFFFFF, 8),  # hex as padded string
+            ),
 
-            # query version number
-            msg = NMEAMessage("P", "QTMVERNO", POLL)
-            send(send_queue, msg)
+            # set signal masks
+            NMEAMessage(
+                "P",
+                "QTMCFGSIGNAL",
+                SET,
+                gpssig=hex2str(0x07),  # hex as unpadded string
+                glonasssig=hex2str(0x03),
+                galileosig=hex2str(0x0F),
+                beidousig=hex2str(0x3F),
+                qzsssig=hex2str(0x07),
+                navicsig=hex2str(0x01),
+            ),
 
             # disable all standard NMEA messages
             # for msgname in LG290P_STANDARD_MESSAGES:
@@ -241,6 +281,10 @@ def main(**kwargs):
             # for systemid in range(1, 7):
             #     msg = NMEAMessage("P", "QTMCFGSAT", POLL, systemid=systemid, signalid=1)
             #     send(send_queue, msg)
+
+            # do hot start (required after setting fix rate or satellite config)
+            msg = NMEAMessage("P", "QTMHOT", SET)
+            send(send_queue, msg, 1)
 
             while not stop_event.is_set():  # loop until user presses Ctrl-C
                 sleep(1)

@@ -332,23 +332,24 @@ class NMEAMessage:
         :rtype: dict
         """
 
+        if key == "QTMCFGGEOFENCE":
+            key = self._get_dict_qtmcfggeofence(key, self._mode, **kwargs)
+        elif key == "QTMCFGMSGRATE":
+            key = self._get_dict_qtmcfgmsgrate(key, self._mode, **kwargs)
+        elif key == "QTMCFGPPS":
+            key = self._get_dict_qtmcfgpps(key, self._mode, **kwargs)
+        elif key == "QTMCFGSAT":
+            key = self._get_dict_qtmcfgsat(key, self._mode, **kwargs)
+        elif key == "QTMCFGUART":
+            key = self._get_dict_qtmcfguart(key, self._mode, **kwargs)
+        elif key[0:3] == "QTM":
+            key = self._get_dict_qtmacknak(key, self._mode)
+
         if self._mode == nmt.POLL:
-            if key == "QTMCFGUART":
-                key = self._get_dict_qtmcfguart(key, self._mode, **kwargs)
-            elif key == "QTMCFGMSGRATE":
-                key = self._get_dict_qtmcfgmsgrate(key, self._mode, **kwargs)
-            dic = nmpp.NMEA_PAYLOADS_POLL_PROP[key]
-        elif self._mode == nmt.SET:
-            if key == "QTMCFGUART":
-                key = self._get_dict_qtmcfguart(key, self._mode, **kwargs)
-            elif key == "QTMCFGMSGRATE":
-                key = self._get_dict_qtmcfgmsgrate(key, self._mode, **kwargs)
-            dic = nmsp.NMEA_PAYLOADS_SET_PROP[key]
-        else:
-            if key[0:3] == "QTM":
-                key = self._get_dict_qtmacknak(key)
-            dic = nmgp.NMEA_PAYLOADS_GET_PROP[key]
-        return dic
+            return nmpp.NMEA_PAYLOADS_POLL_PROP[key]
+        if self._mode == nmt.SET:
+            return nmsp.NMEA_PAYLOADS_SET_PROP[key]
+        return nmgp.NMEA_PAYLOADS_GET_PROP[key]
 
     def _get_dict_qtmcfguart(self, key: str, mode: int, **kwargs) -> str:
         """
@@ -400,7 +401,75 @@ class NMEAMessage:
                 key += "_VER"
         return key
 
-    def _get_dict_qtmacknak(self, key: str) -> str:
+    def _get_dict_qtmcfgpps(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCFGPPS
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = "payload" in kwargs
+        if mode == nmt.SET:
+            if (py and lp == 3) or (not py and kwargs.get("enable", 1) == 0):
+                key += "_DIS"
+        return key
+
+    def _get_dict_qtmcfgsat(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCFGSAT
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = "payload" in kwargs
+        mh = "maskhigh" in kwargs
+        if mode == nmt.SET:
+            if (py and lp == 5) or (not py and mh):
+                key += "_MASKHIGH"
+        if mode == nmt.GET:
+            if (py and lp == 5) or (not py and mh):
+                key += "_MASKHIGH"
+            elif lp in (1, 2):
+                key = self._get_dict_qtmacknak(key, mode)
+        return key
+
+    def _get_dict_qtmcfggeofence(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCFGGEOFENCE
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = "payload" in kwargs
+        l1 = "lon1" in kwargs
+        if mode == nmt.SET:
+            if (py and lp == 13) or (not py and l1):
+                key += "_POLY"
+            elif (py and lp == 3) or (not py and kwargs.get("geofencemode", 1) == 0):
+                key += "_DIS"
+        if mode == nmt.GET:
+            if (py and lp == 13) or (not py and l1):
+                key += "_POLY"
+            elif lp in (1, 2):
+                key = self._get_dict_qtmacknak(key, mode)
+        return key
+
+    def _get_dict_qtmacknak(self, key: str, mode: int) -> str:
         """
         Get payload dictionary for proprietary Quectel command
         response variants.
@@ -411,10 +480,11 @@ class NMEAMessage:
         """
 
         lp = len(self._payload)
-        if lp == 1 and self._payload[0] == "OK":
-            key = "QTMACK"
-        elif lp == 2 and self._payload[0] == "ERROR":
-            key = "QTMNAK"
+        if mode == nmt.GET:
+            if lp == 1 and self._payload[0] == "OK":
+                key = "QTMACK"
+            elif lp == 2 and self._payload[0] == "ERROR":
+                key = "QTMNAK"
         return key
 
     def _calc_num_repeats(

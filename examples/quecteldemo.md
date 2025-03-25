@@ -1,7 +1,7 @@
 PYNMEAGPS QUECTEL LG290P SUPPORT - NOTES
 ========================================
 
-pynmeagps branch [quectel-lg290p-support](https://github.com/semuconsulting/pynmeagps/tree/quectel-lg290p-support) introduces _provisional_ support for the Quectel LG290P quad-band GNSS receiver. 
+pynmeagps branch [RC 1.0.47](https://github.com/semuconsulting/pynmeagps/tree/RC-1.0.47) introduces support for the Quectel LG290P quad-band GNSS receiver. 
 
 It aims to support the complete set of proprietary NMEA 0183 message types for LG290P output (GET), query (POLL) and command (SET), as documented in the
 [Quectel_LG290P03_GNSS_Protocol_Specification_V1.0](https://quectel.com/content/uploads/2024/09/Quectel_LG290P03_GNSS_Protocol_Specification_V1.0.pdf).
@@ -11,7 +11,7 @@ It aims to support the complete set of proprietary NMEA 0183 message types for L
 Assuming you have Python and pip on your platform, you can install this branch as follows:
 
 ```shell
-python3 -m pip install git+https://github.com/semuconsulting/pynmeagps.git@quectel-lg290p-support
+python3 -m pip install git+https://github.com/semuconsulting/pynmeagps.git@RC-1.0.47
 ```
 
 Refer to the [README](https://github.com/semuconsulting/pynmeagps) and [pynmeagps API documentation](https://www.semuconsulting.com/pynmeagps/) for implementation details, but here's a quick summary:
@@ -56,8 +56,13 @@ Refer to the [README](https://github.com/semuconsulting/pynmeagps) and [pynmeagp
     print(msg)
     print(msg.serialize())
 
+    # perform hot restart
+    msg = NMEAMessage("P", "QTMHOT", SET)
+    print(msg)
+    print(msg.serialize())
+
     # send serialized message to receiver - amend port and baudrate as required
-    stream = Serial("\dev\ttyACM1", 115200, timeout=3)
+    stream = Serial("\dev\ttyAMA0", 460800, timeout=3)
     stream.write(msg.serialize())
     ```
 
@@ -69,8 +74,16 @@ Refer to the [README](https://github.com/semuconsulting/pynmeagps) and [pynmeagp
     b'$PQTMCFGUART,W,115200*18\r\n'
     <NMEA(PQTMCFGUART, status=W, portid=2, baudrate=115200, databit=8, parity=0, stopbit=1, flowctrl=0)>
     b'$PQTMCFGUART,W,2,115200,8,0,1,0*0F\r\n'
+    <NMEA(PQTMHOT)>
+    b'$PQTMHOT*4B\r\n'
     ```
 
-7. There is a basic demo script [quecteldemo.py](https://github.com/semuconsulting/pynmeagps/blob/quectel-lg290p-support/examples/quecteldemo.py) in the \examples folder which illustrates how to send commands or queries to the receiver while simultaneously parsing the output - this should allow you to monitor the effects of any configuration changes or queries in real time. **NB** certain config changes may require an explicit reconnection or even a power cycle (e.g. baud rate change or factory reset) - refer to the Quectel documentation for details.
+7. **NB** Some commands (e.g. `PQTMCFGFIXRATE` and `PQTMCFGSAT`) require a hot restart (command `PQTMHOT`) to take effect.
 
-8. The unit test cases used by pynmeagps's automated build process can be found in [test_quectel.py](https://github.com/semuconsulting/pynmeagps/blob/quectel-lg290p-support/tests/test_quectel.py)
+8. There is a basic demo script [quecteldemo.py](https://github.com/semuconsulting/pynmeagps/blob/RC-1.0.47/examples/quecteldemo.py) in the \examples folder which illustrates how to send commands or queries to the receiver while simultaneously parsing the output - this should allow you to monitor the effects of any configuration changes or queries in real time. **NB** certain config changes may require a restart or even a power cycle (e.g. baud rate change or factory reset) - refer to the Quectel documentation for details.
+
+9. **NB** The Quectel LG290P incorporates 3 UART ports, which typically appear on Linux platforms as `/dev/ttyAMA0`, `/dev/ttyAMA2` and `/dev/ttyAMA3`. **NB** These ports may _not_ be automatically detected by the standard `serial.tools.list_ports.comports()` Python function (_as used by PyGPSClient_) - it may be necessary to add them as 'user-defined' ports. The factory default baud rate for all 3 UART ports is 460800.
+
+10. The factory default fix rate (navigation solution interval) is 100ms (i.e. 10 Hz) in Rover mode and 1000ms (i.e. 1 Hz) in Base mode.
+
+11. The unit test cases used by pynmeagps's automated build process can be found in [test_quectel.py](https://github.com/semuconsulting/pynmeagps/blob/RC-1.0.47/tests/test_quectel.py)

@@ -999,6 +999,21 @@ NMEA_PAYLOADS_GET_PROP = {
         "lat0": DE,
         "lon0": DE,
         "radiuslat1": DE,  # use for radius or lat1
+    },
+    "QTMCFGGEOFENCE_DIS": {
+        "status": QS,
+        "index": IN,
+        "geofencemode": IN,  # should be 0
+    },
+    "QTMCFGGEOFENCE_POLY": {
+        "status": QS,
+        "index": IN,
+        "geofencemode": IN,
+        "reserved": IN,
+        "shape": IN,
+        "lat0": DE,
+        "lon0": DE,
+        "radiuslat1": DE,  # use for radius or lat1
         "lon1": DE,
         "lat2": DE,
         "lon2": DE,
@@ -1038,8 +1053,8 @@ NMEA_PAYLOADS_GET_PROP = {
         "status": QS,
         "porttype": IN,
         "portid": IN,
-        "inputprot": HX,
-        "outputprot": HX,
+        "inputprot": ST,  # 8 hex digits
+        "outputprot": ST,  # 8 hex digits
     },
     "QTMCFGRCVRMODE": {
         "status": QS,
@@ -1053,9 +1068,9 @@ NMEA_PAYLOADS_GET_PROP = {
         "status": QS,
         "msmtype": IN,
         "msmmode": IN,
-        "msmelevthd": DE,
-        "reserved1": IN,
-        "reserved2": IN,
+        "msmelevthd": IN,
+        "reserved1": ST,  # must be 07 with leading 0
+        "reserved2": ST,  # must be 06 with leading 0
         "ephmode": IN,
         "ephinterval": IN,
     },
@@ -1067,18 +1082,24 @@ NMEA_PAYLOADS_GET_PROP = {
     "QTMCFGSAT": {
         "status": QS,
         "systemid": IN,
-        "signalid": HX,
-        "masklow": HX,
-        "maskhigh": HX,
+        "signalid": ST,  # hex as string
+        "masklow": ST,  # hex as string
+    },
+    "QTMCFGSAT_MASKHIGH": {
+        "status": QS,
+        "systemid": IN,
+        "signalid": ST,  # hex as string
+        "masklow": ST,  # hex as string
+        "maskhigh": ST,  # hex as string
     },
     "QTMCFGSIGNAL": {
         "status": QS,
-        "gpssig": HX,  # default 0x07
-        "glonasssig": HX,  # default 0x03
-        "galileosig": HX,  # default 0x0F
-        "beidousig": HX,  # default 0x3F
-        "qzsssig": HX,  # default 0x07
-        "navicsig": HX,  # default 0x01
+        "gpssig": ST,  # hex as string, default 07
+        "glonasssig": ST,  # hex as string, default 03
+        "galileosig": ST,  # hex as string, default 0F
+        "beidousig": ST,  # hex as string, default 3F
+        "qzsssig": ST,  # hex as string, default 07
+        "navicsig": ST,  # hex as string, default 01
     },
     "QTMCFGSVIN": {
         "status": QS,

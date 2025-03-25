@@ -35,6 +35,7 @@ from pynmeagps.nmeahelpers import (
     dmm2ddd,
     dms2deg,
     ecef2llh,
+    hex2str,
     generate_checksum,
     get_gpswnotow,
     get_parts,
@@ -582,6 +583,14 @@ class StaticTest(unittest.TestCase):
         for i, dat in enumerate(dats):
             y, m, d = dat
             self.assertEqual(get_gpswnotow(datetime.datetime(y, m, d)), vals[i])
+
+    def testhex2str(self):
+        hex = 0x1234ABCD
+        self.assertEqual(hex2str(hex, 8), "1234ABCD")
+        hex = 0x123B
+        self.assertEqual(hex2str(hex, 8), "0000123B")
+        self.assertEqual(hex2str(hex, 6), "00123B")
+        self.assertEqual(hex2str(hex), "123B")
 
 
 if __name__ == "__main__":

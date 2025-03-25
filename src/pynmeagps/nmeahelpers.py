@@ -639,3 +639,18 @@ def get_gpswnotow(dat: datetime) -> tuple:
     wno = int((dat - GPSEPOCH0).days / 7)
     tow = ((dat.weekday() + 1) % 7) * 86400
     return wno, tow
+
+
+def hex2str(hex: int, padding: int = 0) -> str:
+    """
+    Convert hex integer to padded or unpadded string format,
+    as used by some proprietary NMEA message types.
+
+    :param int hex: hexadecimal integer
+    :param padding: no of padded digits (0)
+    :return: integer as string
+    :rtype: str
+    """
+
+    pad = f"{padding:02d}" if padding else ""
+    return f"{hex:{pad}x}".upper()
