@@ -68,10 +68,26 @@ pynmeagps.nmeatypes\_poll module
    :show-inheritance:
    :undoc-members:
 
+pynmeagps.nmeatypes\_poll\_prop module
+--------------------------------------
+
+.. automodule:: pynmeagps.nmeatypes_poll_prop
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 pynmeagps.nmeatypes\_set module
 -------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_set
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+pynmeagps.nmeatypes\_set\_prop module
+-------------------------------------
+
+.. automodule:: pynmeagps.nmeatypes_set_prop
    :members:
    :show-inheritance:
    :undoc-members:

@@ -47,8 +47,13 @@ def get_parts(message: object) -> tuple:
         if isinstance(message, bytes):
             message = message.decode("utf-8")
         content, cksum = message.strip("$\r\n").split("*", 1)
-        hdr, payload = content.split(",", 1)
-        payload = payload.split(",")
+        hdrpayload = content.split(",", 1)
+        if len(hdrpayload) == 1:  # no payload (e.g. stateless SET command)
+            hdr = content
+            payload = ""
+        else:
+            hdr, payload = content.split(",", 1)
+            payload = payload.split(",")
         if hdr[0:1] == "P":  # proprietary
             talker = "P"
             msgid = hdr[1:]
@@ -86,9 +91,9 @@ def generate_checksum(talker: str, msgID: str, payload: list) -> str:
     :rtype: str
     """
 
-    content = talker + msgID + ","
-    for i, s in enumerate(payload):
-        content += ("," if i else "") + s
+    content = talker + msgID
+    for field in payload:
+        content += f",{field}"
     return calc_checksum(content)
 
 
