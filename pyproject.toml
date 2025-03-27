@@ -8,7 +8,7 @@ dynamic = ["version"]
 authors = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 maintainers = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 description = "NMEA protocol parser and generator"
-license = "BSD-3-Clause-Clear"
+license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [

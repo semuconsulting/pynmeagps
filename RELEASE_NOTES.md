@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.48
+
+FIXES:
+
+1. Fix for Conda build issue (`license = { file = "LICENSE" }` deprecated in latest Python build but still mandated by Conda).
+1. No other functional changes.
+
 ### RELEASE 1.0.47
 
 ENHANCEMENTS:
