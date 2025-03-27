@@ -18,7 +18,7 @@ src/pynmeagps.egg*
 /.dbeaver
 /pynmeagps/__pycache__
 *.pyc
-/examples/temp*.py
+/examples/temp*.*
 /.pytest_cache/
 pylint_report.txt
 .venv

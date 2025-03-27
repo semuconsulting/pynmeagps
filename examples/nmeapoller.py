@@ -40,7 +40,6 @@ from pynmeagps import NMEA_MSGIDS, POLL, NMEAMessage, NMEAReader
 
 
 def io_data(
-    stream: object,
     nmr: NMEAReader,
     readqueue: Queue,
     sendqueue: Queue,
@@ -57,12 +56,11 @@ def io_data(
 
     while not stop.is_set():
         try:
-            if stream.in_waiting:
-                (raw_data, parsed_data) = nmr.read()
-                if parsed_data:
-                    readqueue.put((raw_data, parsed_data))
+            (raw_data, parsed_data) = nmr.read()
+            if parsed_data:
+                readqueue.put((raw_data, parsed_data))
 
-            if not sendqueue.empty():
+            while not sendqueue.empty():
                 data = sendqueue.get(False)
                 if data is not None:
                     nmr.datastream.write(data.serialize())
@@ -91,7 +89,7 @@ def main(**kwargs):
     Main routine.
     """
 
-    port = kwargs.get("serport", "/dev/ttyACM0")
+    port = kwargs.get("port", "/dev/ttyACM0")
     baudrate = int(kwargs.get("baudrate", 38400))
     timeout = float(kwargs.get("timeout", 3))
 
@@ -105,7 +103,6 @@ def main(**kwargs):
         io_thread = Thread(
             target=io_data,
             args=(
-                serial_stream,
                 nmeareader,
                 read_queue,
                 send_queue,

@@ -97,10 +97,11 @@ LA = "LA"  # Latitude value ddmm.mmmmm (ddmm.mmmmmmm in HP mode)
 LAD = "LAD"  # Latitude direction (N/S)
 LN = "LN"  # Longitude value dddmm.mmmmm (dddmm.mmmmmmm in HP mode)
 LND = "LND"  # Longitude direction (E/W)
+QS = "QS"  # Quectel status (R/W/OK/ERROR)
 ST = "ST"  # String
 TM = "TM"  # Time hhmmss.ss
 
-VALID_TYPES = (CH, DE, DM, DT, DTL, HX, IN, LA, LAD, LN, LND, ST, TM)
+VALID_TYPES = (CH, DE, DM, DT, DTL, HX, IN, LA, LAD, LN, LND, QS, ST, TM)
 
 # *****************************************
 # THESE ARE THE NMEA V4 PROTOCOL TALKER IDS
@@ -413,6 +414,48 @@ NMEA_MSGIDS_PROP = {
     # Magellan Proprietary message types
     # ***************************************************************
     "MGNWPL": "Waypoint Location",
+    # ***************************************************************
+    # Quectel Proprietary message types
+    # ***************************************************************
+    "QTMCFGCNST": "Sets/Gets Constellation Configuration",
+    "QTMCFGFIXRATE": "Sets/Gets Fix Interval",
+    "QTMCFGGEOFENCE": "Sets/Gets Geofence Feature",
+    "QTMCFGMSGRATE": "Sets/Gets Message Output Rate on Current Interface",
+    "QTMCFGNMEADP": "Sets/Gets NMEA Precision",
+    "QTMCFGODO": "Sets/Gets Odometer Feature",
+    "QTMCFGPPS": "Sets/Gets PPS (Pulse Per Second) Feature",
+    "QTMCFGPROT": "Sets/Gets I/O Protocol for Specified Port",
+    "QTMCFGRCVRMODE": "Sets/Gets Receiver Working Mode",  # Rover, Base
+    "QTMCFGRSID": "Sets/Gets Reference Station ID",
+    "QTMCFGRTCM": "Sets/Gets RTCM",
+    "QTMCFGRTK": "Sets/Gets RTK Mode",  # Absolute, Relative
+    "QTMCFGSAT": "Sets/Gets GNSS Satellite Mask",
+    "QTMCFGSIGNAL": "Sets/Gets GNSS Signal Mask",
+    "QTMCFGSVIN": "Sets/Gets Survey-In Feature",  # Survey-In or Fixed
+    "QTMCFGUART": "Configure UART Interface",
+    "QTMCOLD": "Cold Start",
+    "QTMDEBUGOFF": "Disable Debug Log Output",
+    "QTMDEBUGON": "Enable Debug Log Output",
+    "QTMDOP": "Outputs Dilution of Precision",
+    "QTMEPE": "Output Estimated Position Error",
+    "QTMGEOFENCESTATUS": "Outputs Geofence Status",
+    "QTMGNSSSTART": "Starts GNSS Engine",
+    "QTMGNSSSTOP": "Stops GNSS Engine",
+    "QTMHOT": "Hot Start",
+    "QTMODO": "Outputs Odometer Information",
+    "QTMPL": "Outputs Protection Level Information",
+    "QTMPVT": "Outputs PVT (GNSS) Result",  # Position, Velocity, Track
+    "QTMRESETODO": "Reset Odometer Distance",
+    "QTMRESTOREPAR": "Restore to Default Values after Restart",
+    "QTMSAVEPAR": "Save Configuration to Non-Volatile Memory",
+    "QTMSRR": "System Reset and Reboot",
+    "QTMSVINSTATUS": "Outputs Survey-In Status",
+    "QTMTXT": "Outputs Short Text Message",  # Longer messages use multiple messages
+    "QTMUNIQID": "Query Module Unique ID",
+    "QTMVEL": "Output Velocity Information",
+    "QTMVER": "Firmware Version",
+    "QTMVERNO": "Query Firmware Version",
+    "QTMWARM": "Warm Start",
     # ***************************************************************
     # Sepentrio X5 Proprietary message types
     # ***************************************************************

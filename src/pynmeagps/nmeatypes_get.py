@@ -1,5 +1,5 @@
 """
-NMEA Protocol Output payload definitions
+NMEA Protocol Output (GET) payload definitions
 
 THESE ARE THE PAYLOAD DEFINITIONS FOR _GET_ MESSAGES _FROM_ THE RECEIVER
 (e.g. Periodic Navigation Data; Poll Responses; Info messages).
@@ -26,6 +26,8 @@ has been collated from public domain sources.
 
 :author: semuadmin
 """
+
+# pylint: disable=too-many-lines, duplicate-code
 
 from pynmeagps.nmeatypes_core import CH, DE, DT, DTL, HX, IN, LA, LAD, LN, LND, ST, TM
 

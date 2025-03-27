@@ -8,7 +8,7 @@ dynamic = ["version"]
 authors = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 maintainers = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 description = "NMEA protocol parser and generator"
-license = { file = "LICENSE" }
+license = "BSD-3-Clause-Clear"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -27,7 +27,6 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "License :: OSI Approved :: BSD License",
     "Topic :: Utilities",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: GIS",

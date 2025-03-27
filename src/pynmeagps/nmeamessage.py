@@ -19,7 +19,9 @@ import pynmeagps.nmeatypes_core as nmt
 import pynmeagps.nmeatypes_get as nmg
 import pynmeagps.nmeatypes_get_prop as nmgp
 import pynmeagps.nmeatypes_poll as nmp
+import pynmeagps.nmeatypes_poll_prop as nmpp
 import pynmeagps.nmeatypes_set as nms
+import pynmeagps.nmeatypes_set_prop as nmsp
 from pynmeagps.nmeahelpers import (
     date2str,
     date2utc,
@@ -245,7 +247,7 @@ class NMEAMessage:
                     else:  # pragma: no cover
                         val = "N"
                 else:
-                    val = kwargs.get(keyr, self.nomval(att))
+                    val = kwargs.get(keyr, self.nomval(att, self.msgmode))
                 vals = self.val2str(val, att, self._hpnmeamode)
                 self._payload.append(vals)
 
@@ -285,6 +287,7 @@ class NMEAMessage:
         :rtype: dict
         """
 
+        dic = None
         try:
             key = self.msgID
             if key in nmt.NMEA_PREFIX_PROP:  # proprietary, first element is msgId
@@ -301,20 +304,188 @@ class NMEAMessage:
                         "include payload or msgId keyword arguments."
                     )
             key = key.upper()
-            if self._mode == nmt.POLL:
-                return nmp.NMEA_PAYLOADS_POLL[key]
-            if self._mode == nmt.SET:
-                return nms.NMEA_PAYLOADS_SET[key]
+
             if self._defsource == nmt.DEF_PROP:  # proprietary
-                return nmgp.NMEA_PAYLOADS_GET_PROP[key]
-            if self._defsource == nmt.DEF_USER:  # user defined
-                return self._userdefined[key]
-            return nmg.NMEA_PAYLOADS_GET[key]  # standard
-        except KeyError as err:
+                dic = self._get_dict_prop(key, **kwargs)
+            elif self._defsource == nmt.DEF_USER:  # user defined
+                dic = self._userdefined[key]
+            else:  # standard
+                if self._mode == nmt.POLL:
+                    dic = nmp.NMEA_PAYLOADS_POLL[key]
+                elif self._mode == nmt.SET:  # pragma: no cover
+                    dic = nms.NMEA_PAYLOADS_SET[key]
+                else:
+                    dic = nmg.NMEA_PAYLOADS_GET[key]
+        except KeyError as err:  # unknown msgid
             erm = f"Unknown msgID {key} msgmode {('GET', 'SET', 'POLL')[self._mode]}."
             if self._validate & nmt.VALMSGID:
                 raise nme.NMEAMessageError(erm) from err
-            return None  # message not yet implemented
+
+        return dic
+
+    def _get_dict_prop(self, key: str, **kwargs) -> dict:
+        """
+        Get payload dictionary for proprietary message types.
+
+        :param str key: msgid
+        :return: dictionary representing payload definition
+        :rtype: dict
+        """
+
+        if key == "QTMCFGGEOFENCE":
+            key = self._get_dict_qtmcfggeofence(key, self._mode, **kwargs)
+        elif key == "QTMCFGMSGRATE":
+            key = self._get_dict_qtmcfgmsgrate(key, self._mode, **kwargs)
+        elif key == "QTMCFGPPS":
+            key = self._get_dict_qtmcfgpps(key, self._mode, **kwargs)
+        elif key == "QTMCFGSAT":
+            key = self._get_dict_qtmcfgsat(key, self._mode, **kwargs)
+        elif key == "QTMCFGUART":
+            key = self._get_dict_qtmcfguart(key, self._mode, **kwargs)
+        elif key[0:3] == "QTM":
+            key = self._get_dict_qtmacknak(key, self._mode)
+
+        if self._mode == nmt.POLL:
+            return nmpp.NMEA_PAYLOADS_POLL_PROP[key]
+        if self._mode == nmt.SET:
+            return nmsp.NMEA_PAYLOADS_SET_PROP[key]
+        return nmgp.NMEA_PAYLOADS_GET_PROP[key]
+
+    def _get_dict_qtmcfguart(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCFGUART
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = "payload" in kwargs
+        pt = "portid" in kwargs
+        if mode == nmt.SET:
+            bd = "baudrate" in kwargs
+            db = "databit" in kwargs
+            if (py and lp == 2) or (not py and not pt and bd and not db):
+                key += "_CURRBAUD"
+            elif (py and lp == 3) or (not py and pt and bd and not db):
+                key += "_BAUD"
+            elif (py and lp == 6) or (not py and not pt and bd and db):
+                key += "_CURR"
+        elif mode == nmt.POLL:
+            if (py and lp == 1) or (not py and not pt):
+                key += "_CURR"
+        return key
+
+    def _get_dict_qtmcfgmsgrate(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCFGMSGRATE
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = "payload" in kwargs
+        mv = "msgver" in kwargs
+        if mode == nmt.SET:
+            if (py and lp == 4) or (not py and mv):
+                key += "_VER"
+        elif mode == nmt.POLL:
+            if (py and lp == 3) or (not py and mv):
+                key += "_VER"
+        return key
+
+    def _get_dict_qtmcfgpps(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCFGPPS
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = "payload" in kwargs
+        if mode == nmt.SET:
+            if (py and lp == 3) or (not py and kwargs.get("enable", 1) == 0):
+                key += "_DIS"
+        return key
+
+    def _get_dict_qtmcfgsat(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCFGSAT
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = "payload" in kwargs
+        mh = "maskhigh" in kwargs
+        if mode == nmt.SET:
+            if (py and lp == 5) or (not py and mh):
+                key += "_MASKHIGH"
+        if mode == nmt.GET:
+            if (py and lp == 5) or (not py and mh):
+                key += "_MASKHIGH"
+            elif lp in (1, 2):
+                key = self._get_dict_qtmacknak(key, mode)
+        return key
+
+    def _get_dict_qtmcfggeofence(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCFGGEOFENCE
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = "payload" in kwargs
+        l1 = "lon1" in kwargs
+        if mode == nmt.SET:
+            if (py and lp == 13) or (not py and l1):
+                key += "_POLY"
+            elif (py and lp == 3) or (not py and kwargs.get("geofencemode", 1) == 0):
+                key += "_DIS"
+        if mode == nmt.GET:
+            if (py and lp == 13) or (not py and l1):
+                key += "_POLY"
+            elif lp in (1, 2):
+                key = self._get_dict_qtmacknak(key, mode)
+        return key
+
+    def _get_dict_qtmacknak(self, key: str, mode: int) -> str:
+        """
+        Get payload dictionary for proprietary Quectel command
+        response variants.
+
+        :param str key: msgid
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        if mode == nmt.GET:
+            if lp == 1 and self._payload[0] == "OK":
+                key = "QTMACK"
+            elif lp == 2 and self._payload[0] == "ERROR":
+                key = "QTMNAK"
+        return key
 
     def _calc_num_repeats(
         self, attd: dict, payload: list, pindex: int, pindexend: int = 0
@@ -343,15 +514,12 @@ class NMEAMessage:
         """
 
         stg = f"<NMEA({self.identity}"
-        stg += ", "
         if self._defsource == nmt.DEF_UNKN:
-            stg += "NOMINAL, "
-        for i, att in enumerate(self.__dict__):
+            stg += ", NOMINAL"
+        for att in self.__dict__:
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
-                stg += att + "=" + str(val)
-                if i < len(self.__dict__) - 1:
-                    stg += ", "
+                stg += f", {att}={val}"
         stg += ")>"
 
         return stg
@@ -395,10 +563,10 @@ class NMEAMessage:
         :rtype: bytes
         """
 
-        output = "$" + self._talker + self._msgID + ","
-        for i, s in enumerate(self._payload):
-            output += ("," if i else "") + s
-        output += "*" + self._checksum + "\r\n"
+        output = f"${self._talker}{self._msgID}"
+        for att in self._payload:
+            output += "," + att
+        output += f"*{self._checksum}\r\n"
         return output.encode("utf-8")  # convert str to bytes
 
     @property
@@ -489,7 +657,7 @@ class NMEAMessage:
         """
 
         val = vals
-        if att in (nmt.CH, nmt.ST, nmt.LAD, nmt.LND):
+        if att in (nmt.CH, nmt.ST, nmt.LAD, nmt.LND, nmt.QS):
             pass
         elif att == nmt.HX:
             val = vals
@@ -524,7 +692,7 @@ class NMEAMessage:
 
         """
 
-        if att in (nmt.CH, nmt.ST, nmt.LAD, nmt.LND):
+        if att in (nmt.CH, nmt.ST, nmt.LAD, nmt.LND, nmt.QS):
             vals = str(val)
         elif att == nmt.HX:
             vals = str(val)
@@ -543,11 +711,12 @@ class NMEAMessage:
         return vals
 
     @staticmethod
-    def nomval(att: str) -> object:
+    def nomval(att: str, msgmode: int = nmt.GET) -> object:
         """
         Return nominal value for specified attribute type
 
         :param str att: attribute type e.g. 'DE'
+        :param int msgmode: message mode GET/SET/POLL
         :return: nominal value for type
         :rtype: object
         :raises: NMEATypeError
@@ -569,6 +738,13 @@ class NMEAMessage:
             val = datetime.now(timezone.utc).time()
         elif att in (nmt.DT, nmt.DTL, nmt.DM):
             val = datetime.now(timezone.utc).date()
+        elif att == nmt.QS:  # Quectel status attribute
+            if msgmode == nmt.POLL:
+                val = "R"  # read
+            elif msgmode == nmt.SET:
+                val = "W"  # write
+            else:
+                val = "OK"  # acknowledgement
         else:
             raise nme.NMEATypeError(f"Unknown attribute type {att}.")
         return val

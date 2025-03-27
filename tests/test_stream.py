@@ -538,7 +538,7 @@ class StreamTest(unittest.TestCase):
         )
         i = 0
         raw = 0
-        with open(os.path.join(DIRNAME, "sepentriox5_nmea.log"), "rb") as stream:
+        with open(os.path.join(DIRNAME, "septentriox5_nmea.log"), "rb") as stream:
             nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
             for raw, parsed in nmr:
                 if raw is not None:

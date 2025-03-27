@@ -47,8 +47,13 @@ def get_parts(message: object) -> tuple:
         if isinstance(message, bytes):
             message = message.decode("utf-8")
         content, cksum = message.strip("$\r\n").split("*", 1)
-        hdr, payload = content.split(",", 1)
-        payload = payload.split(",")
+        hdrpayload = content.split(",", 1)
+        if len(hdrpayload) == 1:  # no payload (e.g. stateless SET command)
+            hdr = content
+            payload = ""
+        else:
+            hdr, payload = content.split(",", 1)
+            payload = payload.split(",")
         if hdr[0:1] == "P":  # proprietary
             talker = "P"
             msgid = hdr[1:]
@@ -86,9 +91,9 @@ def generate_checksum(talker: str, msgID: str, payload: list) -> str:
     :rtype: str
     """
 
-    content = talker + msgID + ","
-    for i, s in enumerate(payload):
-        content += ("," if i else "") + s
+    content = talker + msgID
+    for field in payload:
+        content += f",{field}"
     return calc_checksum(content)
 
 
@@ -634,3 +639,18 @@ def get_gpswnotow(dat: datetime) -> tuple:
     wno = int((dat - GPSEPOCH0).days / 7)
     tow = ((dat.weekday() + 1) % 7) * 86400
     return wno, tow
+
+
+def hex2str(hex: int, padding: int = 0) -> str:
+    """
+    Convert hex integer to padded or unpadded string format,
+    as used by some proprietary NMEA message types.
+
+    :param int hex: hexadecimal integer
+    :param padding: no of padded digits (0)
+    :return: integer as string
+    :rtype: str
+    """
+
+    pad = f"{padding:02d}" if padding else ""
+    return f"{hex:{pad}x}".upper()
