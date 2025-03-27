@@ -4,7 +4,7 @@
 
 ENHANCEMENTS:
 
-1. Add support for proprietary Quectel LG290P PQTM* NMEA sentences, as documented in https://quectel.com/content/uploads/2024/09/Quectel_LG290P03_GNSS_Protocol_Specification_V1.0.pdf.
+1. Add support for proprietary Quectel LG290P PQTM* NMEA sentences, as documented in https://quectel.com/content/uploads/2024/09/Quectel_LG290P03_GNSS_Protocol_Specification_V1.0.pdf. See /examples/quecteldemo.py for example usage.
 
 ### RELEASE 1.0.46
 

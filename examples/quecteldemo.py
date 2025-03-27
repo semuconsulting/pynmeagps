@@ -60,7 +60,7 @@ LG290P_PROPRIETARY_MESSAGES = [
 ]
 
 
-def convert2preset(desc: str, msg: NMEAMessage) -> str:
+def nmea2preset(msg: NMEAMessage, desc: str = "") -> str:
     """
     Convert NMEAMessage to format suitable for adding to user-defined
     preset list `nmeapresets_l` in PyGPSClient *.json configuration files.
@@ -70,12 +70,17 @@ def convert2preset(desc: str, msg: NMEAMessage) -> str:
 
     e.g. "Configure Signals; P; QTMCFGSIGNAL; 1; W,7,3,F,3F,7,1"
 
-    :param str desc: preset description
     :param NMEAMessage msg: message
+    :param str desc: preset description
     :return: preset string
     :rtype: str
     """
 
+    desc = (
+        f"{msg.talker}{msg.msgID} {["GET","SET","POLL"][msg.msgmode]}"
+        if desc == ""
+        else desc
+    )
     return f"{desc}; {msg.talker}; {msg.msgID}; {msg.msgmode}; {','.join(msg.payload)}"
 
 
