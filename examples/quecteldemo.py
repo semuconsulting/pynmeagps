@@ -60,30 +60,6 @@ LG290P_PROPRIETARY_MESSAGES = [
 ]
 
 
-def nmea2preset(msg: NMEAMessage, desc: str = "") -> str:
-    """
-    Convert NMEAMessage to format suitable for adding to user-defined
-    preset list `nmeapresets_l` in PyGPSClient *.json configuration files.
-
-    The format is:
-    "<description>; <talker>; <msgID>; <msgmode>; <payload as comma separated list>"
-
-    e.g. "Configure Signals; P; QTMCFGSIGNAL; 1; W,7,3,F,3F,7,1"
-
-    :param NMEAMessage msg: message
-    :param str desc: preset description
-    :return: preset string
-    :rtype: str
-    """
-
-    desc = (
-        f"{msg.talker}{msg.msgID} {["GET","SET","POLL"][msg.msgmode]}"
-        if desc == ""
-        else desc
-    )
-    return f"{desc}; {msg.talker}; {msg.msgID}; {msg.msgmode}; {','.join(msg.payload)}"
-
-
 def io_data(
     nmr: NMEAReader,
     readqueue: Queue,
@@ -180,9 +156,9 @@ def main(**kwargs):
         process_thread.start()
 
         try:
-            # COMMENT/UNCOMMMENT LG290P COMMANDS (SET) OR QUERIES (POLL) HERE...
-
             # *******************************************************************
+            # COMMENT/UNCOMMMENT LG290P COMMANDS (SET) OR QUERIES (POLL) HERE...
+            #
             # Refer to testConstructors_QUECTEL() in tests\test_quectel.py
             # for a complete set of example LG290P message constructors
             # *******************************************************************
@@ -192,8 +168,8 @@ def main(**kwargs):
             send(send_queue, msg)
 
             # do factory reset (NB only takes effect after restart)
-            # msg = NMEAMessage("P", "QTMRESTOREPAR", SET)
-            # send(send_queue, msg)
+            msg = NMEAMessage("P", "QTMRESTOREPAR", SET)
+            send(send_queue, msg)
 
             # save settings to non-volatile memory
             # msg = NMEAMessage("P", "QTMSAVEPAR", SET)
@@ -219,6 +195,52 @@ def main(**kwargs):
             msg = NMEAMessage("P", "QTMCFGFIXRATE", POLL)
             send(send_queue, msg)
 
+            # *************************************************
+            # NB! PQTMCFGUART command has several permutations:
+            # *************************************************
+
+            # set baud rate on current UART, leaving other parameters unchanged
+            NMEAMessage("P", "QTMCFGUART", SET, baudrate=460800)
+            send(send_queue, msg)
+
+            # set baud rate on UART2 interface (portid=2), leaving other parameters unchanged
+            NMEAMessage("P", "QTMCFGUART", SET, portid=2, baudrate=115200)
+            send(send_queue, msg)
+
+            # configure all parameters on current UART
+            NMEAMessage(
+                "P",
+                "QTMCFGUART",
+                SET,
+                baudrate=460800,
+                databit=8,
+                parity=0,
+                stopbit=1,
+                flowctrl=0,
+            )
+            send(send_queue, msg)
+
+            # configure all parameters on UART2 interface (portid=2)
+            NMEAMessage(
+                "P",
+                "QTMCFGUART",
+                SET,
+                portid=2,
+                baudrate=115200,
+                databit=8,
+                parity=0,
+                stopbit=1,
+                flowctrl=0,
+            )
+            send(send_queue, msg)
+
+            # check UART config for all 3 available ports
+            for portid in range(1, 4):
+                msg = NMEAMessage("P", "QTMCFGUART", POLL, portid=portid)
+                send(send_queue, msg)
+                msg = NMEAMessage("P", "QTMCFGPROT", POLL, porttype=1, portid=portid)
+                send(send_queue, msg)
+
             # turn gnss engine off
             # msg = NMEAMessage("P", "QTMGNSSSTOP", SET)
             # send(send_queue, msg)
@@ -243,7 +265,8 @@ def main(**kwargs):
                 systemid=1,
                 signalid=1,
                 masklow=hex2str(0xFFFFFFFF, 8),  # hex as padded string
-            ),
+            )
+            send(send_queue, msg)
 
             # set signal masks
             NMEAMessage(
@@ -256,30 +279,24 @@ def main(**kwargs):
                 beidousig=hex2str(0x3F),
                 qzsssig=hex2str(0x07),
                 navicsig=hex2str(0x01),
-            ),
+            )
+            send(send_queue, msg)
 
             # disable all standard NMEA messages
-            # for msgname in LG290P_STANDARD_MESSAGES:
-            #     msg = NMEAMessage("P", "QTMCFGMSGRATE", SET, msgname=msgname, rate=0)
-            #     send(send_queue, msg)
+            for msgname in LG290P_STANDARD_MESSAGES:
+                msg = NMEAMessage("P", "QTMCFGMSGRATE", SET, msgname=msgname, rate=0)
+                send(send_queue, msg)
 
             # enable all proprietary NMEA messages
-            # for msgname, msgver in LG290P_PROPRIETARY_MESSAGES:
-            #     msg = NMEAMessage(
-            #         "P", "QTMCFGMSGRATE", SET, msgname=msgname, rate=1, msgver=msgver
-            #     )
-            #     send(send_queue, msg)
+            for msgname, msgver in LG290P_PROPRIETARY_MESSAGES:
+                msg = NMEAMessage(
+                    "P", "QTMCFGMSGRATE", SET, msgname=msgname, rate=1, msgver=msgver
+                )
+                send(send_queue, msg)
 
             # check geofence config
             # for index in range(0, 4):
             #     msg = NMEAMessage("P", "QTMCFGGEOFENCE", POLL, index=index)
-            #     send(send_queue, msg)
-
-            # # check uart config
-            # for portid in range(1, 4):
-            #     msg = NMEAMessage("P", "QTMCFGUART", POLL, portid=portid)
-            #     send(send_queue, msg)
-            #     msg = NMEAMessage("P", "QTMCFGPROT", POLL, porttype=1, portid=portid)
             #     send(send_queue, msg)
 
             # # check satellite config (signal 1 only in this example)
