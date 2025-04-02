@@ -992,7 +992,7 @@ NMEA_PAYLOADS_GET_PROP = {
     },
     "QTMCFGGEOFENCE": {
         "status": QS,
-        "index": IN,
+        "geofenceindex": IN,
         "geofencemode": IN,
         "reserved": IN,
         "shape": IN,
@@ -1002,12 +1002,12 @@ NMEA_PAYLOADS_GET_PROP = {
     },
     "QTMCFGGEOFENCE_DIS": {
         "status": QS,
-        "index": IN,
+        "geofenceindex": IN,
         "geofencemode": IN,  # should be 0
     },
     "QTMCFGGEOFENCE_POLY": {
         "status": QS,
-        "index": IN,
+        "geofenceindex": IN,
         "geofencemode": IN,
         "reserved": IN,
         "shape": IN,
@@ -1026,6 +1026,11 @@ NMEA_PAYLOADS_GET_PROP = {
         "rate": IN,
         "msgver": IN,  # or offset
     },
+    "QTMCFGMSGRATE_NOVER": {
+        "status": QS,
+        "msgname": ST,
+        "rate": IN,
+    },
     "QTMCFGNMEADP": {
         "status": QS,
         "utcdp": IN,
@@ -1042,7 +1047,7 @@ NMEA_PAYLOADS_GET_PROP = {
     },
     "QTMCFGPPS": {
         "status": QS,
-        "index": IN,
+        "ppsindex": IN,
         "enable": IN,
         "duration": IN,
         "ppsmode": IN,
@@ -1084,13 +1089,13 @@ NMEA_PAYLOADS_GET_PROP = {
         "systemid": IN,
         "signalid": ST,  # hex as string
         "masklow": ST,  # hex as string
+        "maskhigh": ST,  # hex as string
     },
-    "QTMCFGSAT_MASKHIGH": {
+    "QTMCFGSAT_LOW": {
         "status": QS,
         "systemid": IN,
         "signalid": ST,  # hex as string
         "masklow": ST,  # hex as string
-        "maskhigh": ST,  # hex as string
     },
     "QTMCFGSIGNAL": {
         "status": QS,

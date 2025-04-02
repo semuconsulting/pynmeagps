@@ -92,10 +92,10 @@ pynmeagps.nmeatypes\_set\_prop module
    :show-inheritance:
    :undoc-members:
 
-pynmeagps.socket\_wrapper module
---------------------------------
+pynmeagps.socketwrapper module
+------------------------------
 
-.. automodule:: pynmeagps.socket_wrapper
+.. automodule:: pynmeagps.socketwrapper
    :members:
    :show-inheritance:
    :undoc-members:

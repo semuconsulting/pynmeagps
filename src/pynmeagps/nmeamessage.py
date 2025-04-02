@@ -393,12 +393,12 @@ class NMEAMessage:
         lp = len(self._payload)
         py = "payload" in kwargs
         mv = "msgver" in kwargs
-        if mode == nmt.SET:
-            if (py and lp == 4) or (not py and mv):
-                key += "_VER"
+        if mode in (nmt.SET, nmt.GET):
+            if (py and lp == 3) or (not py and not mv):
+                key += "_NOVER"
         elif mode == nmt.POLL:
-            if (py and lp == 3) or (not py and mv):
-                key += "_VER"
+            if (py and lp == 2) or (not py and not mv):
+                key += "_NOVER"
         return key
 
     def _get_dict_qtmcfgpps(self, key: str, mode: int, **kwargs) -> str:
@@ -434,11 +434,11 @@ class NMEAMessage:
         py = "payload" in kwargs
         mh = "maskhigh" in kwargs
         if mode == nmt.SET:
-            if (py and lp == 5) or (not py and mh):
-                key += "_MASKHIGH"
-        if mode == nmt.GET:
-            if (py and lp == 5) or (not py and mh):
-                key += "_MASKHIGH"
+            if (py and lp == 4) or (not py and not mh):
+                key += "_LOW"
+        elif mode == nmt.GET:
+            if (py and lp == 4) or (not py and not mh):
+                key += "_LOW"
             elif lp in (1, 2):
                 key = self._get_dict_qtmacknak(key, mode)
         return key
@@ -462,7 +462,7 @@ class NMEAMessage:
                 key += "_POLY"
             elif (py and lp == 3) or (not py and kwargs.get("geofencemode", 1) == 0):
                 key += "_DIS"
-        if mode == nmt.GET:
+        elif mode == nmt.GET:
             if (py and lp == 13) or (not py and l1):
                 key += "_POLY"
             elif lp in (1, 2):
@@ -516,9 +516,8 @@ class NMEAMessage:
         stg = f"<NMEA({self.identity}"
         if self._defsource == nmt.DEF_UNKN:
             stg += ", NOMINAL"
-        for att in self.__dict__:
+        for att, val in self.__dict__.items():
             if att[0] != "_":  # only show public attributes
-                val = self.__dict__[att]
                 stg += f", {att}={val}"
         stg += ")>"
 

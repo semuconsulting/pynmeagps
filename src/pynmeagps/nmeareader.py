@@ -39,7 +39,7 @@ from pynmeagps.nmeatypes_core import (
     VALCKSUM,
     VALMSGID,
 )
-from pynmeagps.socket_wrapper import SocketWrapper
+from pynmeagps.socketwrapper import SocketWrapper
 
 
 class NMEAReader:
