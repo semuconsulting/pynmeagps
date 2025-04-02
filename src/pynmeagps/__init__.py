@@ -25,6 +25,6 @@ from pynmeagps.nmeatypes_poll import *
 from pynmeagps.nmeatypes_poll_prop import *
 from pynmeagps.nmeatypes_set import *
 from pynmeagps.nmeatypes_set_prop import *
-from pynmeagps.socket_wrapper import SocketWrapper
+from pynmeagps.socketwrapper import SocketWrapper
 
 version = __version__

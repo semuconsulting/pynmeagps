@@ -15,7 +15,7 @@ has been collated from public domain sources.
 :author: semuadmin
 """
 
-from pynmeagps.nmeatypes_core import HX, IN, QS, ST
+from pynmeagps.nmeatypes_core import IN, QS, ST
 
 NMEA_PAYLOADS_POLL_PROP = {
     # ***************************************************************
@@ -26,18 +26,18 @@ NMEA_PAYLOADS_POLL_PROP = {
     # ***************************************************************
     "QTMCFGCNST": {"status": QS},
     "QTMCFGFIXRATE": {"status": QS},
-    "QTMCFGGEOFENCE": {"status": QS, "index": IN},
-    "QTMCFGMSGRATE": {"status": QS, "msgname": ST},
-    "QTMCFGMSGRATE_VER": {"status": QS, "msgname": ST, "msgver": IN},
+    "QTMCFGGEOFENCE": {"status": QS, "geofenceindex": IN},
+    "QTMCFGMSGRATE_NOVER": {"status": QS, "msgname": ST},
+    "QTMCFGMSGRATE": {"status": QS, "msgname": ST, "msgver": IN},
     "QTMCFGNMEADP": {"status": QS},
     "QTMCFGODO": {"status": QS},
-    "QTMCFGPPS": {"status": QS, "index": IN},
+    "QTMCFGPPS": {"status": QS, "ppsindex": IN},
     "QTMCFGPROT": {"status": QS, "porttype": IN, "portid": IN},
     "QTMCFGRCVRMODE": {"status": QS},
     "QTMCFGRSID": {"status": QS},
     "QTMCFGRTCM": {"status": QS},
     "QTMCFGRTK": {"status": QS},
-    "QTMCFGSAT": {"status": QS, "systemid": IN, "signalid": HX},
+    "QTMCFGSAT": {"status": QS, "systemid": IN, "signalid": ST},
     "QTMCFGSIGNAL": {"status": QS},
     "QTMCFGSVIN": {"status": QS},
     "QTMCFGUART": {"status": QS, "portid": IN},

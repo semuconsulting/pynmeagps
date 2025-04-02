@@ -50,6 +50,18 @@ DEF_USER = 2
 """User-defined message definition"""
 DEF_UNKN = 3
 """Unknown (not public domain) message definition"""
+DEFAULT_BUFSIZE = 4096
+"""Default socket buffer size"""
+ENCODE_NONE = 0
+"""No socket encoding"""
+ENCODE_CHUNKED = 1
+"""chunked socket encoding"""
+ENCODE_GZIP = 2
+"""gzip socket encoding"""
+ENCODE_COMPRESS = 4
+"""compress socket encoding"""
+ENCODE_DEFLATE = 8
+"""deflate socket encoding"""
 
 GNSSLIST = {
     0: "GPS",
