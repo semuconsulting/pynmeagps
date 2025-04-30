@@ -1,7 +1,7 @@
 """
 quecteldemo.py
 
-A simple demonstrator for provisional Quectel LG290P support in pynmeagps.
+A simple demonstrator for Quectel LG290P configuration and monitoring support in pynmeagps.
 
 Usage:
 
@@ -16,6 +16,10 @@ receiver and sends any queued outbound command or poll messages.
 2) a process thread which processes parsed NMEA data - in this example
 it simply prints the parsed data to the terminal.
 NMEA data is passed between threads using queues.
+
+NB: Some LG290P commands require a hot reset (PQTMHOT)
+or a parameter save (PQTMSAVEPAR) and a full system reset (PQTMSRR)
+before taking effect.
 
 Press CTRL-C to terminate.
 
@@ -293,6 +297,52 @@ def main(**kwargs):
                     "P", "QTMCFGMSGRATE", SET, msgname=msgname, rate=1, msgver=msgver
                 )
                 send(send_queue, msg)
+
+            # Set Base Station Survey-In Mode - requires 4 commands in sequence
+            msg1 = NMEAMessage("P", "QTMCFGRCVRMODE", SET, rcvrmode=2)
+            msg2 = NMEAMessage(
+                "P", "QTMCFGSVIN", SET, svinmode=1, cfgcnt=60, acclimit=3000
+            )
+            msg3 = NMEAMessage(
+                "P",
+                "QTMSAVEPAR",
+                SET,
+            )
+            msg4 = NMEAMessage(
+                "P",
+                "QTMSRR",
+                SET,
+            )
+            msgs = [msg1, msg2, msg3, msg4]
+            for msg in msgs:
+                send(send_queue, msg)
+
+            # Set Base Station Fixed Mode - requires 4 commands in sequence
+            # msg1 = NMEAMessage("P", "QTMCFGRCVRMODE", SET, rcvrmode=2)
+            # msg2 = NMEAMessage(
+            #     "P",
+            #     "QTMCFGSVIN",
+            #     SET,
+            #     svinmode=2,
+            #     cfgcnt=0,
+            #     acclimit=0,
+            #     exefx=-2213540.321087019,
+            #     ecefy=-4577229.071167925,
+            #     ecefz=3838042.2419518335,
+            # )
+            # msg3 = NMEAMessage(
+            #     "P",
+            #     "QTMSAVEPAR",
+            #     SET,
+            # )
+            # msg4 = NMEAMessage(
+            #     "P",
+            #     "QTMSRR",
+            #     SET,
+            # )
+            # msgs = [msg1, msg2, msg3, msg4]
+            # for msg in msgs:
+            #     send(send_queue, msg)
 
             # check geofence config
             # for index in range(0, 4):
