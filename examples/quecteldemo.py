@@ -330,7 +330,7 @@ def main(**kwargs):
             #     svinmode=2,
             #     cfgcnt=0,
             #     acclimit=0,
-            #     exefx=-2213540.321087019,
+            #     ecefx=-2213540.321087019,
             #     ecefy=-4577229.071167925,
             #     ecefz=3838042.2419518335,
             # )
