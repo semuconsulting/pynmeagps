@@ -322,6 +322,10 @@ def main(**kwargs):
                 send(send_queue, msg)
 
             # Set Base Station, Fixed Mode - requires 4 commands in sequence:
+            # If required, use the pynmeagps.llh2ecef() helper function to
+            # convert LLH coordinates to ECEF e.g.
+            # ecefx, ecefy, ecefz = llh2ecef(37.233333, -115.808333, 0)
+            #
             # msg1 = NMEAMessage("P", "QTMCFGRCVRMODE", SET, rcvrmode=2)
             # msg2 = NMEAMessage(
             #     "P",
