@@ -298,7 +298,11 @@ def main(**kwargs):
                 )
                 send(send_queue, msg)
 
-            # Set Base Station Survey-In Mode - requires 4 commands in sequence
+            # *********************************************************************
+            # NB! Base and Rover configurations require 3 or 4 commends in sequence
+            # *********************************************************************
+
+            # Set Base Station, Survey-In Mode - requires 4 commands in sequence:
             msg1 = NMEAMessage("P", "QTMCFGRCVRMODE", SET, rcvrmode=2)
             msg2 = NMEAMessage(
                 "P", "QTMCFGSVIN", SET, svinmode=1, cfgcnt=60, acclimit=3000
@@ -317,7 +321,7 @@ def main(**kwargs):
             for msg in msgs:
                 send(send_queue, msg)
 
-            # Set Base Station Fixed Mode - requires 4 commands in sequence
+            # Set Base Station, Fixed Mode - requires 4 commands in sequence:
             # msg1 = NMEAMessage("P", "QTMCFGRCVRMODE", SET, rcvrmode=2)
             # msg2 = NMEAMessage(
             #     "P",
@@ -343,6 +347,22 @@ def main(**kwargs):
             # msgs = [msg1, msg2, msg3, msg4]
             # for msg in msgs:
             #     send(send_queue, msg)
+
+            # Reset to Normal (Rover) Mode - requires 3 commands in sequence:
+            msg1 = NMEAMessage("P", "QTMCFGRCVRMODE", SET, rcvrmode=1)
+            msg2 = NMEAMessage(
+                "P",
+                "QTMSAVEPAR",
+                SET,
+            )
+            msg3 = NMEAMessage(
+                "P",
+                "QTMSRR",
+                SET,
+            )
+            msgs = [msg1, msg2, msg3]
+            for msg in msgs:
+                send(send_queue, msg)
 
             # check geofence config
             # for index in range(0, 4):
