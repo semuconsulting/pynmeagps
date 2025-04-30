@@ -299,7 +299,7 @@ def main(**kwargs):
                 send(send_queue, msg)
 
             # *********************************************************************
-            # NB! Base and Rover configurations require 3 or 4 commends in sequence
+            # NB! Base and Rover configurations require 3 or 4 commands in sequence
             # *********************************************************************
 
             # Set Base Station, Survey-In Mode - requires 4 commands in sequence:
