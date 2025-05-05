@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.50
+
+ENHANCEMENTS
+
+1. Add support for Feyman IM19 IMU NMEA sentence GPFMI.
+
 ### RELEASE 1.0.49
 
 FIXES:
