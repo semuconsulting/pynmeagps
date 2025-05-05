@@ -12,16 +12,63 @@ Created on 26 Aug 2023
 :license: BSD 3-Clause
 """
 
-QUALITY = {
+FIXTYPE_GGA = QUALITY = {
     0: "NO FIX",
     1: "2D",
     2: "3D",
     3: "N/A",
-    4: "RTK_FIXED",
-    5: "RTK_FLOAT",
-    6: "DR_ONLY",
+    4: "RTK FIXED",
+    5: "RTK FLOAT",
+    6: "DR ONLY",
 }
-"""GGA quality values"""
+"""GGA quality/fix type values"""
+
+GNSSLIST = {
+    0: "GPS",
+    1: "SBAS",
+    2: "Galileo",
+    3: "BeiDou",
+    4: "IMES",
+    5: "QZSS",
+    6: "GLONASS",
+    7: "NAVIC",
+}
+"""GNSS code"""
+
+SYSTEMID = {
+    "1": "GPS",
+    "2": "GLONASS",
+    "3": "Galileo",
+    "4": "Beidou",
+    "5": "QZSS",
+    "6": "NavIC",
+}
+"""NMEA 4.1 System Identifier - key is systemId"""
+
+SIGNALID = {
+    ("1", "1"): "GPS L1C/A2",
+    ("1", "6"): "GPS L2 CL",
+    ("1", "5"): "GPS L2 CM",
+    ("1", "7"): "GPS L5 I",
+    ("1", "8"): "GPS L5 Q",
+    ("3", "7"): "Galileo E1 B2/C2",
+    ("3", "1"): "Galileo E5 aI/aQ",
+    ("3", "2"): "Galileo E5 bI/bQ",
+    ("4", "1"): "BeiDou B1I D12/D22",
+    ("4", "B"): "BeiDou B2I D1/D2",
+    ("4", "3"): "BeiDou B1 Cp/Cd",
+    ("4", "5"): "BeiDou B2 ap/ad",
+    ("5", "1"): "QZSS L1C/A2",
+    ("5", "4"): "QZSS L1S",
+    ("5", "5"): "QZSS L2 CM",
+    ("5", "6"): "QZSS L2 CL",
+    ("5", "7"): "QZSS L5 I",
+    ("5", "8"): "QZSS L5 Q",
+    ("2", "1"): "GLONASS L1 OF",
+    ("2", "3"): "GLONASS L2 OF",
+    ("6", "1"): "NavIC L5 A",
+}
+"""Signal Identifier - key is (systemId, signal Id), values are hex strings"""
 
 FMI_STATUS = {
     0x00000001: ("Finit", "Filter uninitialized flag"),
