@@ -547,6 +547,32 @@ class StreamTest(unittest.TestCase):
                     i += 1
         self.assertEqual(i, 4)
 
+    def testNMEAGPFMI(self):  # test proprietary Feyman GPFMI IMU GET messages
+        EXPECTED_RESULTS = (
+            "<NMEA(GPFMI, time=16:02:24.400000, lat=0.0, lon=0.0, alt=0.0, roll=3.0182, pitch=0.0573, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:24.600000, lat=0.0, lon=0.0, alt=0.0, roll=3.0182, pitch=0.0573, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:24.800000, lat=0.0, lon=0.0, alt=0.0, roll=3.01821, pitch=0.05733, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:25, lat=0.0, lon=0.0, alt=0.0, roll=3.01822, pitch=0.05732, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:25.200000, lat=0.0, lon=0.0, alt=0.0, roll=3.01821, pitch=0.05731, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:25.400000, lat=0.0, lon=0.0, alt=0.0, roll=3.01818, pitch=0.05731, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:25.600000, lat=0.0, lon=0.0, alt=0.0, roll=3.01819, pitch=0.0573, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:25.800000, lat=0.0, lon=0.0, alt=0.0, roll=3.01819, pitch=0.0573, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:26, lat=0.0, lon=0.0, alt=0.0, roll=3.01821, pitch=0.05731, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:26.200000, lat=0.0, lon=0.0, alt=0.0, roll=3.01823, pitch=0.05731, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:26.400000, lat=0.0, lon=0.0, alt=0.0, roll=3.01824, pitch=0.0573, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:26.600000, lat=0.0, lon=0.0, alt=0.0, roll=3.01826, pitch=0.05732, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+        )
+        i = 0
+        raw = 0
+        with open(os.path.join(DIRNAME, "feyman_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, 12)
+
     def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
         EXPECTED_ERROR = "Unknown protocol header b'$&'."
         with self.assertRaises(NMEAParseError) as context:

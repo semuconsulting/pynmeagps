@@ -279,6 +279,7 @@ NMEA_MSGIDS = {
     "ETL": "Engine telegraph operation status",
     "EVE": "General event message",
     "FIR": "Fire detection",
+    "FMI": "Feyman IMU roll, pitch, yaw",
     "FSI": "Frequency set information",
     "GAQ": "Poll Standard Message - Talker ID GA (Galileo)",
     "GBQ": "Poll Standard Message - Talker ID GB (BeiDou)",

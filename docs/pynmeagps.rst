@@ -44,6 +44,14 @@ pynmeagps.nmeatypes\_core module
    :show-inheritance:
    :undoc-members:
 
+pynmeagps.nmeatypes\_decodes module
+-----------------------------------
+
+.. automodule:: pynmeagps.nmeatypes_decodes
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 pynmeagps.nmeatypes\_get module
 -------------------------------
 
