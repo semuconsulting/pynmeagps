@@ -19,6 +19,7 @@ from pynmeagps.nmeahelpers import *
 from pynmeagps.nmeamessage import NMEAMessage
 from pynmeagps.nmeareader import NMEAReader
 from pynmeagps.nmeatypes_core import *
+from pynmeagps.nmeatypes_decodes import *
 from pynmeagps.nmeatypes_get import *
 from pynmeagps.nmeatypes_get_prop import *
 from pynmeagps.nmeatypes_poll import *
