@@ -28,6 +28,7 @@ from pynmeagps import (
     LN,
     LND,
     ST,
+    FMI_STATUS,
 )
 
 DIRNAME = os.path.dirname(__file__)
@@ -546,6 +547,76 @@ class StreamTest(unittest.TestCase):
                     self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                     i += 1
         self.assertEqual(i, 4)
+
+    def testNMEAGPFMI(self):  # test proprietary Feyman GPFMI IMU GET messages
+
+        def getstatus(status) -> str:
+
+            st = ""
+            for key, (desc, _) in FMI_STATUS.items():
+                if int(status, 16) & key:
+                    st += f"{desc} "
+            return st
+
+        EXPECTED_RESULTS = (
+            "<NMEA(GPFMI, time=16:02:24.400000, lat=0.0, lon=0.0, alt=0.0, roll=3.0182, pitch=0.0573, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=16:02:24.600000, lat=0.0, lon=0.0, alt=0.0, roll=3.0182, pitch=0.0573, yaw=9.99999, hrms=0.17, numSV=12, diffAge=0, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.423023, lon=113.193168, alt=45.890494, roll=16.593, pitch=-7.75, yaw=3.888, hrms=0.17, numSV=26, diffAge=5, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.512547, lon=113.637276, alt=45.767895, roll=-3.523, pitch=-7.218, yaw=9.242, hrms=0.17, numSV=27, diffAge=5, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.19525, lon=113.882219, alt=45.719773, roll=4.998, pitch=-8.686, yaw=0.927, hrms=0.17, numSV=27, diffAge=3, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.092634, lon=113.283257, alt=45.018596, roll=8.221, pitch=4.892, yaw=-5.005, hrms=0.17, numSV=26, diffAge=4, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.254565, lon=113.288853, alt=45.661074, roll=7.074, pitch=3.049, yaw=-4.613, hrms=0.17, numSV=25, diffAge=3, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.509901, lon=113.138161, alt=45.996202, roll=-3.514, pitch=-5.205, yaw=8.724, hrms=0.17, numSV=27, diffAge=3, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.76182, lon=113.482807, alt=45.764244, roll=-4.72, pitch=6.391, yaw=-8.178, hrms=0.17, numSV=26, diffAge=2, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.934536, lon=113.034356, alt=45.252132, roll=16.878, pitch=2.358, yaw=-2.944, hrms=0.17, numSV=27, diffAge=2, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.639909, lon=113.402712, alt=45.615865, roll=11.508, pitch=9.446, yaw=3.934, hrms=0.17, numSV=27, diffAge=5, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.269057, lon=113.727968, alt=45.891641, roll=-0.085, pitch=6.887, yaw=-16.113, hrms=0.17, numSV=25, diffAge=2, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.457734, lon=113.13478, alt=45.028494, roll=6.838, pitch=2.27, yaw=8.636, hrms=0.17, numSV=24, diffAge=4, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.114631, lon=113.083719, alt=45.146318, roll=6.506, pitch=7.586, yaw=-3.084, hrms=0.17, numSV=26, diffAge=4, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.561758, lon=113.504337, alt=45.81872, roll=-19.365, pitch=1.583, yaw=-7.598, hrms=0.17, numSV=25, diffAge=3, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.484163, lon=113.286151, alt=45.117093, roll=-7.733, pitch=3.219, yaw=-12.475, hrms=0.17, numSV=24, diffAge=3, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.077227, lon=113.853113, alt=45.633862, roll=16.283, pitch=-9.75, yaw=12.718, hrms=0.17, numSV=24, diffAge=5, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.256628, lon=113.893556, alt=45.736646, roll=-13.055, pitch=-6.64, yaw=5.213, hrms=0.17, numSV=26, diffAge=2, navmod=2, status=001C00E1)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.327387, lon=113.710465, alt=45.119112, roll=-15.582, pitch=0.837, yaw=-8.4, hrms=0.17, numSV=24, diffAge=2, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.238952, lon=113.301512, alt=45.781582, roll=0.25, pitch=6.982, yaw=-3.916, hrms=0.17, numSV=26, diffAge=4, navmod=2, status=001C0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.8632, lon=113.998859, alt=45.163301, roll=5.528, pitch=-2.215, yaw=16.083, hrms=0.17, numSV=24, diffAge=2, navmod=2, status=001A0001)>",
+            "<NMEA(GPFMI, time=21:39:37.460000, lat=13.952284, lon=113.441564, alt=45.696884, roll=-12.544, pitch=-3.978, yaw=-2.798, hrms=0.17, numSV=25, diffAge=2, navmod=2, status=001A0001)>",
+        )
+        EXPECTED_RESULTS2 = (
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit FReset FixRlsStage1 FixRlsStage2 PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit PPSReady SyncReady GnssConnect ",
+            "Finit FInitOk SyncReady GnssConnect ",
+            "Finit FInitOk SyncReady GnssConnect ",
+        )
+        i = 0
+        raw = 0
+        with open(os.path.join(DIRNAME, "feyman_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    self.assertEqual(getstatus(parsed.status), EXPECTED_RESULTS2[i])
+                    i += 1
+        self.assertEqual(i, 22)
 
     def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
         EXPECTED_ERROR = "Unknown protocol header b'$&'."

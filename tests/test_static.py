@@ -51,6 +51,13 @@ from pynmeagps.nmeahelpers import (
     time2utc,
 )
 from pynmeagps.nmeatypes_core import GET, POLL
+from pynmeagps.nmeatypes_decodes import (
+    GNSSLIST,
+    FIXTYPE_GGA,
+    FMI_STATUS,
+    SIGNALID,
+    SYSTEMID,
+)
 
 
 class StaticTest(unittest.TestCase):
@@ -591,6 +598,14 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(hex2str(hex, 8), "0000123B")
         self.assertEqual(hex2str(hex, 6), "00123B")
         self.assertEqual(hex2str(hex), "123B")
+
+    def testdecodes(self):
+
+        self.assertEqual(GNSSLIST[0], "GPS")
+        self.assertEqual(FIXTYPE_GGA[1], "2D")
+        self.assertEqual(FMI_STATUS[2], ("Ready", "Filter convergence completion flag"))
+        self.assertEqual(SIGNALID[("1", "5")], "GPS L2 CM")
+        self.assertEqual(SYSTEMID["4"], "Beidou")
 
 
 if __name__ == "__main__":

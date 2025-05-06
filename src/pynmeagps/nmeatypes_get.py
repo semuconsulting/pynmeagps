@@ -383,6 +383,21 @@ NMEA_PAYLOADS_GET = {
         "alarmackstate": CH,
         "text": ST,
     },
+    # FMI from Feyman IME19EE Product Integration Guide v1.4.1
+    "FMI": {
+        "time": TM,
+        "lat": DE,
+        "lon": DE,
+        "alt": DE,
+        "roll": DE,
+        "pitch": DE,
+        "yaw": DE,
+        "hrms": DE,
+        "numSV": IN,
+        "diffAge": IN,
+        "navmod": IN,
+        "status": HX,
+    },
     "FSI": {
         "txfreq": ST,
         "rxfreq": ST,

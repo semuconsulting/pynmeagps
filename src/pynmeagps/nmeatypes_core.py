@@ -63,27 +63,6 @@ ENCODE_COMPRESS = 4
 ENCODE_DEFLATE = 8
 """deflate socket encoding"""
 
-GNSSLIST = {
-    0: "GPS",
-    1: "SBAS",
-    2: "Galileo",
-    3: "BeiDou",
-    4: "IMES",
-    5: "QZSS",
-    6: "GLONASS",
-    7: "NAVIC",
-}
-"""GNSS code"""
-FIXTYPE_GGA = {
-    0: "NO FIX",
-    1: "3D",
-    2: "3D",
-    4: "RTK FIXED",
-    5: "RTK FLOAT",
-    6: "DR",
-}
-"""Fix type from GGA"""
-
 GPSEPOCH0 = datetime(1980, 1, 6)
 """GPS epoch base date"""
 # Geodetic datum spheroid values:
@@ -279,6 +258,7 @@ NMEA_MSGIDS = {
     "ETL": "Engine telegraph operation status",
     "EVE": "General event message",
     "FIR": "Fire detection",
+    "FMI": "Feyman IMU roll, pitch, yaw",
     "FSI": "Frequency set information",
     "GAQ": "Poll Standard Message - Talker ID GA (Galileo)",
     "GBQ": "Poll Standard Message - Talker ID GB (BeiDou)",
