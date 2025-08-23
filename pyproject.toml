@@ -1,14 +1,15 @@
 [build-system]
-requires = ["setuptools>=66.0.0", "wheel"]
+requires = ["setuptools>=75.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynmeagps"
 dynamic = ["version"]
-authors = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
-maintainers = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
+authors = [{ name = "Steve Smith", email = "semuadmin@semuconsulting.com" }]
+maintainers = [{ name = "Steve Smith", email = "semuadmin@semuconsulting.com" }]
 description = "NMEA protocol parser and generator"
-license = { file = "LICENSE" }
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -27,6 +28,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Utilities",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: GIS",
