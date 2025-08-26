@@ -104,3 +104,12 @@ pythonpath = ["src"]
 
 [tool.coverage.run]
 source = ["src"]
+
+[tool.coverage.paths]
+source = ["src"]
+
+[tool.coverage.report]
+fail_under = 98
+
+[tool.coverage.html]
+directory = "htmlcov"

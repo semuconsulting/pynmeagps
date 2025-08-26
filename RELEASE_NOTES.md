@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.51
+
+ENHANCEMENTS
+
+1. Add Python 3.14rc2 to workflow. No functional changes.
+
 ### RELEASE 1.0.50
 
 ENHANCEMENTS
