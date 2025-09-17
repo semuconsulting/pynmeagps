@@ -24,7 +24,7 @@ Created on 19 Aug 2024
 While the NMEA 0183 © protocol is proprietary, the information here
 has been collated from public domain sources.
 
-:author: semuadmin
+:author: semuadmin (Steve Smith)
 """
 
 from pynmeagps.nmeatypes_core import CH, DE, DT, HX, IN, LA, LAD, LN, LND, QS, ST, TM
@@ -114,9 +114,107 @@ NMEA_PAYLOADS_SET_PROP = {
     # Navigate with GPS+BEIDOU $PMTK353,1,0,0,0,1*2B
     # Entering Standby Mode1 $PMTK161,0*28
     # ***************************************************************
+    # Quectel LC29H / LC79H Proprietary SET message types
+    # https://www.quectel.com/download/quectel_lc29hlc79h_series_gnss_protocol_specification_v1-5/
+    # quectel_lc29hlc79h_series_gnss_protocol_specification_v1-5.pdf
+    # ***************************************************************
+    "AIR002": {},
+    "AIR003": {},
+    "AIR004": {},
+    "AIR005": {},
+    "AIR006": {},
+    "AIR007": {},
+    "AIR050": {
+        "time": IN,
+    },
+    "AIR058": {
+        "minsnr": IN,
+    },
+    "AIR062": {
+        "type": IN,
+        "rate": IN,
+    },
+    "AIR066": {
+        "gpsEnabled": IN,
+        "glonassEnabled": IN,
+        "galileoEnabled": IN,
+        "bdsEnabled": IN,
+        "qzssEnabled": IN,
+        "navicEnabled": IN,
+    },
+    "AIR070": {
+        "speedThreshold": IN,
+    },
+    "AIR072": {
+        "degree": IN,
+    },
+    "AIR074": {
+        "enabled": IN,
+    },
+    "AIR080": {
+        "navMode": IN,
+    },
+    "AIR086": {
+        "status": IN,
+    },
+    "AIR100": {
+        "nmeaMode": IN,
+        "reserved": IN,
+    },
+    "AIR104": {
+        "dualBandEnabled": IN,
+    },
+    "AIR382": {
+        "enabled": IN,
+    },
+    "AIR391": {
+        "cmdType": IN,
+    },
+    "AIR400": {
+        "mode": IN,
+    },
+    "AIR410": {
+        "enabled": IN,
+    },
+    "AIR420": {
+        "enabled": IN,
+    },
+    "AIR432": {
+        "mode": IN,
+    },
+    "AIR434": {
+        "enabled": IN,
+    },
+    "AIR436": {
+        "enabled": IN,
+    },
+    "AIR437": {},
+    "AIR511": {},
+    "AIR513": {},
+    "AIR650": {
+        "second": IN,
+    },
+    "AIR752": {
+        "ppsType": IN,
+    },
+    "AIR864": {
+        "portType": IN,  # 0 = UART
+        "portIndex": IN,  # 0 = UART1
+        "baudrate": IN,
+    },
+    "AIR866": {
+        "portType": IN,  # 0 = UART
+        "portIndex": IN,  # 0 = UART1
+        "flowControl": IN,
+    },
+    # ***************************************************************
     # Quectel LG290P Proprietary message types
     # https://quectel.com/content/uploads/2024/09/Quectel_LG290P03_GNSS_Protocol_Specification_V1.0.pdf
     # ***************************************************************
+    "QTMBKP": {
+        "second": IN,
+    },
+    "QTMCFGAIC": NMEA_PAYLOADS_GET_PROP["QTMCFGAIC"],
     "QTMCFGCNST": NMEA_PAYLOADS_GET_PROP["QTMCFGCNST"],
     "QTMCFGFIXRATE": NMEA_PAYLOADS_GET_PROP["QTMCFGFIXRATE"],
     "QTMCFGGEOFENCE": NMEA_PAYLOADS_GET_PROP["QTMCFGGEOFENCE"],
@@ -124,7 +222,9 @@ NMEA_PAYLOADS_SET_PROP = {
     "QTMCFGGEOFENCE_DIS": NMEA_PAYLOADS_GET_PROP["QTMCFGGEOFENCE_DIS"],
     "QTMCFGMSGRATE_NOVER": NMEA_PAYLOADS_GET_PROP["QTMCFGMSGRATE_NOVER"],
     "QTMCFGMSGRATE": NMEA_PAYLOADS_GET_PROP["QTMCFGMSGRATE"],
+    "QTMCFGNAVMODE": NMEA_PAYLOADS_GET_PROP["QTMCFGNAVMODE"],
     "QTMCFGNMEADP": NMEA_PAYLOADS_GET_PROP["QTMCFGNMEADP"],
+    "QTMCFGNMEATID": NMEA_PAYLOADS_GET_PROP["QTMCFGNMEATID"],
     "QTMCFGODO": NMEA_PAYLOADS_GET_PROP["QTMCFGODO"],
     "QTMCFGPPS": NMEA_PAYLOADS_GET_PROP["QTMCFGPPS"],
     "QTMCFGPPS_DIS": {

@@ -4,8 +4,8 @@ outside the NMEAMessage or NMEAReader classes
 
 Created on 04 Mar 2021
 
-:author: semuadmin
-:copyright: SEMU Consulting © 2021
+:author: semuadmin (Steve Smith)
+:copyright: semuadmin © 2021
 :license: BSD 3-Clause
 """
 

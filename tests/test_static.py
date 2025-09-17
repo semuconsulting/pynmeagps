@@ -5,7 +5,7 @@ Created on 3 Oct 2020
 
 *** NB: must be saved in UTF-8 format ***
 
-:author: semuadmin
+:author: semuadmin (Steve Smith)
 """
 
 import datetime

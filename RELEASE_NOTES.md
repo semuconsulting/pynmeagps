@@ -1,5 +1,13 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.52
+
+ENHANCEMENTS
+
+1. Add support for proprietary Quectel $PAIR message types (as used by Quectel LC29H and LC79H receivers).
+1. Add support for additional proprietary Quectel $PQTM message types (as used by Quectel LC29H and LC79H receivers).
+1. BSD 3-Clause license attribution clarified in all modules.
+
 ### RELEASE 1.0.51
 
 ENHANCEMENTS

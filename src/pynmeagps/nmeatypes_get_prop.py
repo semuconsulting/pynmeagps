@@ -24,7 +24,7 @@ Created on 4 Mar Sep 2021
 While the NMEA 0183 © protocol is proprietary, the information here
 has been collated from public domain sources.
 
-:author: semuadmin
+:author: semuadmin (Steve Smith)
 """
 
 # pylint: disable=too-many-lines, duplicate-code
@@ -961,6 +961,95 @@ NMEA_PAYLOADS_GET_PROP = {
         "yaw": DE,  # degree heading
     },
     # ***************************************************************
+    # Quectel LC29H / LC79H Proprietary GET message types
+    # https://www.quectel.com/download/quectel_lc29hlc79h_series_gnss_protocol_specification_v1-5/
+    # quectel_lc29hlc79h_series_gnss_protocol_specification_v1-5.pdf
+    # ***************************************************************
+    "AIR001": {
+        "commandid": IN,
+        "result": IN,
+    },
+    "AIR010": {
+        "type": IN,
+        "subsystem": IN,
+        "wno": IN,
+        "tow": IN,
+    },
+    "AIR051": {
+        "time": IN,
+    },
+    "AIR059": {
+        "minsnr": IN,
+    },
+    "AIR063": {
+        "type": IN,
+        "rate": IN,
+    },
+    "AIR067": {
+        "gpsEnabled": IN,
+        "glonassEnabled": IN,
+        "galileoEnabled": IN,
+        "bdsEnabled": IN,
+        "qzssEnabled": IN,
+        "navicEnabled": IN,
+    },
+    "AIR071": {
+        "speedThreshold": DE,
+    },
+    "AIR073": {
+        "degree": IN,
+    },
+    "AIR075": {
+        "enabled": IN,
+    },
+    "AIR081": {
+        "navMode": IN,
+    },
+    "AIR087": {
+        "status": IN,
+    },
+    "AIR101": {
+        "nmeaMode": IN,
+        "reserved": IN,
+    },
+    "AIR105": {
+        "dualBandEnabled": IN,
+    },
+    "AIR391": {
+        "cmdType": IN,
+    },
+    "AIR401": {
+        "mode": IN,
+    },
+    "AIR411": {
+        "enabled": IN,
+    },
+    "AIR421": {
+        "enabled": IN,
+    },
+    "AIR433": {
+        "mode": IN,
+    },
+    "AIR435": {
+        "enabled": IN,
+    },
+    "AIR436": {
+        "enabled": IN,
+    },
+    "AIR437": {"enabled": IN},
+    "AIR865": {
+        "baudrate": IN,
+    },
+    "AIR867": {
+        "flowControl": IN,
+    },
+    "AIRSPF": {
+        "status": IN,
+    },
+    "AIRSPF5": {
+        "status": IN,
+    },
+    # ***************************************************************
     # Quectel LG290P Proprietary message types
     # https://quectel.com/content/uploads/2024/09/Quectel_LG290P03_GNSS_Protocol_Specification_V1.0.pdf
     #
@@ -976,6 +1065,10 @@ NMEA_PAYLOADS_GET_PROP = {
     "QTMNAK": {
         "status": QS,  # ERROR
         "errcode": IN,  # 1 = invalid parms, 2 = failed exec, 3 = unsupported
+    },
+    "QTMCFGAIC": {
+        "status": QS,
+        "state": IN,
     },
     "QTMCFGCNST": {
         "status": QS,
@@ -1031,6 +1124,10 @@ NMEA_PAYLOADS_GET_PROP = {
         "msgname": ST,
         "rate": IN,
     },
+    "QTMCFGNAVMODE": {
+        "status": QS,
+        "mode": IN,
+    },
     "QTMCFGNMEADP": {
         "status": QS,
         "utcdp": IN,
@@ -1039,6 +1136,11 @@ NMEA_PAYLOADS_GET_PROP = {
         "dopdp": IN,
         "spddp": IN,
         "cogdp": IN,
+    },
+    "QTMCFGNMEATID": {
+        "status": QS,
+        "mainTalker": ST,
+        "gsvTalker": ST,
     },
     "QTMCFGODO": {
         "status": QS,
@@ -1124,8 +1226,8 @@ NMEA_PAYLOADS_GET_PROP = {
         "stopbit": IN,
         "flowctrl": IN,
     },
-    "QTMDEBUGON": {"status": ST},
-    "QTMDEBUGOFF": {"status": ST},
+    "QTMDEBUGON": {"status": QS},
+    "QTMDEBUGOFF": {"status": QS},
     "QTMDOP": {
         "msgver": IN,  # always 1 for this version
         "tow": IN,
@@ -1146,8 +1248,37 @@ NMEA_PAYLOADS_GET_PROP = {
         "epe3d": DE,
     },
     "QTMGEOFENCESTATUS": {"msgver": IN, "time": TM, "group": (4, {"staten": IN})},
-    "QTMGNSSSTART": {"status": ST},
-    "QTMGNSSSTOP": {"status": ST},
+    "QTMGETUTC": {
+        "status": QS,
+        "year": IN,
+        "month": IN,
+        "day": IN,
+        "hour": IN,
+        "minute": IN,
+        "second": IN,
+        "millisecond": IN,
+        "reserved": ST,
+        "leapsecond": IN,
+    },
+    "QTMGNSSSTART": {"status": QS},
+    "QTMGNSSSTOP": {"status": QS},
+    "QTMJAMMINGSTATUS": {
+        "msgver": IN,  # always 1 for this version
+        "jammingstatus": IN,
+    },
+    "QTMLS": {
+        "msgver": IN,  # always 1 for this version
+        "tow": IN,
+        "lsRef": HX,
+        "wno": IN,
+        "leapsecond": IN,
+        "flag": IN,
+        "lsfRef": HX,
+        "reserved": ST,
+        "wnlsf": IN,
+        "dn": IN,
+        "lsf": IN,
+    },
     "QTMODO": {
         "msgver": IN,  # always 1 for this version
         "time": TM,
@@ -1191,9 +1322,40 @@ NMEA_PAYLOADS_GET_PROP = {
         "hdop": DE,
         "pdop": DE,
     },
-    "QTMRESETODO": {"status": ST},
-    "QTMRESTOREPAR": {"status": ST},
-    "QTMSAVEPAR": {"status": ST},
+    "QTMQVER": {
+        "status": QS,
+        "msgver": IN,
+        "description": ST,
+        "version": ST,
+        "buildDate": ST,
+        "buildTime": ST,
+    },
+    "QTMRESETODO": {"status": QS},
+    "QTMRESTOREPAR": {"status": QS},
+    "QTMSAVEPAR": {"status": QS},
+    "QTMSN": {
+        "status": QS,
+        "snid": IN,  # fixed to 1
+        "length": IN,
+        "serialno": ST,
+    },
+    "QTMSTD": {
+        "reserved": ST,
+        "utc": TM,
+        "wno": IN,
+        "tow": IN,
+        "stdLat": ST,  # defined as ST as fields can be blank
+        "stdLon": ST,
+        "stdAlt": ST,
+        "stdSep": ST,
+        "stdVelN": ST,
+        "stdVelE": ST,
+        "stdVelD": ST,
+        "stdSpd": ST,
+        "stdRoll": ST,
+        "stdPitch": ST,
+        "stdHeading": ST,
+    },
     "QTMSVINSTATUS": {
         "msgver": IN,  # always 1 for this version
         "tow": IN,

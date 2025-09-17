@@ -12,24 +12,55 @@ Created on 19 Aug 2024
 While the NMEA 0183 © protocol is proprietary, the information here
 has been collated from public domain sources.
 
-:author: semuadmin
+:author: semuadmin (Steve Smith)
 """
 
 from pynmeagps.nmeatypes_core import IN, QS, ST
 
 NMEA_PAYLOADS_POLL_PROP = {
     # ***************************************************************
+    # Quectel LC29H / LC79H Proprietary Poll message types
+    # https://www.quectel.com/download/quectel_lc29hlc79h_series_gnss_protocol_specification_v1-5/
+    # quectel_lc29hlc79h_series_gnss_protocol_specification_v1-5.pdf
+    "AIR051": {},
+    "AIR059": {},
+    "AIR063": {"type": IN},
+    "AIR067": {},
+    "AIR071": {},
+    "AIR073": {},
+    "AIR075": {},
+    "AIR081": {},
+    "AIR087": {},
+    "AIR101": {},
+    "AIR105": {},
+    "AIR401": {},
+    "AIR411": {},
+    "AIR421": {},
+    "AIR433": {},
+    "AIR435": {},
+    "AIR865": {
+        "portType": IN,  # 0 = UART
+        "portIndex": IN,  # 0 = UART1
+    },
+    "AIR867": {
+        "portType": IN,  # 0 = UART
+        "portIndex": IN,  # 0 = UART1
+    },
+    # ***************************************************************
     # Quectel LG290P Proprietary message types
     # https://quectel.com/content/uploads/2024/09/Quectel_LG290P03_GNSS_Protocol_Specification_V1.0.pdf
     #
     # status attribute must be set to 'R' in all POLL messages
     # ***************************************************************
+    "QTMCFGAIC": {"status": QS},
     "QTMCFGCNST": {"status": QS},
     "QTMCFGFIXRATE": {"status": QS},
     "QTMCFGGEOFENCE": {"status": QS, "geofenceindex": IN},
     "QTMCFGMSGRATE_NOVER": {"status": QS, "msgname": ST},
     "QTMCFGMSGRATE": {"status": QS, "msgname": ST, "msgver": IN},
+    "QTMCFGNAVMODE": {"status": QS},
     "QTMCFGNMEADP": {"status": QS},
+    "QTMCFGNMEATID": {"status": QS},
     "QTMCFGODO": {"status": QS},
     "QTMCFGPPS": {"status": QS, "ppsindex": IN},
     "QTMCFGPROT": {"status": QS, "porttype": IN, "portid": IN},
@@ -40,8 +71,11 @@ NMEA_PAYLOADS_POLL_PROP = {
     "QTMCFGSAT": {"status": QS, "systemid": IN, "signalid": ST},
     "QTMCFGSIGNAL": {"status": QS},
     "QTMCFGSVIN": {"status": QS},
-    "QTMCFGUART": {"status": QS, "portid": IN},
     "QTMCFGUART_CURR": {"status": QS},
+    "QTMCFGUART": {"status": QS, "portid": IN},
+    "QTMGETUTC": {},
+    "QTMQVER": {"msgver": IN},
+    "QTMSN": {},
     "QTMUNIQID": {},
     "QTMVERNO": {},
 }
