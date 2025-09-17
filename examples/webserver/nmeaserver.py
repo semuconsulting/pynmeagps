@@ -1,26 +1,26 @@
 """
 nmeaserver.py
 
-This illustrates a simple HTTP wrapper around the 
+This illustrates a simple HTTP wrapper around the
 pynmneagps NMEAStreamer streaming and parsing example.
 
 Usage:
 
 python3 nmeaserver.py ipaddress=localhost ipport=8080 serport=/dev/ttyACM1 baudrate=38400 timeout=0.1
 
-It displays selected GPS data on a dynamically updated web page 
+It displays selected GPS data on a dynamically updated web page
 using the native Python 3 http.server library and a RESTful API
 implemented by the pynmeagps streaming and parsing service.
 
 NB: Must be executed from the root folder i.e. /examples/webserver/.
 Press CTRL-C to terminate.
 
-The web page can be accessed at http://localhost:8080. The parsed 
+The web page can be accessed at http://localhost:8080. The parsed
 data can also be accessed directly via the REST API http://localhost:8080/gps.
 
 Created on 17 May 2021
 
-:author: semuadmin
+:author: semuadmin (Steve Smith)
 :license: (c) SEMU Consulting 2021 - BSD 3-Clause License
 """
 

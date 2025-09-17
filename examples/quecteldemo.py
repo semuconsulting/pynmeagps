@@ -25,8 +25,8 @@ Press CTRL-C to terminate.
 
 Created on 19 Aug 2024
 
-:author: semuadmin
-:copyright: SEMU Consulting Â© 2021
+:author: semuadmin (Steve Smith)
+:copyright: semuadmin Â© 2021
 :license: BSD 3-Clause
 """
 

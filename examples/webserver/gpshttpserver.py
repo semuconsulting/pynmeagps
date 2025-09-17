@@ -11,12 +11,12 @@ the output from a GPS device.
 NB: Must be executed from the root folder i.e. /examples/webserver/.
 Press CTRL-C to terminate.
 
-The web page can be accessed at http://localhost:8080. The dummy parsed 
+The web page can be accessed at http://localhost:8080. The dummy parsed
 data can also be accessed directly via the REST API http://localhost:8080/gps.
 
 Created on 17 May 2021
 
-:author: semuadmin
+:author: semuadmin (Steve Smith)
 :license: (c) SEMU Consulting 2021 - BSD 3-Clause License
 """
 

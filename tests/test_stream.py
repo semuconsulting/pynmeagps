@@ -5,7 +5,7 @@ Created on 4 Mar 2021
 
 *** NB: must be saved in UTF-8 format ***
 
-:author: semuadmin
+:author: semuadmin (Steve Smith)
 """
 
 import os
@@ -21,6 +21,7 @@ from pynmeagps import (
     ERR_RAISE,
     ERR_IGNORE,
     ERR_LOG,
+    GET,
     SET,
     TM,
     LA,

@@ -5,7 +5,7 @@ Created on 19 Aug 2024
 
 *** NB: must be saved in UTF-8 format ***
 
-:author: semuadmin
+:author: semuadmin (Steve Smith)
 """
 
 import os
@@ -65,6 +65,13 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMDOP, msgver=1, tow=, gdop=99.99, pdop=99.99, tdop=99.99, vdop=99.99, hdop=99.99, ndop=99.99, edop=99.99)>",
             "<NMEA(PQTMPL, msgver=1, tow=55045200, pul=5.0, reserved1=1, reserved2=1, plposn=2879.0, plpose=2718.0, plposd=4766.0, plveln=5344.0, plvele=4323.0, plveld=10902.0, reserved3=, reserved4=, pltime=)>",
             "<NMEA(PQTMODO, msgver=1, time=12:06:35, state=1, dist=112.3)>",
+            "<NMEA(PQTMLS, msgver=1, tow=195494, lsRef=1, wno=2299, leapsecond=18, flag=0, lsfRef=1, reserved=, wnlsf=137, dn=7, lsf=18)>",
+            "<NMEA(PQTMQVER, status=OK, msgver=1, description=MODULE, version=LC29HCANR11A07S_DSA4, buildDate=2025/06/03, buildTime=15:28:01)>",
+            "<NMEA(PQTMJAMMINGSTATUS, msgver=1, jammingstatus=1)>",
+            "<NMEA(PQTMSTD, reserved=1, utc=13:11:37, wno=2368, tow=393115, stdLat=5.36, stdLon=4.62, stdAlt=12.12, stdSep=, stdVelN=0.13, stdVelE=0.13, stdVelD=0.14, stdSpd=0.23, stdRoll=, stdPitch=, stdHeading=)>",
+            "<NMEA(PQTMSTD, reserved=1, utc=13:15:23.314000, wno=0, tow=393341, stdLat=, stdLon=, stdAlt=, stdSep=, stdVelN=, stdVelE=, stdVelD=, stdSpd=, stdRoll=, stdPitch=, stdHeading=)>",
+            "<NMEA(PQTMGETUTC, status=OK, year=2024, month=10, day=22, hour=2, minute=52, second=30, millisecond=295, reserved=, leapsecond=18)>",
+            "<NMEA(PQTMSN, status=OK, snid=1, length=16, serialno=1234567890ABCDEF)>",
         )
         i = 0
         raw = 0
@@ -102,6 +109,12 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMCFGSAT, status=R, systemid=1, signalid=1)>",
             "<NMEA(PQTMCFGSAT, status=R, systemid=4, signalid=1)>",
             "<NMEA(PQTMCFGRSID, status=R)>",
+            "<NMEA(PQTMGETUTC)>",
+            "<NMEA(PQTMSN)>",
+            "<NMEA(PQTMCFGAIC, status=R)>",
+            "<NMEA(PQTMCFGNAVMODE, status=R)>",
+            "<NMEA(PQTMCFGNMEATID, status=R)>",
+            "<NMEA(PQTMQVER, msgver=1)>",
         )
         i = 0
         raw = 0
@@ -158,6 +171,10 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMCFGSAT, status=W, systemid=4, signalid=1, masklow=BFFCBFFF, maskhigh=1C003FFF)>",
             "<NMEA(PQTMCFGRSID, status=W, rsid=1024)>",
             "<NMEA(PQTMCFGRTCM, status=W, msmtype=4, msmmode=0, msmelevthd=-90, reserved1=07, reserved2=06, ephmode=1, ephinterval=0)>",
+            "<NMEA(PQTMBKP, second=66)>",
+            "<NMEA(PQTMCFGAIC, status=W, state=1)>",
+            "<NMEA(PQTMCFGNAVMODE, status=W, mode=10)>",
+            "<NMEA(PQTMCFGNMEATID, status=W, mainTalker=GP, gsvTalker=0)>",
         )
         i = 0
         raw = 0
@@ -604,3 +621,194 @@ class QuectelStreamTest(unittest.TestCase):
         for i, msg in enumerate(msgs):
             self.assertEqual(str(msg), EXPECTED_PARSED[i])
             self.assertEqual(msg.serialize().decode(), EXPECTED_BINARY[i])
+
+    def testNMEAQUECTELAIRGET(self):  # Test Quectel PAIR GET responses
+        EXPECTED_RESULTS = (
+            "<NMEA(PAIR001, commandid=4, result=0)>",
+            "<NMEA(PAIR001, commandid=3, result=1)>",
+            "<NMEA(PAIR001, commandid=3, result=0)>",
+            "<NMEA(PAIR001, commandid=4, result=0)>",
+            "<NMEA(PAIR001, commandid=5, result=0)>",
+            "<NMEA(PAIR001, commandid=6, result=0)>",
+            "<NMEA(PAIR001, commandid=7, result=0)>",
+            "<NMEA(PAIR010, type=0, subsystem=0, wno=2044, tow=369413)>",
+            "<NMEA(PAIR001, commandid=50, result=0)>",
+            "<NMEA(PAIR001, commandid=51, result=0)>",
+            "<NMEA(PAIR051, time=1000)>",
+            "<NMEA(PAIR001, commandid=58, result=0)>",
+            "<NMEA(PAIR001, commandid=59, result=0)>",
+            "<NMEA(PAIR059, minsnr=15)>",
+            "<NMEA(PAIR001, commandid=62, result=0)>",
+            "<NMEA(PAIR001, commandid=63, result=0)>",
+            "<NMEA(PAIR063, type=0, rate=3)>",
+            "<NMEA(PAIR001, commandid=66, result=0)>",
+            "<NMEA(PAIR001, commandid=67, result=0)>",
+            "<NMEA(PAIR067, gpsEnabled=1, glonassEnabled=1, galileoEnabled=1, bdsEnabled=1, qzssEnabled=1, navicEnabled=0)>",
+            "<NMEA(PAIR001, commandid=70, result=0)>",
+            "<NMEA(PAIR001, commandid=71, result=0)>",
+            "<NMEA(PAIR071, speedThreshold=0.4)>",
+            "<NMEA(PAIR001, commandid=72, result=0)>",
+            "<NMEA(PAIR001, commandid=73, result=0)>",
+            "<NMEA(PAIR073, degree=5)>",
+            "<NMEA(PAIR001, commandid=74, result=0)>",
+            "<NMEA(PAIR001, commandid=75, result=0)>",
+            "<NMEA(PAIR075, enabled=1)>",
+            "<NMEA(PAIR001, commandid=80, result=0)>",
+            "<NMEA(PAIR001, commandid=81, result=0)>",
+            "<NMEA(PAIR081, navMode=0)>",
+            "<NMEA(PAIR001, commandid=86, result=0)>",
+            "<NMEA(PAIR001, commandid=87, result=0)>",
+            "<NMEA(PAIR087, status=0)>",
+            "<NMEA(PAIR001, commandid=100, result=0)>",
+            "<NMEA(PAIR001, commandid=101, result=0)>",
+            "<NMEA(PAIR101, nmeaMode=1, reserved=0)>",
+            "<NMEA(PAIR001, commandid=382, result=0)>",
+            "<NMEA(PAIR001, commandid=3, result=0)>",
+            "<NMEA(PAIR001, commandid=104, result=0)>",
+            "<NMEA(PAIR001, commandid=2, result=0)>",
+            "<NMEA(PAIR001, commandid=105, result=0)>",
+            "<NMEA(PAIR105, dualBandEnabled=1)>",
+            "<NMEA(PAIR001, commandid=382, result=0)>",
+            "<NMEA(PAIR001, commandid=391, result=0)>",
+            "<NMEA(PAIRSPF, status=0)>",
+            "<NMEA(PAIRSPF5, status=0)>",
+            "<NMEA(PAIRSPF, status=1)>",
+            "<NMEA(PAIRSPF5, status=1)>",
+            "<NMEA(PAIRSPF, status=2)>",
+            "<NMEA(PAIRSPF5, status=2)>",
+            "<NMEA(PAIRSPF, status=3)>",
+            "<NMEA(PAIRSPF5, status=3)>",
+            "<NMEA(PAIR001, commandid=400, result=0)>",
+            "<NMEA(PAIR001, commandid=401, result=0)>",
+            "<NMEA(PAIR401, mode=2)>",
+            "<NMEA(PAIR001, commandid=410, result=0)>",
+            "<NMEA(PAIR001, commandid=411, result=0)>",
+            "<NMEA(PAIR411, enabled=1)>",
+            "<NMEA(PAIR001, commandid=420, result=0)>",
+            "<NMEA(PAIR001, commandid=421, result=0)>",
+            "<NMEA(PAIR421, enabled=1)>",
+            "<NMEA(PAIR001, commandid=433, result=0)>",
+            "<NMEA(PAIR433, mode=-1)>",
+            "<NMEA(PAIR001, commandid=434, result=0)>",
+            "<NMEA(PAIR001, commandid=435, result=0)>",
+            "<NMEA(PAIR435, enabled=1)>",
+            "<NMEA(PAIR001, commandid=436, result=0)>",
+            "<NMEA(PAIR001, commandid=437, result=0)>",
+            "<NMEA(PAIR437, enabled=1)>",
+            "<NMEA(PAIR001, commandid=650, result=0)>",
+            "<NMEA(PAIR650, field_01=0)>",
+            "<NMEA(PAIR001, commandid=752, result=0)>",
+            "<NMEA(PAIR001, commandid=864, result=0)>",
+            "<NMEA(PAIR001, commandid=865, result=0)>",
+            "<NMEA(PAIR865, baudrate=115200)>",
+            "<NMEA(PAIR001, commandid=866, result=0)>",
+            "<NMEA(PAIR001, commandid=867, result=0)>",
+            "<NMEA(PAIR867, flowControl=0)>",
+        )
+
+        i = 0
+        raw = 0
+        with open(
+            os.path.join(DIRNAME, "pygpsdata_quectel_pair_get.log"), "rb"
+        ) as stream:
+            nmr = NMEAReader(stream)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, len(EXPECTED_RESULTS))
+
+    def testNMEAQUECTELAIRSET(self):  # Test Quectel PAIR SET commands
+        EXPECTED_RESULTS = (
+            "<NMEA(PAIR002)>",
+            "<NMEA(PAIR003)>",
+            "<NMEA(PAIR004)>",
+            "<NMEA(PAIR005)>",
+            "<NMEA(PAIR007)>",
+            "<NMEA(PAIR050, time=1000)>",
+            "<NMEA(PAIR058, minsnr=15)>",
+            "<NMEA(PAIR062, type=0, rate=3)>",
+            "<NMEA(PAIR066, gpsEnabled=1, glonassEnabled=0, galileoEnabled=1, bdsEnabled=1, qzssEnabled=0, navicEnabled=0)>",
+            "<NMEA(PAIR070, speedThreshold=4)>",
+            "<NMEA(PAIR072, degree=5)>",
+            "<NMEA(PAIR074, enabled=1)>",
+            "<NMEA(PAIR080, navMode=1)>",
+            "<NMEA(PAIR081)>",
+            "<NMEA(PAIR086, status=1)>",
+            "<NMEA(PAIR382, enabled=1)>",
+            "<NMEA(PAIR003)>",
+            "<NMEA(PAIR104, dualBandEnabled=0)>",
+            "<NMEA(PAIR002)>",
+            "<NMEA(PAIR382, enabled=1)>",
+            "<NMEA(PAIR391, cmdType=1)>",
+            "<NMEA(PAIR400, mode=2)>",
+            "<NMEA(PAIR410, enabled=1)>",
+            "<NMEA(PAIR420, enabled=1)>",
+            "<NMEA(PAIR432, mode=1)>",
+            "<NMEA(PAIR434, enabled=1)>",
+            "<NMEA(PAIR436, enabled=1)>",
+            "<NMEA(PAIR511)>",
+            "<NMEA(PAIR382, enabled=1)>",
+            "<NMEA(PAIR003)>",
+            "<NMEA(PAIR511)>",
+            "<NMEA(PAIR002)>",
+            "<NMEA(PAIR513)>",
+            "<NMEA(PAIR382, enabled=1)>",
+            "<NMEA(PAIR003)>",
+            "<NMEA(PAIR513)>",
+            "<NMEA(PAIR002)>",
+            "<NMEA(PAIR650, second=0)>",
+            "<NMEA(PAIR752, ppsType=2)>",
+            "<NMEA(PAIR864, portType=0, portIndex=0, baudrate=115200)>",
+            "<NMEA(PAIR866, portType=0, portIndex=0, flowControl=1)>",
+        )
+
+        i = 0
+        raw = 0
+        with open(
+            os.path.join(DIRNAME, "pygpsdata_quectel_pair_set.log"), "rb"
+        ) as stream:
+            nmr = NMEAReader(stream, msgmode=SET)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, len(EXPECTED_RESULTS))
+
+    def testNMEAQUECTELAIRPOLL(self):  # Test Quectel PAIR POLL commands
+        EXPECTED_RESULTS = (
+            "<NMEA(PAIR051)>",
+            "<NMEA(PAIR059)>",
+            "<NMEA(PAIR063, type=0)>",
+            "<NMEA(PAIR067)>",
+            "<NMEA(PAIR071)>",
+            "<NMEA(PAIR073)>",
+            "<NMEA(PAIR075)>",
+            "<NMEA(PAIR081)>",
+            "<NMEA(PAIR087)>",
+            "<NMEA(PAIR101)>",
+            "<NMEA(PAIR105)>",
+            "<NMEA(PAIR401)>",
+            "<NMEA(PAIR411)>",
+            "<NMEA(PAIR421)>",
+            "<NMEA(PAIR433)>",
+            "<NMEA(PAIR435)>",
+            "<NMEA(PAIR437)>",
+            "<NMEA(PAIR865, portType=0, portIndex=0)>",
+            "<NMEA(PAIR867, portType=0, portIndex=0)>",
+        )
+
+        i = 0
+        raw = 0
+        with open(
+            os.path.join(DIRNAME, "pygpsdata_quectel_pair_poll.log"), "rb"
+        ) as stream:
+            nmr = NMEAReader(stream, msgmode=POLL)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, len(EXPECTED_RESULTS))

@@ -7,8 +7,8 @@ From various public domain sources.
 
 Created on 26 Aug 2023
 
-:author: semuadmin
-:copyright: SEMU Consulting © 2021
+:author: semuadmin (Steve Smith)
+:copyright: semuadmin © 2021
 :license: BSD 3-Clause
 """
 
