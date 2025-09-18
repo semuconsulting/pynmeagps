@@ -1,5 +1,12 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.53
+
+FIXES:
+
+1. Fix typo in Quectel PAIR650 GET message definition.
+1. Allow string type (*as well as datetime/time type*) for NMEA DT, DTL, DM and TM attribute types. TM strings must be in format "hhmmss" (or "hh:mm:ss") and DT/DTL/DM strings must be "yyyymmdd" (or "yyyy-mm-dd").
+
 ### RELEASE 1.0.52
 
 ENHANCEMENTS

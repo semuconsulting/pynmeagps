@@ -696,7 +696,7 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PAIR001, commandid=437, result=0)>",
             "<NMEA(PAIR437, enabled=1)>",
             "<NMEA(PAIR001, commandid=650, result=0)>",
-            "<NMEA(PAIR650, field_01=0)>",
+            "<NMEA(PAIR650, second=0)>",
             "<NMEA(PAIR001, commandid=752, result=0)>",
             "<NMEA(PAIR001, commandid=864, result=0)>",
             "<NMEA(PAIR001, commandid=865, result=0)>",
