@@ -271,6 +271,8 @@ NMEAMessage('GN','GLL', 0, payload=['4307.4074073', 'S', '00259.2592593', 'E', '
 
 **NB:** Once instantiated, an `NMEAMessage` object is immutable.
 
+See [pynmeagps._usage.py](https://https://github.com/semuconsulting/pynmeagps/blob/master/examples/pynmeagps_usage.py) for further examples.
+
 ---
 ## <a name="serializing">Serializing</a>
 
