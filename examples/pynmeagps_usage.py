@@ -24,14 +24,14 @@ msg1 = NMEAMessage(
     "P",
     "GRMI",
     SET,
-    lat=-115.81513,
-    lon=37.23345,
+    lat=37.23345,
+    lon=-115.81513,
     date="2025-09-12",  # "-" delimiters are optional
     time="12:15:34",  # ":" delimiters are optional
     rcvr_cmd="D",
 )
-# <NMEA(PGRMI, lat=-115.81513, NS=S, lon=37.23345, EW=E, date=2025-09-12, time=12:15:34, rcvr_cmd=D)>
-# b'$PGRMI,11548.90780,S,03714.00700,E,120925,121534,D*3B\r\n'
+# <NMEA(PGRMI, lat=37.23345, NS=N, lon=-115.81513, EW=W, date=2025-09-12, time=12:15:34, rcvr_cmd=D)>
+# b'$PGRMI,3714.00700,N,11548.90780,W,120925,121534,D*04\r\n'
 print(msg1)
 print(msg1.serialize())
 
@@ -40,14 +40,14 @@ msg2 = NMEAMessage(
     "P",
     "GRMI",
     SET,
-    lat=-115.81513,
-    lon=37.23345,
+    lat=37.23345,
+    lon=-115.81513,
     date=datetime(2025, 9, 12).date(),
     time=datetime(2025, 9, 12, 12, 15, 34).time(),
     rcvr_cmd="D",
 )
-# <NMEA(PGRMI, lat=-115.81513, NS=S, lon=37.23345, EW=E, date=2025-09-12, time=12:15:34, rcvr_cmd=D)>
-# b'$PGRMI,11548.90780,S,03714.00700,E,120925,121534.00,D*15\r\n'
+# <NMEA(PGRMI, lat=37.23345, NS=N, lon=-115.81513, EW=W, date=2025-09-12, time=12:15:34, rcvr_cmd=D)>
+# b'$PGRMI,3714.00700,N,11548.90780,W,120925,121534.00,D*2A\r\n'
 print(msg2)
 print(msg2.serialize())
 
@@ -56,11 +56,11 @@ msg3 = NMEAMessage(
     "P",
     "GRMI",
     SET,
-    lat=-115.81513,
-    lon=37.23345,
+    lat=37.23345,
+    lon=-115.81513,
     rcvr_cmd="D",
 )
-# <NMEA(PGRMI, lat=-115.81513, NS=S, lon=37.23345, EW=E, date=2025-09-18, time=14:37:20.373212, rcvr_cmd=D)>
-# b'$PGRMI,11548.90780,S,03714.00700,E,180925,143720.37,D*18\r\n'
+# <NMEA(PGRMI, lat=37.23345, NS=N, lon=-115.81513, EW=W, date=2025-09-18, time=15:19:31.240234, rcvr_cmd=D)>
+# b'$PGRMI,3714.00700,N,11548.90780,W,180925,151931.24,D*28\r\n'
 print(msg3)
 print(msg3.serialize())
