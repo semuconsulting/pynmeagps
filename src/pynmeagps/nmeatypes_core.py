@@ -464,11 +464,11 @@ NMEA_MSGIDS_PROP = {
     "AIRSPF": "Jamming status L1",
     "AIRSPF5": "Jamming status L5",
     "QTMBKP": "Set Backup Mode",
-    "QTMCFGAIC": "Sets/gets the AIC (Active Interference Cancellation) Function",
+    "QTMCFGAIC": "Sets/Gets AIC Function",
     "QTMCFGCNST": "Sets/Gets Constellation Configuration",
     "QTMCFGFIXRATE": "Sets/Gets Fix Interval",
     "QTMCFGGEOFENCE": "Sets/Gets Geofence Feature",
-    "QTMCFGMSGRATE": "Sets/Gets Message Output Rate on Current Interface",
+    "QTMCFGMSGRATE": "Sets/Gets Message Output Rate",
     "QTMCFGNAVMODE": "Sets/Gets Navigation Mode",
     "QTMCFGNMEADP": "Sets/Gets NMEA Precision",
     "QTMCFGNMEATID": "Sets/Gets NMEA Talker ID",
@@ -524,13 +524,13 @@ NMEA_MSGIDS_PROP = {
     # ***************************************************************
     # U-BLOX Proprietary message types
     # ***************************************************************
-    "UBX00": "PUBX-POSITION Lat/Long Position Data",
-    "UBX03": "PUBX-SVSTATUS Satellite Status",
-    "UBX04": "PUBX-TIME Time of Day and Clock Information",
+    "UBX00": "Lat/Long Position Data",
+    "UBX03": "Satellite Status",
+    "UBX04": "Time of Day and Clock Information",
     "UBX05": "Lat/Long Position Data",
     "UBX06": "Lat/Long Position Data",
-    "UBX40": "Set NMEA message output rate",
-    "UBX41": "PUBX-CONFIG Set Protocols and Baudrate",
+    "UBX40": "Set NMEA Message Output Rate",
+    "UBX41": "Set Protocols and Baudrate",
     # ***************************************************************
     # Trimble Proprietary message types
     # ***************************************************************

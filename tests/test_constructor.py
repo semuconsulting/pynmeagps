@@ -71,7 +71,7 @@ class FillTest(unittest.TestCase):
 
     def testFill_GNGLL_SP(self):  # test GET constructor in standard precision mode
         EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
-        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "W", "", "A", "A"]
+        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "W", "223232", "A", "A"]
         res = NMEAMessage(
             "GN",
             "GLL",
@@ -90,7 +90,7 @@ class FillTest(unittest.TestCase):
         self,
     ):  # derive lat/lon sign from NS/EW values
         EXPECTED_RESULT = "<NMEA(GNGLL, lat=-43.123456789, NS=S, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
-        EXPECTED_PAYLOAD = ["4307.40741", "S", "00259.25926", "W", "", "A", "A"]
+        EXPECTED_PAYLOAD = ["4307.40741", "S", "00259.25926", "W", "223232", "A", "A"]
         res = NMEAMessage(
             "GN",
             "GLL",
@@ -109,7 +109,7 @@ class FillTest(unittest.TestCase):
         self,
     ):  # derive lat/lon sign from NS/EW values
         EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=2.987654321, EW=E, time=22:32:32, status=A, posMode=A)>"
-        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "E", "", "A", "A"]
+        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "E", "223232", "A", "A"]
         res = NMEAMessage(
             "GN",
             "GLL",
@@ -128,7 +128,7 @@ class FillTest(unittest.TestCase):
         self,
     ):  # derive lat/lon sign from NS/EW values
         EXPECTED_RESULT = "<NMEA(GNGLL, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, time=22:32:32, status=A, posMode=A)>"
-        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "W", "", "A", "A"]
+        EXPECTED_PAYLOAD = ["4307.40741", "N", "00259.25926", "W", "223232", "A", "A"]
         res = NMEAMessage(
             "GN",
             "GLL",
@@ -139,6 +139,32 @@ class FillTest(unittest.TestCase):
             status="A",
             posMode="A",
             hpnmeamode=0,
+        )
+        self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.payload, EXPECTED_PAYLOAD)
+
+    def testFill_GRMI(
+        self,
+    ):  # test population ot TM and DT attributes by strings
+        EXPECTED_RESULT = "<NMEA(PGRMI, lat=43.123456789, NS=N, lon=-2.987654321, EW=W, date=2025-09-18, time=22:32:32, rcvr_cmd=D)>"
+        EXPECTED_PAYLOAD = [
+            "4307.40741",
+            "N",
+            "00259.25926",
+            "W",
+            "180925",
+            "223232",
+            "D",
+        ]
+        res = NMEAMessage(
+            "P",
+            "GRMI",
+            SET,
+            lat=43.123456789,
+            lon=-2.987654321,
+            date="2025-09-18",
+            time="22:32:32",
+            rcvr_cmd="D",
         )
         self.assertEqual(str(res), EXPECTED_RESULT)
         self.assertEqual(res.payload, EXPECTED_PAYLOAD)

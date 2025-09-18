@@ -1037,6 +1037,9 @@ NMEA_PAYLOADS_GET_PROP = {
         "enabled": IN,
     },
     "AIR437": {"enabled": IN},
+    "AIR650": {
+        "second": IN,
+    },
     "AIR865": {
         "baudrate": IN,
     },

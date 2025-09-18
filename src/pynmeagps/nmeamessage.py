@@ -702,9 +702,31 @@ class NMEAMessage:
         elif att in (nmt.LA, nmt.LN):
             vals = ddd2dmm(val, att, hpmode)
         elif att == nmt.TM:
-            vals = time2str(val)
-        elif att in (nmt.DT, nmt.DTL, nmt.DM):
-            vals = date2str(val, att)
+            if isinstance(val, str):
+                vals = str(val.replace(":", ""))
+            else:  # time
+                vals = time2str(val)
+        elif att == nmt.DT:
+            if isinstance(val, str):
+                # yyyymmdd -> ddmmyy
+                val = val.replace("-", "")
+                vals = f"{val[6:8]}{val[4:6]}{val[2:4]}"
+            else:  # datetime
+                vals = date2str(val, att)
+        elif att == nmt.DTL:
+            # yyyymmdd -> ddmmyyyy
+            if isinstance(val, str):
+                val = val.replace("-", "")
+                vals = f"{val[6:8]}{val[4:6]}{val[0:4]}"
+            else:  # datetime
+                vals = date2str(val, att)
+        elif att == nmt.DM:
+            # yyyymmdd -> mmddyy
+            if isinstance(val, str):
+                val = val.replace("-", "")
+                vals = f"{val[4:6]}{val[6:8]}{val[2:4]}"
+            else:  # datetime
+                vals = date2str(val, att)
         else:
             raise nme.NMEATypeError(f"Unknown attribute type {att}.")
         return vals

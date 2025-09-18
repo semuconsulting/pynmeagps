@@ -264,7 +264,7 @@ class StaticTest(unittest.TestCase):
         res = msgdesc("GGA")
         self.assertEqual(res, "Global positioning system fix data")
         res = msgdesc("UBX03")
-        self.assertEqual(res, "PUBX-SVSTATUS Satellite Status")
+        self.assertEqual(res, "Satellite Status")
         res = msgdesc("XXX")
         self.assertEqual(res, "Unknown msgID XXX")
 
