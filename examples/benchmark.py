@@ -72,7 +72,7 @@ def progbar(i: int, lim: int, inc: int = 20):
 
 def benchmark(**kwargs) -> float:
     """
-    pyubx2 Performance benchmark test.
+    Performance benchmark test.
 
     :param int cycles: (kwarg) number of test cycles (10,000)
     :returns: benchmark as transactions/second
@@ -92,22 +92,25 @@ def benchmark(**kwargs) -> float:
         f"\nTxn per cycle: {txnc:,}",
     )
 
+    msglen = 0
     start = process_time_ns()
     print(f"\nBenchmark test started at {start}")
     for i in range(cyc):
         progbar(i, cyc)
         for msg in NMEAMESSAGES:
+            msglen += len(msg)
             _ = NMEAReader.parse(msg)
     end = process_time_ns()
     print(f"Benchmark test ended at {end}.")
     duration = end - start
-    rate = round(txnt * 1e9 / duration, 2)
+    txs = round(txnt * 1e9 / duration, 2)
+    kbs = round(msglen * 1e9 / duration / 2**10, 2)
 
     print(
-        f"\n{txnt:,} messages processed in {duration/1e9:,.3f} seconds = {rate:,.2f} txns/second.\n"
+        f"\n{txnt:,} messages processed in {duration/1e9:,.3f} seconds = {txs:,.2f} txns/second, {kbs:,.2f} kB/second.\n"
     )
 
-    return rate
+    return txs, kbs
 
 
 def main():

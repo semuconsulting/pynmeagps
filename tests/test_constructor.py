@@ -202,18 +202,41 @@ class FillTest(unittest.TestCase):
     def testFill_PUBX401(
         self,
     ):  # test SET constructor with PUBX message and payload kwarg
-        EXPECTED_RESULT = "<NMEA(PUBX40, msgId=40, id=2, rddc=0, rus1=1, rus2=0, rusb=1, rspi=0, reserved=0)>"
+        EXPECTED_RESULT = "<NMEA(PUBX40, msgId=40, id=GLL, rddc=0, rus1=1, rus2=0, rusb=1, rspi=0, reserved=0)>"
+        EXPECTED_PAYLOAD = b"$PUBX,40,GLL,0,1,0,1,0,0*5C\r\n"
         res = NMEAMessage(
-            "P", "UBX", SET, payload=["40", "02", "0", "1", "0", "1", "0", "0"]
+            "P", "UBX", SET, payload=["40", "GLL", "0", "1", "0", "1", "0", "0"]
         )
         self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.serialize(), EXPECTED_PAYLOAD)
 
     def testFill_PUBX402(
         self,
     ):  # test SET constructor with PUBX message and individual kwargs
         EXPECTED_RESULT = "<NMEA(PUBX40, msgId=40, id=3, rddc=0, rus1=1, rus2=0, rusb=1, rspi=0, reserved=0)>"
+        EXPECTED_PAYLOAD = b"$PUBX,40,3,0,1,0,1,0,0*28\r\n"
         res = NMEAMessage("P", "UBX", SET, msgId="40", id=3, rus1=1, rusb=1)
         self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.serialize(), EXPECTED_PAYLOAD)
+
+    def testFill_PUBX412(
+        self,
+    ):  # test SET constructor with PUBX message and individual kwargs
+        EXPECTED_RESULT = "<NMEA(PUBX41, msgId=41, portId=1, inProto=1, outProto=1, baudRate=115200, autobauding=0)>"
+        EXPECTED_PAYLOAD = b"$PUBX,41,1,1,1,115200,0*1C\r\n"
+        res = NMEAMessage(
+            "P",
+            "UBX",
+            SET,
+            msgId="41",
+            portId=1,
+            inProto=1,
+            outProto=1,
+            baudRate=115200,
+            autobauding=0,
+        )
+        self.assertEqual(str(res), EXPECTED_RESULT)
+        self.assertEqual(res.serialize(), EXPECTED_PAYLOAD)
 
     def testFill_PUBX4ERR(self):  # test SET constructor with missing msgId
         EXPECTED_ERROR = (

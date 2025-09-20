@@ -31,38 +31,86 @@ from pynmeagps.nmeatypes_core import (
 )
 
 KNOTSCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
+LEAPS0 = datetime(1900, 1, 1, 0, 0, 0)
+LEAPSECONDS = [
+    (2272060800, 10),  # 1 Jan 1972
+    (2287785600, 11),  # 1 Jul 1972
+    (2303683200, 12),  # 1 Jan 1973
+    (2335219200, 13),  # 1 Jan 1974
+    (2366755200, 14),  # 1 Jan 1975
+    (2398291200, 15),  # 1 Jan 1976
+    (2429913600, 16),  # 1 Jan 1977
+    (2461449600, 17),  # 1 Jan 1978
+    (2492985600, 18),  # 1 Jan 1979
+    (2524521600, 19),  # 1 Jan 1980
+    (2571782400, 20),  # 1 Jul 1981
+    (2603318400, 21),  # 1 Jul 1982
+    (2634854400, 22),  # 1 Jul 1983
+    (2698012800, 23),  # 1 Jul 1985
+    (2776982400, 24),  # 1 Jan 1988
+    (2840140800, 25),  # 1 Jan 1990
+    (2871676800, 26),  # 1 Jan 1991
+    (2918937600, 27),  # 1 Jul 1992
+    (2950473600, 28),  # 1 Jul 1993
+    (2982009600, 29),  # 1 Jul 1994
+    (3029443200, 30),  # 1 Jan 1996
+    (3076704000, 31),  # 1 Jul 1997
+    (3124137600, 32),  # 1 Jan 1999
+    (3345062400, 33),  # 1 Jan 2006
+    (3439756800, 34),  # 1 Jan 2009
+    (3550089600, 35),  # 1 Jul 2012
+    (3644697600, 36),  # 1 Jul 2015
+    (3692217600, 37),  # 1 Jan 2017
+]
+"""
+Leapsecond list from NTC - Updated through IERS Bulletin C69
+https://hpiers.obspm.fr/iers/bul/bulc/ntp/leap-seconds.list
+File expires on: 28 June 2026
+"""
 
 
-def get_parts(message: object) -> tuple:
+def area(
+    lat1: float,
+    lon1: float,
+    lat2: float,
+    lon2: float,
+    radius: int = WGS84_SMAJ_AXIS / 1000,
+) -> float:
     """
-    Get content, talker, msgid, payload and checksum of raw NMEA message.
+    Calculate spherical area bounded by two coordinates.
 
-    :param object message: entire message as bytes or string
-    :return: tuple of (content, talker, msgID, payload as list, checksum)
-    :rtype: tuple
-    :raises: NMEAMessageError (if message is badly formed)
+    :param float lat1: lat1
+    :param float lon1: lon1
+    :param float lat2: lat2
+    :param float lon2: lon2
+    :param float radius: radius in km (Earth = 6378.137 km)
+    :return: area in km²
+    :rtype: float
     """
 
-    try:
-        if isinstance(message, bytes):
-            message = message.decode("utf-8")
-        content, cksum = message.strip("$\r\n").split("*", 1)
-        hdrpayload = content.split(",", 1)
-        if len(hdrpayload) == 1:  # no payload (e.g. stateless SET command)
-            hdr = content
-            payload = ""
-        else:
-            hdr, payload = content.split(",", 1)
-            payload = payload.split(",")
-        if hdr[0:1] == "P":  # proprietary
-            talker = "P"
-            msgid = hdr[1:]
-        else:  # standard
-            talker = hdr[0:2]
-            msgid = hdr[2:]
-        return content, talker, msgid, payload, cksum
-    except Exception as err:
-        raise nme.NMEAMessageError(f"Badly formed message {message}") from err
+    phi1, phi2 = [c * pi / 180 for c in (lat1, lat2)]
+    return pow(radius, 2) * pi * abs(sin(phi1) - sin(phi2)) * abs(lon1 - lon2) / 180
+
+
+def bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """
+    Calculate bearing between two coordinates.
+
+    :param float lat1: lat1
+    :param float lon1: lon1
+    :param float lat2: lat2
+    :param float lon2: lon2
+    :return: bearing in degrees
+    :rtype: float
+    """
+
+    phi1, lambda1, phi2, lambda2 = [c * pi / 180 for c in (lat1, lon1, lat2, lon2)]
+    y = sin(lambda2 - lambda1) * cos(phi2)
+    x = cos(phi1) * sin(phi2) - sin(phi1) * cos(phi2) * cos(lambda2 - lambda1)
+    theta = atan2(y, x)
+    brng = (theta * 180 / pi + 360) % 360
+
+    return brng
 
 
 def calc_checksum(content: object) -> str:
@@ -80,40 +128,47 @@ def calc_checksum(content: object) -> str:
     return f"{cksum:02X}"
 
 
-def generate_checksum(talker: str, msgID: str, payload: list) -> str:
+def date2str(dat: datetime.date, form: str = DT) -> str:
     """
-    Generate checksum for new NMEA message.
+    Convert datetime.date to NMEA formatted string.
 
-    :param str talker: talker e.g. "GN"
-    :param str msgID: msgID e.g. "GLL"
-    :param list payload: payload as list
-    :return: checksum as hex string
+    :param datetime.date dat: date
+    :param str form: date format DT = ddmmyy, DTL = ddmmyyyy, DM = mmddyy (DT)
+    :return: NMEA formatted date string
     :rtype: str
     """
 
-    content = talker + msgID
-    for field in payload:
-        content += f",{field}"
-    return calc_checksum(content)
+    try:
+        if form == DM:
+            dform = "%m%d%y"
+        elif form == DTL:
+            dform = "%d%m%Y"
+        else:
+            dform = "%d%m%y"
+        return dat.strftime(dform)
+    except (AttributeError, TypeError, ValueError):
+        return ""
 
 
-def dmm2ddd(pos: str) -> float:
+def date2utc(dates: str, form: str = DT) -> datetime.date:
     """
-    Convert NMEA lat/lon string to (unsigned) decimal degrees.
+    Convert NMEA Date to UTC datetime.
 
-    :param str pos: (d)ddmm.mmmmm
-    :return: pos as decimal degrees
-    :rtype: float or str if invalid
-
+    :param str dates: NMEA date
+    :param str form: date format DT = ddmmyy, DTL = ddmmyyyy, DM = mmddyy (DT)
+    :return: UTC date YYyy:mm:dd
+    :rtype: datetime.date
     """
 
     try:
-        dp = pos.find(".")
-        if dp < 4:
-            raise ValueError()
-        posdeg = float(pos[0 : dp - 2])
-        posmin = float(pos[dp - 2 :])
-        return round((posdeg + posmin / 60), 10)
+        if form == "DM":
+            dform = "%m%d%y"
+        elif form == "DTL":
+            dform = "%d%m%Y"
+        else:
+            dform = "%d%m%y"
+        utc = datetime.strptime(dates, dform)
+        return utc.date()
     except (TypeError, ValueError):
         return ""
 
@@ -152,153 +207,29 @@ def ddd2dmm(degrees: float, att: str, hpmode: bool = False) -> str:
         return ""
 
 
-def date2utc(dates: str, form: str = DT) -> datetime.date:
+def deg2dmm(degrees: float, att: str) -> str:
     """
-    Convert NMEA Date to UTC datetime.
+    Convert decimal degrees to degrees decimal minutes string
+    e.g. '51°20.76′S'.
 
-    :param str dates: NMEA date
-    :param str form: date format DT = ddmmyy, DTL = ddmmyyyy, DM = mmddyy (DT)
-    :return: UTC date YYyy:mm:dd
-    :rtype: datetime.date
+    :param float degrees: degrees
+    :param str att: 'LA' (lat) or 'LN' (lon)
+    :return: degrees as dm.m formatted string
+    :rtype: str
+
     """
 
     try:
-        if form == "DM":
-            dform = "%m%d%y"
-        elif form == "DTL":
-            dform = "%d%m%Y"
+        negative = degrees < 0
+        degrees = abs(degrees)
+        degrees, minutes = divmod(degrees * 60, 60)
+        if negative:
+            sfx = "S" if att == LA else "W"
         else:
-            dform = "%d%m%y"
-        utc = datetime.strptime(dates, dform)
-        return utc.date()
+            sfx = "N" if att == LA else "E"
+        return f"{int(degrees)}\u00b0{round(minutes,7)}\u2032{sfx}"
     except (TypeError, ValueError):
         return ""
-
-
-def time2utc(times: str) -> datetime.time:
-    """
-    Convert NMEA Time to UTC datetime.
-
-    :param str times: NMEA time hhmmss.ss
-    :return: UTC time hh:mm:ss.ss
-    :rtype: datetime.time
-    """
-
-    try:
-        if len(times) == 6:  # decimal seconds is omitted
-            times = times + ".00"
-        utc = datetime.strptime(times, "%H%M%S.%f")
-        return utc.time()
-    except (TypeError, ValueError):
-        return ""
-
-
-def time2str(tim: datetime.time) -> str:
-    """
-    Convert datetime.time to NMEA formatted string.
-
-    :param datetime.time tim: time
-    :return: NMEA formatted time string hhmmss.ss
-    :rtype: str
-    """
-
-    try:
-        return tim.strftime("%H%M%S.%f")[0:9]
-    except (AttributeError, TypeError, ValueError):
-        return ""
-
-
-def date2str(dat: datetime.date, form: str = DT) -> str:
-    """
-    Convert datetime.date to NMEA formatted string.
-
-    :param datetime.date dat: date
-    :param str form: date format DT = ddmmyy, DTL = ddmmyyyy, DM = mmddyy (DT)
-    :return: NMEA formatted date string
-    :rtype: str
-    """
-
-    try:
-        if form == DM:
-            dform = "%m%d%y"
-        elif form == DTL:
-            dform = "%d%m%Y"
-        else:
-            dform = "%d%m%y"
-        return dat.strftime(dform)
-    except (AttributeError, TypeError, ValueError):
-        return ""
-
-
-def knots2spd(knots: float, unit: str = "MS") -> float:
-    """
-    Convert speed in knots to speed in specified units.
-
-    :param float knots: knots
-    :param unit str: 'MS' (default), 'FS', MPH', 'KMPH'
-    :return: speed in m/s, feet/s, mph or kmph
-    :rtype: float
-
-    """
-
-    try:
-        return knots * KNOTSCONV[unit.upper()]
-    except KeyError as err:
-        raise KeyError(
-            f"Invalid conversion unit {unit.upper()} - must be in {list(KNOTSCONV.keys())}."
-        ) from err
-    except TypeError as err:
-        raise TypeError(
-            f"Invalid knots value {knots} - must be float or integer."
-        ) from err
-
-
-def msgdesc(msgID: str) -> str:
-    """
-    Return descriptive string for NMEA msgId.
-
-    :param msgID str: message ID e.g. 'GGA'
-    :return: description of message
-    :rtype: str
-
-    """
-    # pylint: disable=invalid-name
-
-    if msgID in NMEA_MSGIDS:
-        return NMEA_MSGIDS[msgID]
-    if msgID in NMEA_MSGIDS_PROP:
-        return NMEA_MSGIDS_PROP[msgID]
-    return f"Unknown msgID {msgID}"
-
-
-def latlon2dms(lat: float, lon: float) -> tuple:
-    """
-    Converts decimal lat/lon tuple to degrees minutes seconds.
-
-    :param float lat: lat
-    :param float lon: lon
-    :return: (lat,lon) in d.m.s. format
-    :rtype: tuple
-    """
-
-    lat = deg2dms(lat, LA)
-    lon = deg2dms(lon, LN)
-    return lat, lon
-
-
-def latlon2dmm(lat: float, lon: float) -> tuple:
-    """
-    Converts decimal lat/lon tuple to degrees decimal minutes.
-
-    :param float lat: lat
-    :param float lon: lon
-    :return: (lat,lon) in d.mm.m format
-    :rtype: tuple
-    """
-
-    lat = deg2dmm(lat, LA)
-    lon = deg2dmm(lon, LN)
-    return lat, lon
 
 
 def deg2dms(degrees: float, att: str) -> str:
@@ -327,27 +258,23 @@ def deg2dms(degrees: float, att: str) -> str:
         return ""
 
 
-def deg2dmm(degrees: float, att: str) -> str:
+def dmm2ddd(pos: str) -> float:
     """
-    Convert decimal degrees to degrees decimal minutes string
-    e.g. '51°20.76′S'.
+    Convert NMEA lat/lon string to (unsigned) decimal degrees.
 
-    :param float degrees: degrees
-    :param str att: 'LA' (lat) or 'LN' (lon)
-    :return: degrees as dm.m formatted string
-    :rtype: str
+    :param str pos: (d)ddmm.mmmmm
+    :return: pos as decimal degrees
+    :rtype: float or str if invalid
 
     """
 
     try:
-        negative = degrees < 0
-        degrees = abs(degrees)
-        degrees, minutes = divmod(degrees * 60, 60)
-        if negative:
-            sfx = "S" if att == LA else "W"
-        else:
-            sfx = "N" if att == LA else "E"
-        return f"{int(degrees)}\u00b0{round(minutes,7)}\u2032{sfx}"
+        dp = pos.find(".")
+        if dp < 4:
+            raise ValueError()
+        posdeg = float(pos[0 : dp - 2])
+        posmin = float(pos[dp - 2 :])
+        return round((posdeg + posmin / 60), 10)
     except (TypeError, ValueError):
         return ""
 
@@ -388,24 +315,6 @@ def dms2deg(
     for x in range(len(dms) - 1):
         ddd += 0.0 if dms[x] == "" else float(dms[x]) / pow(60, x)
     return round(ddd * sign, rnd)
-
-
-def llh2iso6709(lat: float, lon: float, alt: float, crs: str = WGS84) -> str:
-    """
-    Convert decimal degrees and alt to ISO6709 format
-    e.g. "+27.5916+086.5640+8850CRSWGS_84/".
-
-    :param float lat: latitude
-    :param float lon: longitude
-    :param float alt: altitude (hMSL)
-    :param float crs: coordinate reference system (default = WGS_84)
-    :return: position in ISO6709 format
-    :rtype: str
-
-    """
-
-    lati, loni, alti = ["-" if c < 0 else "+" for c in (lat, lon, alt)]
-    return f"{lati}{abs(lat)}{loni}{abs(lon)}{alti}{alt}CRS{crs}/"
 
 
 def ecef2llh(
@@ -485,6 +394,186 @@ def ecef2llh(
     return lat, lon, height
 
 
+def generate_checksum(talker: str, msgID: str, payload: list) -> str:
+    """
+    Generate checksum for new NMEA message.
+
+    :param str talker: talker e.g. "GN"
+    :param str msgID: msgID e.g. "GLL"
+    :param list payload: payload as list
+    :return: checksum as hex string
+    :rtype: str
+    """
+
+    content = talker + msgID
+    for field in payload:
+        content += f",{field}"
+    return calc_checksum(content)
+
+
+def get_gpswnotow(dat: datetime) -> tuple:
+    """
+    Get GPS Week number (Wno) and Time of Week (Tow)
+    for midnight on given date.
+
+    GPS Epoch 0 = 6th Jan 1980
+
+    :param datetime dat: calendar date
+    :return: tuple of (Wno, Tow)
+    :rtype: tuple
+    """
+
+    wno = int((dat - GPSEPOCH0).days / 7)
+    tow = ((dat.weekday() + 1) % 7) * 86400
+    return wno, tow
+
+
+def get_parts(message: object) -> tuple:
+    """
+    Get content, talker, msgid, payload and checksum of raw NMEA message.
+
+    :param object message: entire message as bytes or string
+    :return: tuple of (content, talker, msgID, payload as list, checksum)
+    :rtype: tuple
+    :raises: NMEAMessageError (if message is badly formed)
+    """
+
+    try:
+        if isinstance(message, bytes):
+            message = message.decode("utf-8")
+        content, cksum = message.strip("$\r\n").split("*", 1)
+        hdr, *payload = content.split(",")
+        s = 1 if hdr[:1] == "P" else 2
+        talker, msgid = hdr[:s], hdr[s:]
+        return content, talker, msgid, payload, cksum
+    except Exception as err:
+        raise nme.NMEAMessageError(f"Badly formed message {message}") from err
+
+
+def haversine(
+    lat1: float,
+    lon1: float,
+    lat2: float,
+    lon2: float,
+    radius: int = WGS84_SMAJ_AXIS / 1000,
+) -> float:
+    """
+    Calculate spherical distance in km between two coordinates using haversine formula.
+
+    NB suitable for coordinates greater than around 50m apart. For
+    smaller separations, use the planar approximation formula.
+
+    :param float lat1: lat1
+    :param float lon1: lon1
+    :param float lat2: lat2
+    :param float lon2: lon2
+    :param float radius: radius in km (Earth = 6378.137 km)
+    :return: spherical distance in km
+    :rtype: float
+    """
+
+    phi1, lambda1, phi2, lambda2 = [c * pi / 180 for c in (lat1, lon1, lat2, lon2)]
+    dist = radius * acos(
+        cos(phi2 - phi1) - cos(phi1) * cos(phi2) * (1 - cos(lambda2 - lambda1))
+    )
+
+    return dist
+
+
+def hex2str(num: int, padding: int = 0) -> str:
+    """
+    Convert hex integer to padded or unpadded string format,
+    as used by some proprietary NMEA message types.
+
+    :param int num: hexadecimal integer
+    :param padding: no of padded digits (0)
+    :return: integer as string
+    :rtype: str
+    """
+
+    pad = f"{padding:02d}" if padding else ""
+    return f"{num:{pad}x}".upper()
+
+
+def knots2spd(knots: float, unit: str = "MS") -> float:
+    """
+    Convert speed in knots to speed in specified units.
+
+    :param float knots: knots
+    :param unit str: 'MS' (default), 'FS', MPH', 'KMPH'
+    :return: speed in m/s, feet/s, mph or kmph
+    :rtype: float
+
+    """
+
+    try:
+        return knots * KNOTSCONV[unit.upper()]
+    except KeyError as err:
+        raise KeyError(
+            f"Invalid conversion unit {unit.upper()} - must be in {list(KNOTSCONV.keys())}."
+        ) from err
+    except TypeError as err:
+        raise TypeError(
+            f"Invalid knots value {knots} - must be float or integer."
+        ) from err
+
+
+def latlon2dmm(lat: float, lon: float) -> tuple:
+    """
+    Converts decimal lat/lon tuple to degrees decimal minutes.
+
+    :param float lat: lat
+    :param float lon: lon
+    :return: (lat,lon) in d.mm.m format
+    :rtype: tuple
+    """
+
+    lat = deg2dmm(lat, LA)
+    lon = deg2dmm(lon, LN)
+    return lat, lon
+
+
+def latlon2dms(lat: float, lon: float) -> tuple:
+    """
+    Converts decimal lat/lon tuple to degrees minutes seconds.
+
+    :param float lat: lat
+    :param float lon: lon
+    :return: (lat,lon) in d.m.s. format
+    :rtype: tuple
+    """
+
+    lat = deg2dms(lat, LA)
+    lon = deg2dms(lon, LN)
+    return lat, lon
+
+
+def leapsecond(dat: datetime) -> int:
+    """
+    Get GPS UTC leapsecond offset effective at date.
+
+    Refer to LEAPSECONDS constant.
+
+    - LEAPS0 = 1900-01-01 00:00:00
+    - GPSEPOCH0 = 1980-01-06: 00:00:00
+
+    :param datetime.datetime dat: effective date
+    :return: leapsecond offset
+    :rtype: int
+    """
+
+    def totsec(dt) -> int:
+        return (dt - LEAPS0).total_seconds()
+
+    if totsec(dat) < LEAPSECONDS[0][0]:
+        return 0
+
+    dts = []
+    for dt in (dat, GPSEPOCH0):
+        dts.append(max((val for key, val in LEAPSECONDS if key < totsec(dt))))
+    return dts[0] - dts[1]
+
+
 def llh2ecef(
     lat: float,
     lon: float,
@@ -519,34 +608,40 @@ def llh2ecef(
     return x, y, z
 
 
-def haversine(
-    lat1: float,
-    lon1: float,
-    lat2: float,
-    lon2: float,
-    radius: int = WGS84_SMAJ_AXIS / 1000,
-) -> float:
+def llh2iso6709(lat: float, lon: float, alt: float, crs: str = WGS84) -> str:
     """
-    Calculate spherical distance in km between two coordinates using haversine formula.
+    Convert decimal degrees and alt to ISO6709 format
+    e.g. "+27.5916+086.5640+8850CRSWGS_84/".
 
-    NB suitable for coordinates greater than around 50m apart. For
-    smaller separations, use the planar approximation formula.
+    :param float lat: latitude
+    :param float lon: longitude
+    :param float alt: altitude (hMSL)
+    :param float crs: coordinate reference system (default = WGS_84)
+    :return: position in ISO6709 format
+    :rtype: str
 
-    :param float lat1: lat1
-    :param float lon1: lon1
-    :param float lat2: lat2
-    :param float lon2: lon2
-    :param float radius: radius in km (Earth = 6378.137 km)
-    :return: spherical distance in km
-    :rtype: float
     """
 
-    phi1, lambda1, phi2, lambda2 = [c * pi / 180 for c in (lat1, lon1, lat2, lon2)]
-    dist = radius * acos(
-        cos(phi2 - phi1) - cos(phi1) * cos(phi2) * (1 - cos(lambda2 - lambda1))
-    )
+    lati, loni, alti = ["-" if c < 0 else "+" for c in (lat, lon, alt)]
+    return f"{lati}{abs(lat)}{loni}{abs(lon)}{alti}{alt}CRS{crs}/"
 
-    return dist
+
+def msgdesc(msgID: str) -> str:
+    """
+    Return descriptive string for NMEA msgId.
+
+    :param msgID str: message ID e.g. 'GGA'
+    :return: description of message
+    :rtype: str
+
+    """
+    # pylint: disable=invalid-name
+
+    if msgID in NMEA_MSGIDS:
+        return NMEA_MSGIDS[msgID]
+    if msgID in NMEA_MSGIDS_PROP:
+        return NMEA_MSGIDS_PROP[msgID]
+    return f"Unknown msgID {msgID}"
 
 
 def planar(
@@ -580,77 +675,34 @@ def planar(
     return dist
 
 
-def bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+def time2str(tim: datetime.time) -> str:
     """
-    Calculate bearing between two coordinates.
+    Convert datetime.time to NMEA formatted string.
 
-    :param float lat1: lat1
-    :param float lon1: lon1
-    :param float lat2: lat2
-    :param float lon2: lon2
-    :return: bearing in degrees
-    :rtype: float
-    """
-
-    phi1, lambda1, phi2, lambda2 = [c * pi / 180 for c in (lat1, lon1, lat2, lon2)]
-    y = sin(lambda2 - lambda1) * cos(phi2)
-    x = cos(phi1) * sin(phi2) - sin(phi1) * cos(phi2) * cos(lambda2 - lambda1)
-    theta = atan2(y, x)
-    brng = (theta * 180 / pi + 360) % 360
-
-    return brng
-
-
-def area(
-    lat1: float,
-    lon1: float,
-    lat2: float,
-    lon2: float,
-    radius: int = WGS84_SMAJ_AXIS / 1000,
-) -> float:
-    """
-    Calculate spherical area bounded by two coordinates.
-
-    :param float lat1: lat1
-    :param float lon1: lon1
-    :param float lat2: lat2
-    :param float lon2: lon2
-    :param float radius: radius in km (Earth = 6378.137 km)
-    :return: area in km²
-    :rtype: float
-    """
-
-    phi1, phi2 = [c * pi / 180 for c in (lat1, lat2)]
-    return pow(radius, 2) * pi * abs(sin(phi1) - sin(phi2)) * abs(lon1 - lon2) / 180
-
-
-def get_gpswnotow(dat: datetime) -> tuple:
-    """
-    Get GPS Week number (Wno) and Time of Week (Tow)
-    for midnight on given date.
-
-    GPS Epoch 0 = 6th Jan 1980
-
-    :param datetime dat: calendar date
-    :return: tuple of (Wno, Tow)
-    :rtype: tuple
-    """
-
-    wno = int((dat - GPSEPOCH0).days / 7)
-    tow = ((dat.weekday() + 1) % 7) * 86400
-    return wno, tow
-
-
-def hex2str(num: int, padding: int = 0) -> str:
-    """
-    Convert hex integer to padded or unpadded string format,
-    as used by some proprietary NMEA message types.
-
-    :param int num: hexadecimal integer
-    :param padding: no of padded digits (0)
-    :return: integer as string
+    :param datetime.time tim: time
+    :return: NMEA formatted time string hhmmss.ss
     :rtype: str
     """
 
-    pad = f"{padding:02d}" if padding else ""
-    return f"{num:{pad}x}".upper()
+    try:
+        return tim.strftime("%H%M%S.%f")[0:9]
+    except (AttributeError, TypeError, ValueError):
+        return ""
+
+
+def time2utc(times: str) -> datetime.time:
+    """
+    Convert NMEA Time to UTC datetime.
+
+    :param str times: NMEA time hhmmss.ss
+    :return: UTC time hh:mm:ss.ss
+    :rtype: datetime.time
+    """
+
+    try:
+        if len(times) == 6:  # decimal seconds is omitted
+            times = times + ".00"
+        utc = datetime.strptime(times, "%H%M%S.%f")
+        return utc.time()
+    except (TypeError, ValueError):
+        return ""

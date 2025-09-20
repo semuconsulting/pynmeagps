@@ -281,7 +281,7 @@ NMEA_PAYLOADS_SET_PROP = {
     # *********************************************
     "UBX40": {  # set message rates per port
         "msgId": ST,  # '40'
-        "id": IN,
+        "id": ST,  # e.g. GLL
         "rddc": IN,  # I2C
         "rus1": IN,  # UART1
         "rus2": IN,  # UART2
