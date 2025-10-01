@@ -1046,6 +1046,10 @@ NMEA_PAYLOADS_GET_PROP = {
     "AIR867": {
         "flowControl": IN,
     },
+    "AIR6011": {
+        "type": IN,
+        "rate": IN,
+    },
     "AIRSPF": {
         "status": IN,
     },
@@ -1082,6 +1086,18 @@ NMEA_PAYLOADS_GET_PROP = {
         "qzss": IN,
         "navic": IN,
     },
+    "QTMCFGDR": {
+        "status": QS,
+        "drstate": IN,
+    },
+    "QTMCFGDRRTD": {"status": QS, "time": IN, "distance": IN},
+    "QTMCFGEINSMSG": {
+        "type": IN,
+        "ins_enabled": IN,
+        "imu_enabled": IN,
+        "gps_enabled": IN,
+        "rate": IN,
+    },
     "QTMCFGFIXRATE": {
         "status": QS,
         "fixinterval": IN,
@@ -1115,6 +1131,28 @@ NMEA_PAYLOADS_GET_PROP = {
         "lon2": DE,
         "lat3": DE,
         "lon3": DE,
+    },
+    "QTMCFGIMUINT": {
+        "status": QS,
+        "index": IN,
+        "mode": IN,
+        "reserved": IN,
+        "actLevel": IN,
+    },
+    "QTMCFGIMUTC": {
+        "status": QS,
+        "imustatus": IN,
+    },
+    "QTMCFGLA": {
+        "status": QS,
+        "type": IN,
+        "laX": DE,
+        "laY": DE,
+        "laZ": DE,
+    },
+    "QTMCFGLAM": {
+        "status": QS,
+        "mode": IN,
     },
     "QTMCFGMSGRATE": {
         "status": QS,
@@ -1189,6 +1227,10 @@ NMEA_PAYLOADS_GET_PROP = {
         "diffmode": IN,  # 0 disable, 1 auto, 2 RTD only
         "relmode": IN,  # 1 absolute, 2 relative
     },
+    "QTMCFGRTKSRCTYPE": {
+        "status": QS,
+        "srctype": IN,
+    },
     "QTMCFGSAT": {
         "status": QS,
         "systemid": IN,
@@ -1211,6 +1253,10 @@ NMEA_PAYLOADS_GET_PROP = {
         "qzsssig": ST,  # hex as string, default 07
         "navicsig": ST,  # hex as string, default 01
     },
+    "QTMCFGSTATICHOLD": {
+        "status": QS,
+        "shstate": IN,
+    },
     "QTMCFGSVIN": {
         "status": QS,
         "svinmode": IN,
@@ -1229,6 +1275,11 @@ NMEA_PAYLOADS_GET_PROP = {
         "stopbit": IN,
         "flowctrl": IN,
     },
+    "QTMCFGVEHMOT": {
+        "status": QS,
+        "mode": IN,
+        "vehtype": IN,
+    },
     "QTMDEBUGON": {"status": QS},
     "QTMDEBUGOFF": {"status": QS},
     "QTMDOP": {
@@ -1242,6 +1293,31 @@ NMEA_PAYLOADS_GET_PROP = {
         "ndop": DE,
         "edop": DE,
     },
+    "QTMDRCAL": {
+        "msgver": IN,  # always 1 for this version
+        "calstate": IN,  # 0 = none, 1 = lightly, 2 = fully
+        "navtype": IN,  # 0 = none, 1 = GNSS only, 2 = DR only, 3 = GNSS + DR
+    },
+    "QTMDRCLR": {"status": QS},
+    "QTMCFGDRHOT": {"status": QS, "mode": IN},
+    "QTMDRPVA": {
+        "msgver": IN,  # always 1 for this version
+        "timestamp": IN,
+        "time": DE,
+        "solType": IN,
+        "lat": DE,
+        "lon": DE,
+        "alt": DE,
+        "sep": DE,
+        "velN": DE,
+        "velE": DE,
+        "velD": DE,
+        "speed": DE,
+        "roll": DE,
+        "pitch": DE,
+        "heading": DE,
+    },
+    "QTMDRSAVE": {"status": QS},
     "QTMEPE": {
         "msgver": IN,  # always 2 for this version
         "epenorth": DE,
@@ -1265,9 +1341,51 @@ NMEA_PAYLOADS_GET_PROP = {
     },
     "QTMGNSSSTART": {"status": QS},
     "QTMGNSSSTOP": {"status": QS},
+    "QTMGPS": {
+        "timestamp": IN,
+        "tow": IN,
+        "lat": DE,
+        "lon": DE,
+        "alt": DE,
+        "speed": DE,
+        "heading": DE,
+        "accuracy": DE,
+        "HDOP": DE,
+        "PDOP": DE,
+        "numSv": IN,
+        "fixMode": IN,
+    },
     "QTMJAMMINGSTATUS": {
         "msgver": IN,  # always 1 for this version
         "jammingstatus": IN,
+    },
+    "QTMIMU": {
+        "timestamp": IN,
+        "accX": DE,
+        "accY": DE,
+        "accZ": DE,
+        "angrateX": DE,
+        "angrateY": DE,
+        "angrateZ": DE,
+        "wheeltick": IN,
+        "last_tick_timestamp": IN,
+    },
+    "QTMIMUTYPE": {
+        "msgver": IN,  # always 1 for this version
+        "imustatus": IN,  # 0 = failed, 1 = OK
+    },
+    "QTMINS": {
+        "timestamp": IN,
+        "soltype": IN,
+        "lat": DE,
+        "lon": DE,
+        "height": DE,
+        "velN": DE,
+        "velE": DE,
+        "velD": DE,
+        "roll": DE,
+        "pitch": DE,
+        "yaw": DE,
     },
     "QTMLS": {
         "msgver": IN,  # always 1 for this version
@@ -1336,6 +1454,16 @@ NMEA_PAYLOADS_GET_PROP = {
     "QTMRESETODO": {"status": QS},
     "QTMRESTOREPAR": {"status": QS},
     "QTMSAVEPAR": {"status": QS},
+    "QTMSENMSG": {
+        "msgver": IN,  # 2 or 4
+        "timestamp": IN,
+        "group": (
+            "None",
+            {
+                "sensor_info": DE,
+            },
+        ),
+    },
     "QTMSN": {
         "status": QS,
         "snid": IN,  # fixed to 1
@@ -1383,6 +1511,35 @@ NMEA_PAYLOADS_GET_PROP = {
         "status": QS,
         "length": IN,
         "ID": HX,
+    },
+    "QTMVEHATT": {
+        "msgver": IN,  # always 1 for this version
+        "timestamp": IN,
+        "roll": DE,
+        "pitch": DE,
+        "heading": DE,
+        "acc_Roll": DE,
+        "acc_Pitch": DE,
+        "acc_Heading": DE,
+    },
+    "QTMVEHMOT": {
+        "msgver": IN,  # 1 or 2
+        "group": (
+            "None",
+            {
+                "vehicle_info": DE,
+            },
+        ),
+    },
+    "QTMVEHMSG": {
+        "msgver": IN,  # 1 = speed, 2 = tick, 3 = speed 4wd, 4 = ticks 4wd
+        "timestamp": IN,
+        "group": (
+            "None",
+            {
+                "vehicle_info": DE,
+            },
+        ),
     },
     "QTMVEL": {
         "msgver": IN,  # always 1 for this version

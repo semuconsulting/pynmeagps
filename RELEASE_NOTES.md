@@ -8,6 +8,7 @@ FIXES:
 
 ENHANCEMENTS:
 
+1. Add further Quectel proprietary PQTM message definitions for LC29H (BA,CA,DA,EA) DR series.
 1. Add `get_leapseconds()` helper method to retrieve GPS leapsecond offset effective at given date.
 
 ### RELEASE 1.0.53
