@@ -22,6 +22,7 @@ from pynmeagps import (
     NMEA_PAYLOADS_GET,
     NMEA_PAYLOADS_POLL,
     NMEA_PAYLOADS_SET,
+    GPSEPOCH0,
 )
 from pynmeagps.nmeahelpers import (
     area,
@@ -49,6 +50,7 @@ from pynmeagps.nmeahelpers import (
     planar,
     time2str,
     time2utc,
+    leapsecond,
 )
 from pynmeagps.nmeatypes_core import GET, POLL
 from pynmeagps.nmeatypes_decodes import (
@@ -606,6 +608,14 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(FMI_STATUS[2], ("Ready", "Filter convergence completion flag"))
         self.assertEqual(SIGNALID[("1", "5")], "GPS L2 CM")
         self.assertEqual(SYSTEMID["4"], "Beidou")
+
+    def testleapsecond(self):
+        self.assertEqual(leapsecond(GPSEPOCH0), 0)
+        self.assertEqual(leapsecond(datetime.datetime(1985, 1, 1, 0, 0, 0)), 3)
+        self.assertEqual(leapsecond(datetime.datetime(1997, 8, 1, 0, 0, 0)), 12)
+        self.assertEqual(leapsecond(datetime.datetime(2025, 9, 18, 16, 51, 34)), 18)
+        self.assertEqual(leapsecond(datetime.datetime(1974, 9, 18, 16, 51, 34)), -6)
+        self.assertEqual(leapsecond(datetime.datetime(1971, 9, 18, 16, 51, 34)), 0)
 
 
 if __name__ == "__main__":

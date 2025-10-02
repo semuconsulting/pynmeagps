@@ -46,6 +46,9 @@ NMEA_PAYLOADS_POLL_PROP = {
         "portType": IN,  # 0 = UART
         "portIndex": IN,  # 0 = UART1
     },
+    "AIR6011": {
+        "type": IN,
+    },
     # ***************************************************************
     # Quectel LG290P Proprietary message types
     # https://quectel.com/content/uploads/2024/09/Quectel_LG290P03_GNSS_Protocol_Specification_V1.0.pdf
@@ -54,8 +57,12 @@ NMEA_PAYLOADS_POLL_PROP = {
     # ***************************************************************
     "QTMCFGAIC": {"status": QS},
     "QTMCFGCNST": {"status": QS},
+    "QTMCFGDR": {"status": QS},
     "QTMCFGFIXRATE": {"status": QS},
     "QTMCFGGEOFENCE": {"status": QS, "geofenceindex": IN},
+    "QTMCFGIMUINT": {"status": QS},
+    "QTMCFGLA": {"status": QS},
+    "QTMCFGLAM": {"status": QS},
     "QTMCFGMSGRATE_NOVER": {"status": QS, "msgname": ST},
     "QTMCFGMSGRATE": {"status": QS, "msgname": ST, "msgver": IN},
     "QTMCFGNAVMODE": {"status": QS},
@@ -68,14 +75,18 @@ NMEA_PAYLOADS_POLL_PROP = {
     "QTMCFGRSID": {"status": QS},
     "QTMCFGRTCM": {"status": QS},
     "QTMCFGRTK": {"status": QS},
+    "QTMCFGRTKSRCTYPE": {"status": QS},
     "QTMCFGSAT": {"status": QS, "systemid": IN, "signalid": ST},
     "QTMCFGSIGNAL": {"status": QS},
+    "QTMCFGSTATICHOLD": {"status": QS},
     "QTMCFGSVIN": {"status": QS},
     "QTMCFGUART_CURR": {"status": QS},
     "QTMCFGUART": {"status": QS, "portid": IN},
+    "QTMCFGVEHMOT": {"status": QS},
     "QTMGETUTC": {},
     "QTMQVER": {"msgver": IN},
     "QTMSN": {},
     "QTMUNIQID": {},
+    "QTMVEHATT": {},
     "QTMVERNO": {},
 }

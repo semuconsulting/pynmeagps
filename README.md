@@ -305,6 +305,7 @@ b'$EIGNQ,RMC*24\r\n'
  - `planar` - finds planar distance in m between two sets of (lat, lon) coordinates
  - `bearing` - finds bearing in degrees between two sets of (lat, lon) coordinates
  - `area` - finds spherical area bounded by two sets of (lat, lon) coordinates
+ - `leapsecond` - find GPS UTC leapsecond offset for a given effective date
 
 See [Sphinx documentation](https://www.semuconsulting.com/pynmeagps/pynmeagps.html#module-pynmeagaps.nmeahelpers) for details.
 

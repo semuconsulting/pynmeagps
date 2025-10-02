@@ -1,5 +1,22 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.54
+
+FIXES:
+
+1. Fix PUBX040 payload definition (`id` = str, not int)
+
+ENHANCEMENTS:
+
+1. Add further Quectel proprietary PQTM message definitions for LC29H (BA,CA,DA,EA) DR series.
+1. Add `get_leapseconds()` helper method to retrieve GPS leapsecond offset effective at given date.
+
+### RELEASE 1.0.53
+
+FIXES:
+
+1. Fix PUBX040 message definition (id = str rather than int).
+
 ### RELEASE 1.0.53
 
 FIXES:

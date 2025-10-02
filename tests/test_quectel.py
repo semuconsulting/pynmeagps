@@ -72,6 +72,31 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMSTD, reserved=1, utc=13:15:23.314000, wno=0, tow=393341, stdLat=, stdLon=, stdAlt=, stdSep=, stdVelN=, stdVelE=, stdVelD=, stdSpd=, stdRoll=, stdPitch=, stdHeading=)>",
             "<NMEA(PQTMGETUTC, status=OK, year=2024, month=10, day=22, hour=2, minute=52, second=30, millisecond=295, reserved=, leapsecond=18)>",
             "<NMEA(PQTMSN, status=OK, snid=1, length=16, serialno=1234567890ABCDEF)>",
+            "<NMEA(PQTMDRCAL, msgver=1, calstate=0, navtype=1)>",
+            "<NMEA(PQTMIMUTYPE, msgver=1, imustatus=2)>",
+            "<NMEA(PQTMVEHMSG, msgver=2, timestamp=153954, vehicle_info_01=100.0, vehicle_info_02=1.0)>",
+            "<NMEA(PQTMINS, timestamp=240951, soltype=1, lat=31.82222216, lon=117.11578436, height=62.555605, velN=-0.004233, velE=0.005535, velD=-0.004011, roll=0.0, pitch=0.0, yaw=127.41)>",
+            "<NMEA(PQTMIMU, timestamp=45454, accX=-1.35673, accY=-0.210568, accZ=9.75793, angrateX=0.564879, angrateY=0.549612, angrateZ=-0.412209, wheeltick=0, last_tick_timestamp=0)>",
+            "<NMEA(PQTMGPS, timestamp=86139, tow=94183, lat=31.82218794, lon=117.11579022, alt=65.75508, speed=0.027, heading=94.68, accuracy=2.533952, HDOP=0.555471, PDOP=0.886183, numSv=29, fixMode=3)>",
+            "<NMEA(PQTMCFGEINSMSG, type=1, ins_enabled=1, imu_enabled=1, gps_enabled=1, rate=10)>",
+            "<NMEA(PQTMVEHMOT, msgver=1, vehicle_info_01=0.288124, vehicle_info_02=0.15993)>",
+            "<NMEA(PQTMSENMSG, msgver=2, timestamp=1000, sensor_info_01=22.21, sensor_info_02=0.124521, sensor_info_03=1.241541, sensor_info_04=0.912451, sensor_info_05=0.145785, sensor_info_06=1.241541, sensor_info_07=8.954214)>",
+            "<NMEA(PQTMSENMSG, msgver=4, timestamp=1000, sensor_info_01=22.21, sensor_info_02=0.124521, sensor_info_03=1.241541, sensor_info_04=0.912451, sensor_info_05=0.145785, sensor_info_06=1.241541, sensor_info_07=8.954214)>",
+            "<NMEA(PQTMCFGDRRTD, status=OK, time=600, distance=10000)>",
+            "<NMEA(PQTMCFGIMUTC, status=OK, imustatus=1)>",
+            "<NMEA(PQTMDRPVA, msgver=1, timestamp=1000, time=163355.0, solType=0, lat=, lon=, alt=, sep=, velN=, velE=, velD=, speed=, roll=, pitch=, heading=)>",
+            "<NMEA(PQTMDRPVA, msgver=1, timestamp=75000, time=83737.0, solType=2, lat=31.12738291, lon=117.2637291, alt=34.212, sep=5.267, velN=3.212, velE=2.928, velD=0.238, speed=4.346, roll=0.392663, pitch=1.300793, heading=0.030088)>",
+            "<NMEA(PQTMCFGDRHOT, status=OK, mode=1)>",
+            "<NMEA(PQTMCFGDR, status=OK, drstate=1)>",
+            "<NMEA(PQTMCFGIMUINT, status=OK, index=1, mode=1, reserved=0, actLevel=1)>",
+            "<NMEA(PQTMCFGLA, status=OK, type=1, laX=0.212, laY=0.514, laZ=0.113)>",
+            "<NMEA(PQTMCFGLAM, status=OK, mode=2)>",
+            "<NMEA(PQTMCFGRTKSRCTYPE, status=OK, srctype=1)>",
+            "<NMEA(PQTMCFGSTATICHOLD, status=OK, shstate=1)>",
+            "<NMEA(PQTMCFGVEHMOT, status=OK, mode=1, vehtype=1)>",
+            "<NMEA(PQTMDRCLR, status=OK)>",
+            "<NMEA(PQTMDRSAVE, status=OK)>",
+            "<NMEA(PQTMVEHATT, msgver=1, timestamp=1000, roll=10.002154, pitch=20.235412, heading=160.145185, acc_Roll=1.254123, acc_Pitch=5.451214, acc_Heading=5.102154)>",
         )
         i = 0
         raw = 0
@@ -115,6 +140,13 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMCFGNAVMODE, status=R)>",
             "<NMEA(PQTMCFGNMEATID, status=R)>",
             "<NMEA(PQTMQVER, msgver=1)>",
+            "<NMEA(PQTMCFGDR, status=R)>",
+            "<NMEA(PQTMCFGIMUINT, status=R)>",
+            "<NMEA(PQTMCFGLA, status=R)>",
+            "<NMEA(PQTMCFGLAM, status=R)>",
+            "<NMEA(PQTMCFGRTKSRCTYPE, status=R)>",
+            "<NMEA(PQTMCFGSTATICHOLD, status=R)>",
+            "<NMEA(PQTMCFGVEHMOT, status=R)>",
         )
         i = 0
         raw = 0
@@ -175,6 +207,15 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMCFGAIC, status=W, state=1)>",
             "<NMEA(PQTMCFGNAVMODE, status=W, mode=10)>",
             "<NMEA(PQTMCFGNMEATID, status=W, mainTalker=GP, gsvTalker=0)>",
+            "<NMEA(PQTMCFGDR, status=W, drstate=1)>",
+            "<NMEA(PQTMCFGIMUINT, status=W, index=1, mode=1, reserved=0, actLevel=1)>",
+            "<NMEA(PQTMCFGLA, status=W, type=1, laX=0.212, laY=0.514, laZ=0.113)>",
+            "<NMEA(PQTMCFGLAM, status=W, mode=2)>",
+            "<NMEA(PQTMCFGRTKSRCTYPE, status=W, srctype=1)>",
+            "<NMEA(PQTMCFGSTATICHOLD, status=W, shstate=1)>",
+            "<NMEA(PQTMCFGVEHMOT, status=W, mode=1, vehtype=1)>",
+            "<NMEA(PQTMDRCLR)>",
+            "<NMEA(PQTMDRSAVE)>",
         )
         i = 0
         raw = 0
@@ -264,6 +305,22 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMCFGRSID, status=OK, rsid=1024)>",
             "<NMEA(PQTMCFGRTCM, status=OK)>",
             "<NMEA(PQTMCFGGEOFENCE, status=R, geofenceindex=0, geofencemode=1, reserved=0, shape=3, lat0=31.451248, lon0=117.451245, radiuslat1=100.5, lon1=12.36, lat2=85.24, lon2=118.72, lat3=56.45, lon3=140.13)>",
+            "<NMEA(PQTMCFGDR, status=OK)>",
+            "<NMEA(PQTMCFGDR, status=OK, drstate=1)>",
+            "<NMEA(PQTMCFGIMUINT, status=OK)>",
+            "<NMEA(PQTMCFGIMUINT, status=OK, index=1, mode=1, reserved=0, actLevel=1)>",
+            "<NMEA(PQTMCFGLA, status=OK)>",
+            "<NMEA(PQTMCFGLA, status=OK, type=1, laX=0.212, laY=0.514, laZ=0.113)>",
+            "<NMEA(PQTMCFGLAM, status=OK)>",
+            "<NMEA(PQTMCFGLAM, status=OK, mode=2)>",
+            "<NMEA(PQTMCFGRTKSRCTYPE, status=OK)>",
+            "<NMEA(PQTMCFGRTKSRCTYPE, status=OK, srctype=1)>",
+            "<NMEA(PQTMCFGSTATICHOLD, status=OK)>",
+            "<NMEA(PQTMCFGSTATICHOLD, status=OK, shstate=1)>",
+            "<NMEA(PQTMCFGVEHMOT, status=OK)>",
+            "<NMEA(PQTMCFGVEHMOT, status=OK, mode=1, vehtype=1)>",
+            "<NMEA(PQTMDRCLR, status=OK)>",
+            "<NMEA(PQTMDRSAVE, status=OK)>",
         )
         i = 0
         raw = 0
@@ -338,6 +395,7 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMCFGSIGNAL, status=R)>",
             "<NMEA(PQTMCFGSAT, status=R, systemid=1, signalid=1)>",
             "<NMEA(PQTMCFGRSID, status=R)>",
+            "<NMEA(PQTMCFGSTATICHOLD, status=R)>",
         ]
         EXPECTED_BINARY = [
             "$PQTMCFGPPS,R,0*6B\r\n",
@@ -704,6 +762,7 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PAIR001, commandid=866, result=0)>",
             "<NMEA(PAIR001, commandid=867, result=0)>",
             "<NMEA(PAIR867, flowControl=0)>",
+            "<NMEA(PAIR6011, type=1, rate=0)>",
         )
 
         i = 0
@@ -762,6 +821,7 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PAIR752, ppsType=2)>",
             "<NMEA(PAIR864, portType=0, portIndex=0, baudrate=115200)>",
             "<NMEA(PAIR866, portType=0, portIndex=0, flowControl=1)>",
+            "<NMEA(PAIR6010, type=0, rate=1)>",
         )
 
         i = 0
@@ -798,6 +858,7 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PAIR437)>",
             "<NMEA(PAIR865, portType=0, portIndex=0)>",
             "<NMEA(PAIR867, portType=0, portIndex=0)>",
+            "<NMEA(PAIR6011, type=1)>",
         )
 
         i = 0
