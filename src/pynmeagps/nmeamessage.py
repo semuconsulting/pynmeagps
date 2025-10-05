@@ -342,6 +342,10 @@ class NMEAMessage:
             key = self._get_dict_qtmcfgsat(key, self._mode, **kwargs)
         elif key == "QTMCFGUART":
             key = self._get_dict_qtmcfguart(key, self._mode, **kwargs)
+        elif key == "QTMSN":
+            key = self._get_dict_qtmsn(key, self._mode, **kwargs)
+        elif key == "STMDRSENMSG":
+            key = self._get_dict_stmdrsenmsg(key, self._mode, **kwargs)
         elif key[0:3] == "QTM":
             key = self._get_dict_qtmacknak(key, self._mode)
 
@@ -393,12 +397,21 @@ class NMEAMessage:
         lp = len(self._payload)
         py = "payload" in kwargs
         mv = "msgver" in kwargs
+        pt = "porttype" in kwargs
         if mode in (nmt.SET, nmt.GET):
-            if (py and lp == 3) or (not py and not mv):
+            if (py and lp == 3) or (not py and not pt and not mv):
                 key += "_NOVER"
+            elif (py and lp == 5) or (not py and pt and not mv):
+                key += "_INTFNOVER"
+            elif (py and lp == 6) or (not py and pt and mv):
+                key += "_INTF"
         elif mode == nmt.POLL:
-            if (py and lp == 2) or (not py and not mv):
+            if (py and lp == 2) or (not py and not pt and not mv):
                 key += "_NOVER"
+            elif (py and lp == 4) or (not py and pt and not mv):
+                key += "_INTFNOVER"
+            elif (py and lp == 5) or (not py and pt and mv):
+                key += "_INTF"
         return key
 
     def _get_dict_qtmcfgpps(self, key: str, mode: int, **kwargs) -> str:
@@ -469,12 +482,50 @@ class NMEAMessage:
                 key = self._get_dict_qtmacknak(key, mode)
         return key
 
+    def _get_dict_qtmsn(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMSN.
+        (bug in LG580P firmware - seems to transpose status field?)
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        py = "payload" in kwargs
+        if mode == nmt.GET:
+            if py and kwargs["payload"][0].isnumeric():
+                key += "_ALT"
+        return key
+
+    def _get_dict_stmdrsenmsg(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel PSTMDRSENMSG variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        py = "payload" in kwargs
+        mt = "msgtype" in kwargs
+        msgtype = ""
+        if py:
+            msgtype = self._payload[0]
+        elif not py and mt:
+            msgtype = kwargs["msgtype"]
+        key += f"_{msgtype}"
+        return key
+
     def _get_dict_qtmacknak(self, key: str, mode: int) -> str:
         """
         Get payload dictionary for proprietary Quectel command
         response variants.
 
         :param str key: msgid
+        :param int mode: msgmode 1/2
         :return: key of payload definition
         :rtype: str
         """
