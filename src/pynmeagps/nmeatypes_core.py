@@ -409,7 +409,7 @@ NMEA_MSGIDS_PROP = {
     # ***************************************************************
     "MGNWPL": "Waypoint Location",
     # ***************************************************************
-    # Quectel Proprietary message types
+    # Quectel PAIR Proprietary message types LC29 etc.
     # ***************************************************************
     "AIR001": "Ack",
     "AIR002": "GNSS Subsys Power On",
@@ -419,6 +419,8 @@ NMEA_MSGIDS_PROP = {
     "AIR006": "GNSS Subsys Cold Start",
     "AIR007": "GNSS Subsys Full Cold Start",
     "AIR010": "Request Aiding",
+    # "AIR011": "Unknown definition",  # TODO
+    # "AIR020": "Get firmware release information",  # TODO
     "AIR050": "Common Set Fix Rate",
     "AIR051": "Common Get Fix Rate",
     "AIR058": "Common Set Min Snr",
@@ -441,6 +443,8 @@ NMEA_MSGIDS_PROP = {
     "AIR101": "Common Get Nmea Output Mode",
     "AIR104": "Common Set Dual Band",
     "AIR105": "Common Get Dual Band",
+    # "AIR161": "Force standby mode",  # TODO
+    # "AIR351": "Support QZSS NMEA",  # TODO
     "AIR382": "Test Lock System Sleep",
     "AIR391": "Test Jamming Detect",
     "AIR400": "DGPS Set Mode",
@@ -455,27 +459,50 @@ NMEA_MSGIDS_PROP = {
     "AIR435": "RTCM Get Output Ant Pnt",
     "AIR436": "RTCM Set Output Ephemeris",
     "AIR437": "RTCM Get Output Ephemeris",
+    "AIR490": "Set EASYTM status",
+    "AIR491": "Get EASY status",
+    # "AIR496": "EPOC Enable", # TODO
+    # "AIR498": "EPOC Set Config",# TODO
+    # "AIR507": "EPOC Clear Data",# TODO
+    # "AIR508": "EPOC Get Status",# TODO
+    # "AIR509":"EPOC Get Prediction Status", # TODO
     "AIR511": "NVRAM Save Navigation Data",
+    "AIR512": "NVRAM Clear Navigation Data",
     "AIR513": "NVRAM Save Setting",
+    "AIR6010": "DR Set Custom Message Output",
+    "AIR6011": "DR Get Custom Message Output",
     "AIR650": "Low Power Entry Rtc Mode",
+    # "AIR690": "Enter periodic mode for power saving",  # TODO
+    # "AIR751": "Fix NMEA output time behind PPS",  # TODO
     "AIR752": "PPS Set Config Cmd",
+    # "AIR820": "Set LOCUS logging status",  # TODO
+    # "AIR821": "Get LOCUS logging status",  # TODO
+    # "AIR824": "Erase LOCUS logger flash",  # TODO
+    # "AIR826": "Dump LOCUS flash data",  # TODO
     "AIR864": "IO Set Baudrate",
     "AIR865": "IO Get Baudrate",
     "AIR866": "IO Set Flow Control",
     "AIR867": "IO Get Flow Control",
-    "AIR6010": "DR Set Custom Message Output",
-    "AIR6011": "DR Get Custom Message Output",
     "AIRSPF": "Jamming status L1",
     "AIRSPF5": "Jamming status L5",
+    # ***************************************************************
+    # Quectel PQTM Proprietary message types LG290P/LG580P
+    # ***************************************************************
+    "QTMANTENNASTATUS": "Report Antenna Status",
     "QTMBKP": "Set Backup Mode",
     "QTMCFGAIC": "Sets/Gets AIC Function",
+    "QTMCFGANTDELTA": "Sets/Gets Delta Between Ref Point and Antenna",
+    "QTMCFGANTINF": "Sets/Gets Antenna Information",
+    "QTMCFGBLD": "Sets/Gets Baseline Between Two Antennas",
     "QTMCFGCNST": "Sets/Gets Constellation Configuration",
     "QTMCFGDR": "Sets/Gets DR State",
     "QTMCFGDRHOT": "Sets/Gets DR Hot Start Feature",
     "QTMCFGDRRTD": "Sets/Gets DR Running TIme and Distance",
     "QTMCFGEINSMSG": "Sets/Gets INS, IMU, GPS Status",
+    "QTMCFGELETHD": "Sets/Gets Elevation Threshold for Position Engine",
     "QTMCFGFIXRATE": "Sets/Gets Fix Interval",
     "QTMCFGGEOFENCE": "Sets/Gets Geofence Feature",
+    "QTMCFGGEOSEP": "Sets/Gets Geoidal Separation",
     "QTMCFGIMUINT": "Sets/Gets Motion Trigger Interruption",
     "QTMCFGIMUTC": "Sets/Gets IMU Temperature Compensation",
     "QTMCFGLA": "Sets/Gets Lever Arm",
@@ -492,12 +519,17 @@ NMEA_MSGIDS_PROP = {
     "QTMCFGRTCM": "Sets/Gets RTCM",
     "QTMCFGRTK": "Sets/Gets RTK Mode",  # Absolute, Relative
     "QTMCFGRTKSRCTYPE": "Sets/Gets RTK Source Type",
+    "QTMMCFGRTKSRCTYPE": "Sets/Gets RTK Source Type",  # typo in LG580P firmware?
     "QTMCFGSAT": "Sets/Gets GNSS Satellite Mask",
-    "QTMCFGSIGNAL": "Sets/Gets GNSS Signal Mask",
+    "QTMCFGSBAS": "Sets/Gets SBAS",
+    "QTMCFGSIGGRP": "Sets/Gets GNSS Signal Group",
+    "QTMCFGSIGNAL": "Sets/Gets Antenna1 Signal Mask",
+    "QTMCFGSIGNAL2": "Sets/Gets Antenna2 Signal Mask",
     "QTMCFGSTATICHOLD": "Sets/Gets Parking Static Hold",
     "QTMCFGSVIN": "Sets/Gets Survey-In Feature",  # Survey-In or Fixed
     "QTMCFGUART": "Configure UART Interface",
     "QTMCFGVEHMOT": "Sets/Gets Vehicle Motion Detection",
+    "QTMCFGWN": "Sets/Gets Reference Start Week No",
     "QTMCOLD": "Cold Start",
     "QTMDEBUGOFF": "Disable Debug Log Output",
     "QTMDEBUGON": "Enable Debug Log Output",
@@ -506,6 +538,7 @@ NMEA_MSGIDS_PROP = {
     "QTMDRCLR": "Clear DR Calibration Data",
     "QTMDRPVA": "DR Postion, Velosity and Attitude",
     "QTMDRSAVE": "Save DR Calibration Data",
+    "QTMEOE": "Output End of Epoch Information",
     "QTMEPE": "Output Estimated Position Error",
     "QTMGEOFENCESTATUS": "Outputs Geofence Status",
     "QTMGETUTC": "Get UTC Time Information",
@@ -518,6 +551,7 @@ NMEA_MSGIDS_PROP = {
     "QTMINS": "Navigation Results",
     "QTMJAMMINGSTATUS": "Jamming Detection Status",
     "QTMLS": "Outputs Leap Second Forecast Information",
+    "QTMNAV": "Output Navigation Information",
     "QTMODO": "Outputs Odometer Information",
     "QTMPL": "Outputs Protection Level Information",
     "QTMPVT": "Outputs PVT (GNSS) Result",  # Position, Velocity, Track
@@ -530,6 +564,7 @@ NMEA_MSGIDS_PROP = {
     "QTMSRR": "System Reset and Reboot",
     "QTMSTD": "Outputs Time, Position, Velocoity and Attitude Deviations",
     "QTMSVINSTATUS": "Outputs Survey-In Status",
+    "QTMTAR": "Output Time and Attitude",
     "QTMTXT": "Outputs Short Text Message",  # Longer messages use multiple messages
     "QTMUNIQID": "Query Module Unique ID",
     "QTMVEHATT": "Output Vehicle Attitude",
@@ -539,6 +574,49 @@ NMEA_MSGIDS_PROP = {
     "QTMVER": "Firmware Version",
     "QTMVERNO": "Query Firmware Version",
     "QTMWARM": "Warm Start",
+    # ***************************************************************
+    # Quectel PSTM Proprietary message types (LG69T)
+    # ***************************************************************
+    "STMCOLD": "Perform cold start",  # Command
+    "STMCPU": "Output CPU usage and speed",  # Output
+    "STMDR1": "Report gyroscope and accelerometer details",  # Output
+    "STMDR2": "Report calibration status and availability",  # Output
+    "STMDRBSD": "Report IMU bias error estimates",  # Output
+    "STMDRCAL": "Report IMU and odometer calibration status",  # Output
+    "STMDRCONFID": "Report navigation and calibration error estimates",  # Output
+    "STMDRDEBUG": "Report DR debug information",  # Output
+    "STMDREPE": "Report DR horizontal position error estimates",  # Output
+    "STMDRGPS": "Report GNSS information",  # Output
+    "STMDRMMFB": "Set DR algorithm input data",  # Command
+    "STMDRMMFBKF": "Report MMFB data timing, acceptance, and usage",  # Output
+    "STMDRPVA": "Report PVT estimated by DR",  # Output
+    "STMDRPVASD": "Report DR PVT error estimates",  # Output
+    "STMDRSENMSG": "Output the IMU raw data",  # Output
+    "STMDRSINT": "Report sensor integration samples",  # Type:
+    "STMDRSTYPE": "Report DR type",  # Output
+    "STMDRSVF": "Report IMU vehicle dynamics",  # Output
+    "STMDRUPD": "Quectel internal debugging",  # Output
+    "STMEPHEM": "Load ephemeris into NVM",  # Command
+    "STMHOT": "Perform hot start",  # Command
+    "STMIMUSELFTESTCMD": "Execute IMU self-test",  # Command
+    "STMINITGPS": "Initialise GPS",  # Command #
+    "STMINITGPSERROR": "Initialise GPS Nak",  # Response
+    "STMINITGPSOK": "Initialise GPS Ack",  # Response
+    "STMINITTIME": "Initialise time",  # Command
+    "STMINITTIMEERROR": "Initialise time Nak",  # Response
+    "STMINITTIMEOK": "Initialise time Ack",  # Response
+    "STMPPSDATA": "Output the PPS data",  # Output
+    "STMRESTOREPAR": "Restore the factory setting parameters",  # Command
+    "STMSAVEPAR": "Save current configuration data block to NVM",  # Command
+    "STMSBAS": "Output SBAS satellite data",  # Output
+    "STMSETPAR": "Set parameter",  # Command
+    "STMSETPARERROR": "Set parameter Nak",  # Response
+    "STMSETPAROK": "Set parameter Ack",  # Response
+    "STMSRR": "Execute system reset and reboot",  # Command
+    "STMTEMP": "Report temperature",  # Output
+    "STMTG": "Output time and satellite information",  # Output
+    "STMTS": "Output tracked satellite parameters",  # Output
+    "STMWARM": "Perform warm start",  # Command
     # ***************************************************************
     # Sepentrio X5 Proprietary message types
     # ***************************************************************

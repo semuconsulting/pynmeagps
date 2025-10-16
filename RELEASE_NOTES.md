@@ -1,5 +1,17 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.55
+
+ENHANCEMENTS:
+
+1. Add additional proprietary NMEA PQTM message definitions for Quectel LG290P / LG580P series.
+1. Address what appear to be minor bugs in LG580P firmware (LG580P03AANR01A04S_SH 2025/06/06-10:08:42) relating to proprietary NMEA PQTM message output (*outputs differ from documented firmware specifications for PQTMSN and PQTMCFGRTKSRCTYPE*).
+1. Add additional proprietary NMEA PSTM message definitions for Quectel LG69T (AA,AD,AF,AI,AJ,AR) series.
+
+CHANGES:
+
+1. Drop active support for Python 3.9 (EOL as at 31 October 2025)
+
 ### RELEASE 1.0.54
 
 FIXES:
