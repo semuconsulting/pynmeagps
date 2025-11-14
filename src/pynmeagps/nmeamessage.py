@@ -545,7 +545,7 @@ class NMEAMessage:
         return key
 
     def _calc_num_repeats(
-        self, attd: dict, payload: list, pindex: int, pindexend: int = 0, **kwargs
+        self, attd: dict, payload: list, pindex: int, pindexend: int = 0
     ) -> int:
         """
         Deduce number of items in repeating group.
@@ -554,7 +554,6 @@ class NMEAMessage:
         :param list payload : content as list
         :param int pindex: number of payload attributes before group
         :param int pindexend: number of payload attributes after group
-        :param bool tream: generated (as opposed to streamed) message
         :return: number of repeats
         :rtype: int
         """
