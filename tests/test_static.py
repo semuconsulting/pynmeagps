@@ -40,6 +40,7 @@ from pynmeagps.nmeahelpers import (
     generate_checksum,
     get_gpswnotow,
     get_parts,
+    groupsize,
     haversine,
     knots2spd,
     latlon2dmm,
@@ -616,6 +617,16 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(leapsecond(datetime.datetime(2025, 9, 18, 16, 51, 34)), 18)
         self.assertEqual(leapsecond(datetime.datetime(1974, 9, 18, 16, 51, 34)), -6)
         self.assertEqual(leapsecond(datetime.datetime(1971, 9, 18, 16, 51, 34)), 0)
+
+    def testmaxidx(self):
+        PYLD1 = {"svid_01": 7, "svid_02": 8, "elv_03": 15, "svid_04": 23}
+        self.assertEqual(groupsize(**PYLD1), 4)
+        PYLD2 = {"svid_01": 7, "svid_02": 8, "cno_03": 15}
+        self.assertEqual(groupsize(**PYLD2), 3)
+        PYLD3 = {"svid": 7, "elv": 8, "az": 15}
+        self.assertEqual(groupsize(**PYLD3), 0)
+        PYLD4 = {}
+        self.assertEqual(groupsize(**PYLD4), 0)
 
 
 if __name__ == "__main__":

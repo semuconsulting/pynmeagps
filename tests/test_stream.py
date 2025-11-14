@@ -103,12 +103,12 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=66, svid_02=76, svid_03=, svid_04=, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=2)>",
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=, svid_02=, svid_03=, svid_04=, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=3)>",
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=, svid_02=, svid_03=, svid_04=, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=4)>",
-            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
-            "<NMEA(GPGSV, numMsg=3, msgNum=2, numSV=11, svid_01=17, elv_01=32.0, az_01=64, cno_01=16, svid_02=19, elv_02=33.0, az_02=94, cno_02=, svid_03=20, elv_03=20.0, az_03=251, cno_03=31, svid_04=21, elv_04=4.0, az_04=354, cno_04=, signalID=1)>",
-            "<NMEA(GPGSV, numMsg=3, msgNum=3, numSV=11, svid_01=23, elv_01=27.0, az_01=251, cno_01=31, svid_02=24, elv_02=89.0, az_02=268, cno_02=26, svid_03=25, elv_03=5.0, az_03=223, cno_03=, signalID=1)>",
-            "<NMEA(GLGSV, numMsg=3, msgNum=1, numSV=10, svid_01=65, elv_01=7.0, az_01=176, cno_01=, svid_02=66, elv_02=57.0, az_02=223, cno_02=35, svid_03=67, elv_03=42.0, az_03=315, cno_03=23, svid_04=68, elv_04=0.0, az_04=341, cno_04=29, signalID=1)>",
-            "<NMEA(GLGSV, numMsg=3, msgNum=2, numSV=10, svid_01=75, elv_01=37.0, az_01=57, cno_01=, svid_02=76, elv_02=78.0, az_02=303, cno_02=18, svid_03=77, elv_03=27.0, az_03=253, cno_03=21, svid_04=84, elv_04=19.0, az_04=18, cno_04=, signalID=B)>",
-            "<NMEA(GLGSV, numMsg=3, msgNum=3, numSV=10, svid_01=85, elv_01=22.0, az_01=78, cno_01=, svid_02=86, elv_02=1.0, az_02=121, cno_02=, signalID=1)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6, az_01=14, cno_01=8, svid_02=12, elv_02=43, az_02=207, cno_02=28, svid_03=14, elv_03=6, az_03=49, cno_03=, svid_04=15, elv_04=44, az_04=171, cno_04=23, signalID=1)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=2, numSV=11, svid_01=17, elv_01=32, az_01=64, cno_01=16, svid_02=19, elv_02=33, az_02=94, cno_02=, svid_03=20, elv_03=20, az_03=251, cno_03=31, svid_04=21, elv_04=4, az_04=354, cno_04=, signalID=1)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=3, numSV=11, svid_01=23, elv_01=27, az_01=251, cno_01=31, svid_02=24, elv_02=89, az_02=268, cno_02=26, svid_03=25, elv_03=5, az_03=223, cno_03=, signalID=1)>",
+            "<NMEA(GLGSV, numMsg=3, msgNum=1, numSV=10, svid_01=65, elv_01=7, az_01=176, cno_01=, svid_02=66, elv_02=57, az_02=223, cno_02=35, svid_03=67, elv_03=42, az_03=315, cno_03=23, svid_04=68, elv_04=0, az_04=341, cno_04=29, signalID=1)>",
+            "<NMEA(GLGSV, numMsg=3, msgNum=2, numSV=10, svid_01=75, elv_01=37, az_01=57, cno_01=, svid_02=76, elv_02=78, az_02=303, cno_02=18, svid_03=77, elv_03=27, az_03=253, cno_03=21, svid_04=84, elv_04=19, az_04=18, cno_04=, signalID=B)>",
+            "<NMEA(GLGSV, numMsg=3, msgNum=3, numSV=10, svid_01=85, elv_01=22, az_01=78, cno_01=, svid_02=86, elv_02=1, az_02=121, cno_02=, signalID=1)>",
             "<NMEA(GAGSV, numMsg=1, msgNum=1, numSV=0, signalID=7)>",
             "<NMEA(GBGSV, numMsg=1, msgNum=1, numSV=2, svid_01=21, elv_01=, az_01=, cno_01=15, svid_02=25, elv_02=, az_02=, cno_02=28, signalID=1)>",
             "<NMEA(GNGLL, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, time=10:36:07, status=A, posMode=A)>",
@@ -139,7 +139,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GPAPB, LCgwarn=A, LCcwarn=A, ctrkerr=0.1, dirs=R, ctrkUnit=N, aalmcirc=V, aalmperp=V, bearO2D=11.0, bearO2Du=M, wpt=DEST, bearD=11.0, bearDu=M, bearS=11.0, bearSu=M)>",
             "<NMEA(GPMSK, freq=318.0, fmode=A, beacbps=100, bpsmode=M, MMSfreq=2.0)>",
             "<NMEA(GPMSS, strength=55, snr=27, freq=318.0, beacbps=100, channel=)>",
-            "<NMEA(GBGSV, numMsg=2, msgNum=2, numSV=6, svid_01=14, elv_01=55.0, az_01=175, cno_01=46, svid_02=40, elv_02=29.0, az_02=43, cno_02=18, signalID=B)>",
+            "<NMEA(GBGSV, numMsg=2, msgNum=2, numSV=6, svid_01=14, elv_01=55, az_01=175, cno_01=46, svid_02=40, elv_02=29, az_02=43, cno_02=18, signalID=B)>",
             "<NMEA(INGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
             "<NMEA(ANNAK, talkerid=UP, formatter=AID, identifier=999999990, reason=11, text=)>",
             "<NMEA(GPGBS, time=23:55:03, errLat=1.6, errLon=1.4, errAlt=3.2, svid=, prob=, bias=, stddev=, systemId=, signalId=)>",
@@ -171,10 +171,10 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GPVTG, cogt=, cogtUnit=T, cogm=, cogmUnit=M, sogn=0.273, sognUnit=N, sogk=0.506, sogkUnit=K, posMode=A)>",
             "<NMEA(GPGGA, time=10:29:29, lat=53.4506706667, NS=N, lon=-2.24026, EW=W, quality=1, numSV=8, HDOP=1.16, alt=36.3, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
             "<NMEA(GPGSA, opMode=A, navMode=3, svid_01=17, svid_02=15, svid_03=10, svid_04=24, svid_05=20, svid_06=12, svid_07=19, svid_08=23, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=2.36, HDOP=1.16, VDOP=2.05)>",
-            "<NMEA(GPGSV, numMsg=4, msgNum=1, numSV=15, svid_01=1, elv_01=6.0, az_01=15, cno_01=, svid_02=10, elv_02=30.0, az_02=290, cno_02=27, svid_03=12, elv_03=42.0, az_03=207, cno_03=26, svid_04=13, elv_04=19.0, az_04=141, cno_04=23)>",
-            "<NMEA(GPGSV, numMsg=4, msgNum=2, numSV=15, svid_01=14, elv_01=7.0, az_01=49, cno_01=21, svid_02=15, elv_02=45.0, az_02=171, cno_02=27, svid_03=17, elv_03=32.0, az_03=65, cno_03=22, svid_04=19, elv_04=33.0, az_04=95, cno_04=25)>",
-            "<NMEA(GPGSV, numMsg=4, msgNum=3, numSV=15, svid_01=20, elv_01=21.0, az_01=251, cno_01=31, svid_02=21, elv_02=4.0, az_02=355, cno_02=, svid_03=23, elv_03=28.0, az_03=252, cno_03=33, svid_04=24, elv_04=88.0, az_04=273, cno_04=36)>",
-            "<NMEA(GPGSV, numMsg=4, msgNum=4, numSV=15, svid_01=25, elv_01=5.0, az_01=223, cno_01=, svid_02=28, elv_02=14.0, az_02=49, cno_02=26, svid_03=32, elv_03=10.0, az_03=313, cno_03=16)>",
+            "<NMEA(GPGSV, numMsg=4, msgNum=1, numSV=15, svid_01=1, elv_01=6, az_01=15, cno_01=, svid_02=10, elv_02=30, az_02=290, cno_02=27, svid_03=12, elv_03=42, az_03=207, cno_03=26, svid_04=13, elv_04=19, az_04=141, cno_04=23)>",
+            "<NMEA(GPGSV, numMsg=4, msgNum=2, numSV=15, svid_01=14, elv_01=7, az_01=49, cno_01=21, svid_02=15, elv_02=45, az_02=171, cno_02=27, svid_03=17, elv_03=32, az_03=65, cno_03=22, svid_04=19, elv_04=33, az_04=95, cno_04=25)>",
+            "<NMEA(GPGSV, numMsg=4, msgNum=3, numSV=15, svid_01=20, elv_01=21, az_01=251, cno_01=31, svid_02=21, elv_02=4, az_02=355, cno_02=, svid_03=23, elv_03=28, az_03=252, cno_03=33, svid_04=24, elv_04=88, az_04=273, cno_04=36)>",
+            "<NMEA(GPGSV, numMsg=4, msgNum=4, numSV=15, svid_01=25, elv_01=5, az_01=223, cno_01=, svid_02=28, elv_02=14, az_02=49, cno_02=26, svid_03=32, elv_03=10, az_03=313, cno_03=16)>",
             "<NMEA(GPGLL, lat=53.4506706667, NS=N, lon=-2.24026, EW=W, time=10:29:29, status=A, posMode=A)>",
             "<NMEA(GPRMC, time=10:29:30, status=A, lat=53.4506721667, NS=N, lon=-2.2402583333, EW=W, spd=0.099, cog=, date=2021-03-07, mv=, mvEW=, posMode=A)>",
         )
@@ -199,9 +199,9 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=78, svid_02=68, svid_03=, svid_04=, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=12.55, HDOP=8.68, VDOP=9.07, systemId=2)>",
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=, svid_02=, svid_03=, svid_04=, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=12.55, HDOP=8.68, VDOP=9.07, systemId=3)>",
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=, svid_02=, svid_03=, svid_04=, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=12.55, HDOP=8.68, VDOP=9.07, systemId=4)>",
-            "<NMEA(GPGSV, numMsg=1, msgNum=1, numSV=4, svid_01=10, elv_01=29.0, az_01=284, cno_01=30, svid_02=20, elv_02=17.0, az_02=247, cno_02=36, svid_03=23, elv_03=24.0, az_03=247, cno_03=38, svid_04=28, elv_04=10.0, az_04=49, cno_04=7, signalID=1)>",
-            "<NMEA(GLGSV, numMsg=2, msgNum=1, numSV=7, svid_01=66, elv_01=10.0, az_01=179, cno_01=, svid_02=67, elv_02=52.0, az_02=218, cno_02=22, svid_03=68, elv_03=46.0, az_03=309, cno_03=30, svid_04=69, elv_04=5.0, az_04=340, cno_04=17, signalID=1)>",
-            "<NMEA(GLGSV, numMsg=2, msgNum=2, numSV=7, svid_01=78, elv_01=30.0, az_01=255, cno_01=33, svid_02=85, elv_02=19.0, az_02=18, cno_02=, svid_03=86, elv_03=25.0, az_03=71, cno_03=, signalID=1)>",
+            "<NMEA(GPGSV, numMsg=1, msgNum=1, numSV=4, svid_01=10, elv_01=29, az_01=284, cno_01=30, svid_02=20, elv_02=17, az_02=247, cno_02=36, svid_03=23, elv_03=24, az_03=247, cno_03=38, svid_04=28, elv_04=10, az_04=49, cno_04=7, signalID=1)>",
+            "<NMEA(GLGSV, numMsg=2, msgNum=1, numSV=7, svid_01=66, elv_01=10, az_01=179, cno_01=, svid_02=67, elv_02=52, az_02=218, cno_02=22, svid_03=68, elv_03=46, az_03=309, cno_03=30, svid_04=69, elv_04=5, az_04=340, cno_04=17, signalID=1)>",
+            "<NMEA(GLGSV, numMsg=2, msgNum=2, numSV=7, svid_01=78, elv_01=30, az_01=255, cno_01=33, svid_02=85, elv_02=19, az_02=18, cno_02=, svid_03=86, elv_03=25, az_03=71, cno_03=, signalID=1)>",
             "<NMEA(GAGSV, numMsg=1, msgNum=1, numSV=0, signalID=7)>",
             "<NMEA(GBGSV, numMsg=1, msgNum=1, numSV=0, signalID=1)>",
             "<NMEA(GNGGA, time=10:41:14, lat=53.4505926667, NS=N, lon=-2.240361, EW=W, quality=1, numSV=5, HDOP=8.68, alt=65.2, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
@@ -274,7 +274,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>",
             "<NMEA(GNGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=23, svid_02=24, svid_03=20, svid_04=12, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=1)>",
-            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6, az_01=14, cno_01=8, svid_02=12, elv_02=43, az_02=207, cno_02=28, svid_03=14, elv_03=6, az_03=49, cno_03=, svid_04=15, elv_04=44, az_04=171, cno_04=23, signalID=1)>",
             "<NMEA(GPTHS, headt=23.34, mi=A)>",
         )
 
@@ -296,7 +296,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(GNGNS, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, posMode=AANN, numSV=6, HDOP=5.88, alt=56.0, sep=48.5, diffAge=, diffStation=, navStatus=V)>",
             "<NMEA(GNGGA, time=10:36:07, lat=53.450657, NS=N, lon=-2.2404103333, EW=W, quality=1, numSV=6, HDOP=5.88, alt=56.0, altUnit=M, sep=48.5, sepUnit=M, diffAge=, diffStation=)>",
             "<NMEA(GNGSA, opMode=A, navMode=3, svid_01=23, svid_02=24, svid_03=20, svid_04=12, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=9.62, HDOP=5.88, VDOP=7.62, systemId=1)>",
-            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6, az_01=14, cno_01=8, svid_02=12, elv_02=43, az_02=207, cno_02=28, svid_03=14, elv_03=6, az_03=49, cno_03=, svid_04=15, elv_04=44, az_04=171, cno_04=23, signalID=1)>",
             "<NMEA(GPTHS, headt=23.34, mi=A)>",
         )
 
@@ -330,7 +330,7 @@ class StreamTest(unittest.TestCase):
     def testNMEAITERATE_ERR2(
         self,
     ):  # NMEAReader iterator ignoring bad checksum and passing error handler
-        EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0.0, az_01=32, cno_01=, svid_02=10, elv_02=27.0, az_02=310, cno_02=, svid_03=12, elv_03=19.0, az_03=205, cno_03=19, svid_04=13, elv_04=38.0, az_04=134, cno_04=21, signalID=1)>"
+        EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0, az_01=32, cno_01=, svid_02=10, elv_02=27, az_02=310, cno_02=, svid_03=12, elv_03=19, az_03=205, cno_03=19, svid_04=13, elv_04=38, az_04=134, cno_04=21, signalID=1)>"
         with open(os.path.join(DIRNAME, "pygpsdata-nmeabadck2.log"), "rb") as stream:
             nmr = NMEAReader(
                 stream,
@@ -348,7 +348,7 @@ class StreamTest(unittest.TestCase):
     def testNMEAITERATE_ERR3(
         self,
     ):  # NMEAReader iterator ignoring bad checksum and continuing
-        EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0.0, az_01=32, cno_01=, svid_02=10, elv_02=27.0, az_02=310, cno_02=, svid_03=12, elv_03=19.0, az_03=205, cno_03=19, svid_04=13, elv_04=38.0, az_04=134, cno_04=21, signalID=1)>"
+        EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=0, az_01=32, cno_01=, svid_02=10, elv_02=27, az_02=310, cno_02=, svid_03=12, elv_03=19, az_03=205, cno_03=19, svid_04=13, elv_04=38, az_04=134, cno_04=21, signalID=1)>"
         with open(os.path.join(DIRNAME, "pygpsdata-nmeabadck2.log"), "rb") as stream:
             nmr = NMEAReader(
                 stream,
@@ -655,7 +655,7 @@ class StreamTest(unittest.TestCase):
     def testLCCHECKSUM(self):  # lower case checksum bytes
         EXPECTED_RESULTS = (
             "<NMEA(GNRMC, time=10:36:07, status=A, lat=53.450657, NS=N, lon=-102.2404103333, EW=W, spd=0.046, cog=, date=2021-03-06, mv=, mvEW=, posMode=A, navStatus=V)>",
-            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6.0, az_01=14, cno_01=8, svid_02=12, elv_02=43.0, az_02=207, cno_02=28, svid_03=14, elv_03=6.0, az_03=49, cno_03=, svid_04=15, elv_04=44.0, az_04=171, cno_04=23, signalID=1)>",
+            "<NMEA(GPGSV, numMsg=3, msgNum=1, numSV=11, svid_01=1, elv_01=6, az_01=14, cno_01=8, svid_02=12, elv_02=43, az_02=207, cno_02=28, svid_03=14, elv_03=6, az_03=49, cno_03=, svid_04=15, elv_04=44, az_04=171, cno_04=23, signalID=1)>",
             "<NMEA(GNZDA, time=10:36:07, day=6, month=3, year=2021, ltzh=00, ltzn=00)>",
             "<NMEA(GNGBS, time=10:36:07, errLat=15.1, errLon=24.2, errAlt=31.0, svid=, prob=, bias=, stddev=, systemId=, signalId=)>",
             "<NMEA(GNVLW, twd=, twdUnit=N, wd=, wdUnit=N, tgd=0.0, tgdUnit=N, gd=0.0, gdUnit=N)>",

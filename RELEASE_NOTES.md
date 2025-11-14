@@ -1,5 +1,10 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.56
+
+1. Cosmetic fix to GSV parsing - `elv` now rendered as `int` rather than `float`.
+1. Add helper method `groupsize` to fix issue which prevented manual generation of messages with variable length groups (e.g. GSV, RTE)
+
 ### RELEASE 1.0.55
 
 ENHANCEMENTS:

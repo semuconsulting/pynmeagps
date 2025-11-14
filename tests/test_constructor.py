@@ -275,6 +275,62 @@ class FillTest(unittest.TestCase):
         EXPECTED_ERROR = "Unknown msgID GNXXX, msgmode GET."
         msg = NMEAMessage("GN", "XXX", GET, payload=[0, 0, 0], validate=VALCKSUM)
 
+    def testGSV(self):
+        EXPECTED_RESULT = "<NMEA(GPGSV, numMsg=1, msgNum=1, numSV=16, svid_01=4, elv_01=48, az_01=25, cno_01=45, svid_02=6, elv_02=78, az_02=120, cno_02=39, svid_03=18, elv_03=62, az_03=26, cno_03=52, svid_04=23, elv_04=17, az_04=99, cno_04=47, signalID=0)>"
+        EXPECTED_BIN = (
+            b"$GPGSV,1,1,16,4,48,25,45,6,78,120,39,18,62,26,52,23,17,99,47,0*56\r\n"
+        )
+        msg = NMEAMessage(
+            "GP",
+            "GSV",
+            GET,
+            numMsg=1,
+            msgNum=1,
+            numSV=16,
+            svid_01=4,
+            elv_01=48,
+            az_01=25,
+            cno_01=45,
+            svid_02=6,
+            elv_02=78,
+            az_02=120,
+            cno_02=39,
+            svid_03=18,
+            elv_03=62,
+            az_03=26,
+            cno_03=52,
+            svid_04=23,
+            elv_04=17,
+            az_04=99,
+            cno_04=47,
+        )
+        self.assertEqual(str(msg), EXPECTED_RESULT)
+        self.assertEqual(msg.serialize(), EXPECTED_BIN)
+        self.assertEqual(str(NMEAReader.parse(msg.serialize())), EXPECTED_RESULT)
+
+    def testGSV2(self):
+        EXPECTED_RESULT = "<NMEA(GLGSV, numMsg=1, msgNum=1, numSV=16, svid_01=4, elv_01=48, az_01=25, cno_01=45, svid_02=6, elv_02=78, az_02=120, cno_02=39, signalID=0)>"
+        EXPECTED_BIN = b"$GLGSV,1,1,16,4,48,25,45,6,78,120,39,0*40\r\n"
+        msg = NMEAMessage(
+            "GL",
+            "GSV",
+            GET,
+            numMsg=1,
+            msgNum=1,
+            numSV=16,
+            svid_01=4,
+            elv_01=48,
+            az_01=25,
+            cno_01=45,
+            svid_02=6,
+            elv_02=78,
+            az_02=120,
+            cno_02=39,
+        )
+        self.assertEqual(str(msg), EXPECTED_RESULT)
+        self.assertEqual(msg.serialize(), EXPECTED_BIN)
+        self.assertEqual(str(NMEAReader.parse(msg.serialize())), EXPECTED_RESULT)
+
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

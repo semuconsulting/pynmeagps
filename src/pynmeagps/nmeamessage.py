@@ -28,6 +28,7 @@ from pynmeagps.nmeahelpers import (
     ddd2dmm,
     dmm2ddd,
     generate_checksum,
+    groupsize,
     time2str,
     time2utc,
 )
@@ -96,6 +97,8 @@ class NMEAMessage:
         self._hpnmeamode = hpnmeamode
         self._talker = talker
         self._msgID = msgID
+        # flag to show message is being streamed rather than generated
+        self._streaming = "payload" in kwargs
         self._do_attributes(**kwargs)
         self._immutable = True  # once initialised, object is immutable
 
@@ -185,7 +188,10 @@ class NMEAMessage:
             rng = numr
         elif numr == "None":  # indeterminate number of repeats
             pindexend = 0  # may need tweaking
-            rng = self._calc_num_repeats(attd, self._payload, pindex, pindexend)
+            if self._streaming:
+                rng = self._calc_num_repeats(attd, self._payload, pindex, pindexend)
+            else:
+                rng = groupsize(**kwargs)
         else:  # number of repeats is defined in named attribute
             rng = getattr(self, numr)
         # recursively process each group attribute,
@@ -225,7 +231,7 @@ class NMEAMessage:
 
         try:
             # all attribute values have been provided
-            if "payload" in kwargs:
+            if self._streaming:
                 # remove group delimiters in proprietary PSSNSNC message
                 if self.identity == "PSSNSNC":
                     self._payload[pindex] = (
@@ -257,7 +263,7 @@ class NMEAMessage:
             return pindex
 
         setattr(self, keyr, val)  # add attribute to NMEAMessage object
-        if "payload" in kwargs:
+        if self._streaming:
             # override sign of lat/lon according to NS and EW values
             if att == nmt.LND and hasattr(self, "lon"):
                 if isinstance(self.lon, (int, float)):
@@ -291,7 +297,7 @@ class NMEAMessage:
         try:
             key = self.msgID
             if key in nmt.NMEA_PREFIX_PROP:  # proprietary, first element is msgId
-                if "payload" in kwargs:
+                if self._streaming:
                     if key == "ASHR" and self._payload[0][1].isdigit():
                         pass  # exception for PASHR pitch and roll sentence without msgId
                     else:
@@ -367,7 +373,7 @@ class NMEAMessage:
         """
 
         lp = len(self._payload)
-        py = "payload" in kwargs
+        py = self._streaming
         pt = "portid" in kwargs
         if mode == nmt.SET:
             bd = "baudrate" in kwargs
@@ -395,7 +401,7 @@ class NMEAMessage:
         """
 
         lp = len(self._payload)
-        py = "payload" in kwargs
+        py = self._streaming
         mv = "msgver" in kwargs
         pt = "porttype" in kwargs
         if mode in (nmt.SET, nmt.GET):
@@ -426,7 +432,7 @@ class NMEAMessage:
         """
 
         lp = len(self._payload)
-        py = "payload" in kwargs
+        py = self._streaming
         if mode == nmt.SET:
             if (py and lp == 3) or (not py and kwargs.get("enable", 1) == 0):
                 key += "_DIS"
@@ -444,7 +450,7 @@ class NMEAMessage:
         """
 
         lp = len(self._payload)
-        py = "payload" in kwargs
+        py = self._streaming
         mh = "maskhigh" in kwargs
         if mode == nmt.SET:
             if (py and lp == 4) or (not py and not mh):
@@ -468,7 +474,7 @@ class NMEAMessage:
         """
 
         lp = len(self._payload)
-        py = "payload" in kwargs
+        py = self._streaming
         l1 = "lon1" in kwargs
         if mode == nmt.SET:
             if (py and lp == 13) or (not py and l1):
@@ -493,7 +499,7 @@ class NMEAMessage:
         :rtype: str
         """
 
-        py = "payload" in kwargs
+        py = self._streaming
         if mode == nmt.GET:
             if py and kwargs["payload"][0].isnumeric():
                 key += "_ALT"
@@ -509,7 +515,7 @@ class NMEAMessage:
         :rtype: str
         """
 
-        py = "payload" in kwargs
+        py = self._streaming
         mt = "msgtype" in kwargs
         msgtype = ""
         if py:
