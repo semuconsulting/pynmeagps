@@ -1,5 +1,9 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.56
+
+1. Cosmetic fix to GSV parsing - `elv` now rendered as `int` rather than `float`.
+
 ### RELEASE 1.0.55
 
 ENHANCEMENTS:

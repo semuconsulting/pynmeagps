@@ -531,7 +531,7 @@ NMEA_PAYLOADS_GET = {
             "None",
             {  # repeating group * 1..4
                 "svid": IN,
-                "elv": DE,  # elevation
+                "elv": IN,  # elevation
                 "az": IN,  # azimuth
                 "cno": IN,  # signal strength
             },
