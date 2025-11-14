@@ -308,6 +308,29 @@ class FillTest(unittest.TestCase):
         self.assertEqual(msg.serialize(), EXPECTED_BIN)
         self.assertEqual(str(NMEAReader.parse(msg.serialize())), EXPECTED_RESULT)
 
+    def testGSV2(self):
+        EXPECTED_RESULT = "<NMEA(GLGSV, numMsg=1, msgNum=1, numSV=16, svid_01=4, elv_01=48, az_01=25, cno_01=45, svid_02=6, elv_02=78, az_02=120, cno_02=39, signalID=0)>"
+        EXPECTED_BIN = b"$GLGSV,1,1,16,4,48,25,45,6,78,120,39,0*40\r\n"
+        msg = NMEAMessage(
+            "GL",
+            "GSV",
+            GET,
+            numMsg=1,
+            msgNum=1,
+            numSV=16,
+            svid_01=4,
+            elv_01=48,
+            az_01=25,
+            cno_01=45,
+            svid_02=6,
+            elv_02=78,
+            az_02=120,
+            cno_02=39,
+        )
+        self.assertEqual(str(msg), EXPECTED_RESULT)
+        self.assertEqual(msg.serialize(), EXPECTED_BIN)
+        self.assertEqual(str(NMEAReader.parse(msg.serialize())), EXPECTED_RESULT)
+
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

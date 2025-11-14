@@ -450,6 +450,24 @@ def get_parts(message: object) -> tuple:
         raise nme.NMEAMessageError(f"Badly formed message {message}") from err
 
 
+def groupsize(**kwargs) -> int:
+    """
+    Get number of grouped items in generated payload arguments.
+    e.g. {svid_01=7, svid_02=8, svid_03=24} -> 3
+
+    :param dict kwargs: payload arguments
+    :return: group size
+    :rtype: int
+    """
+
+    idx = 0
+    for a in kwargs:
+        ai = a.split("_", 1)
+        if len(ai) > 1:
+            idx = max(idx, int(ai[1]))
+    return idx
+
+
 def haversine(
     lat1: float,
     lon1: float,

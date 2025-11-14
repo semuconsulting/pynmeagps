@@ -28,6 +28,7 @@ from pynmeagps.nmeahelpers import (
     ddd2dmm,
     dmm2ddd,
     generate_checksum,
+    groupsize,
     time2str,
     time2utc,
 )
@@ -187,7 +188,10 @@ class NMEAMessage:
             rng = numr
         elif numr == "None":  # indeterminate number of repeats
             pindexend = 0  # may need tweaking
-            rng = self._calc_num_repeats(attd, self._payload, pindex, pindexend)
+            if self._streaming:
+                rng = self._calc_num_repeats(attd, self._payload, pindex, pindexend)
+            else:
+                rng = groupsize(**kwargs)
         else:  # number of repeats is defined in named attribute
             rng = getattr(self, numr)
         # recursively process each group attribute,
@@ -541,7 +545,7 @@ class NMEAMessage:
         return key
 
     def _calc_num_repeats(
-        self, attd: dict, payload: list, pindex: int, pindexend: int = 0
+        self, attd: dict, payload: list, pindex: int, pindexend: int = 0, **kwargs
     ) -> int:
         """
         Deduce number of items in repeating group.
@@ -555,8 +559,6 @@ class NMEAMessage:
         :rtype: int
         """
 
-        if not self._streaming and self.msgID == "GSV":
-            return 4  # arbitrarily assume generated GSV always have 4 SV
         lenpayload = len(payload) - pindex - pindexend
         lengroup = len(attd)
         return int(lenpayload / lengroup)
