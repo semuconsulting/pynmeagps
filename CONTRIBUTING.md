@@ -21,13 +21,13 @@ Please help us keep our issue list small by adding fixes: #{$ISSUE_NO} to the co
 * We use and recommend [Visual Studio Code](https://code.visualstudio.com/) with the [Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) for development and testing.
 * Code should be documented in accordance with [Sphinx](https://www.sphinx-doc.org/en/master/) docstring conventions.
 * Code should formatted using [black](https://pypi.org/project/black/).
-* We use and recommend [pylint](https://pypi.org/project/pylint/)for code analysis.
-* We use and recommend [bandit](https://pypi.org/project/bandit/)for security vulnerability analysis.
+* We use and recommend [pylint](https://pypi.org/project/pylint/) for code analysis.
+* We use and recommend [bandit](https://pypi.org/project/bandit/) for security vulnerability analysis.
 * Commits must be [signed](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits).
 
 ## Testing
 
-We use Python's native unittest framework for local unit testing, complemented by the GitHub Actions automated build and testing workflow. We endeavour to have 100% code coverage.
+We use Python's native unittest framework for local unit testing, complemented by the GitHub Actions automated build and testing workflow. We endeavour to have >98% code coverage.
 
 Please write unittest examples for new code you create and add them to the `/tests` folder following the naming convention `test_*.py`.
 
