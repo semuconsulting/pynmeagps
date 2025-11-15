@@ -416,6 +416,16 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, "024523.00")
         res = NMEAMessage.val2str(datetime.datetime(2020, 6, 7, 3, 27, 24), "DT")
         self.assertEqual(res, "070620")
+        res = NMEAMessage.val2str(datetime.datetime(2020, 6, 7, 3, 27, 24), "DTL")
+        self.assertEqual(res, "07062020")
+        res = NMEAMessage.val2str("2020-06-07", "DTL")
+        self.assertEqual(res, "07062020")
+        res = NMEAMessage.val2str("20210708", "DTL")
+        self.assertEqual(res, "08072021")
+        res = NMEAMessage.val2str(datetime.datetime(2020, 6, 7, 3, 27, 24), "DM")
+        self.assertEqual(res, "060720")
+        res = NMEAMessage.val2str("2020-06-07", "DM")
+        self.assertEqual(res, "060720")
 
     def testVal2StrBAD(self):
         EXPECTED_ERROR = "Unknown attribute type XX."

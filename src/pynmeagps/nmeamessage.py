@@ -13,6 +13,8 @@ Created on 04 Mar 2021
 import struct
 from datetime import datetime, timezone
 from logging import getLogger
+from types import NoneType
+from typing import Literal
 
 import pynmeagps.exceptions as nme
 import pynmeagps.nmeatypes_core as nmt
@@ -41,10 +43,11 @@ class NMEAMessage:
         self,
         talker: str,
         msgID: str,
-        msgmode: int,
+        msgmode: Literal[0, 1, 2],
         hpnmeamode: bool = False,
         validate: int = nmt.VALCKSUM,
-        userdefined: dict = None,
+        userdefined: dict | NoneType = None,
+        checksum: str | NoneType = None,
         **kwargs,
     ):
         """Constructor.
@@ -62,6 +65,8 @@ class NMEAMessage:
         :param int validate: VALNONE (0), VALCKSUM (1), VALMSGID (2),
             (can be OR'd) (1)
         :param dict userdefined: user-defined payload definition dictionary (None)
+        :param str | NoneType checksum: checksum from incoming message or
+            None if creating new message (None)
         :param kwargs: keyword arg(s) representing all or some payload attributes
         :raises: NMEAMessageError
         """
@@ -97,6 +102,7 @@ class NMEAMessage:
         self._hpnmeamode = hpnmeamode
         self._talker = talker
         self._msgID = msgID
+        self._checksum = checksum
         # flag to show message is being streamed rather than generated
         self._streaming = "payload" in kwargs
         self._do_attributes(**kwargs)
@@ -113,10 +119,11 @@ class NMEAMessage:
 
         pindex = 0  # payload index
         gindex = []  # (nested) grouped attribute indices
+        key = ""
 
         try:
             self._payload = kwargs.get("payload", [])
-            self._checksum = kwargs.get("checksum", None)
+            # self._checksum = kwargs.get("checksum", None)
             pdict = self._get_dict(**kwargs)  # get payload definition dict
             if pdict is None:  # definition not yet implemented
                 if "payload" in kwargs:
@@ -167,7 +174,7 @@ class NMEAMessage:
         return (pindex, gindex)
 
     def _set_attribute_group(
-        self, att: tuple, pindex: int, gindex: list, **kwargs
+        self, att: tuple[int, dict], pindex: int, gindex: list, **kwargs
     ) -> tuple:
         """
         Process (nested) group of attributes.
@@ -285,17 +292,18 @@ class NMEAMessage:
         for i, fld in enumerate(payload):
             setattr(self, f"field_{i+1:02d}", fld)
 
-    def _get_dict(self, **kwargs) -> dict:
+    def _get_dict(self, **kwargs) -> dict | NoneType:
         """
         Get payload dictionary.
 
         :return: dictionary representing payload definition
-        :rtype: dict
+        :rtype: dict | NoneType
         """
 
         dic = None
+        key = self.msgID
+
         try:
-            key = self.msgID
             if key in nmt.NMEA_PREFIX_PROP:  # proprietary, first element is msgId
                 if self._streaming:
                     if key == "ASHR" and self._payload[0][1].isdigit():

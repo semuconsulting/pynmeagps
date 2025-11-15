@@ -37,7 +37,7 @@ Companion libraries are available which handle UBX &copy; and RTCM3 &copy; messa
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pynmeagps.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pynmeagps)
 
-The library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS and Maritime devices, but is readily [extensible](#extensibility). Refer to [`NMEA_MSGIDS`](https://github.com/semuconsulting/pynmeagps/blob/master/src/pynmeagps/nmeatypes_core.py#L224) and [`NMEA_MSGIDS_PROP`](https://github.com/semuconsulting/pynmeagps/blob/master/src/pynmeagps/nmeatypes_core.py#L367) for the complete dictionary of standard and proprietary messages currently supported. While the [NMEA 0183 protocol itself is proprietary](https://www.nmea.org/nmea-0183.html), the definitions here have been collated from public domain sources.
+The library implements a comprehensive set of outbound (GET) and inbound (SET/POLL) GNSS NMEA messages relating to GNSS/GPS and Maritime devices, but is readily [extensible](#extensibility). Refer to [`NMEA_MSGIDS`](https://github.com/semuconsulting/pynmeagps/blob/master/src/pynmeagps/nmeatypes_core.py#L224) and [`NMEA_MSGIDS_PROP`](https://github.com/semuconsulting/pynmeagps/blob/master/src/pynmeagps/nmeatypes_core.py#L367) for the complete dictionary of standard and proprietary messages currently supported. The library also supports [user-defined NMEA message definitions](#userdef) (e.g. for product development). While the [NMEA 0183 protocol itself is proprietary](https://www.nmea.org/nmea-0183.html), the definitions here have been collated from public domain sources.
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pynmeagps/](https://www.semuconsulting.com/pynmeagps/).
 
@@ -88,7 +88,7 @@ class pynmeagps.nmeareader.NMEAReader(stream, **kwargs)
 
 You can create an `NMEAReader` object by calling the constructor with an active stream object. 
 The stream object can be any data stream which supports a `read(n) -> bytes` method (e.g. File or Serial, with 
-or without a buffer wrapper). `pynmeagps` implements an internal `SocketStream` class to allow sockets to be read in the same way as other streams (see example below).
+or without a buffer wrapper). `pynmeagps` implements an internal `SocketWrapper` class to allow sockets to be read in the same way as other streams (see example below).
 
 Individual input NMEA messages can then be read using the `NMEAReader.read()` function, which returns both the raw data (as bytes) and the parsed data (as an `NMEAMessage` object, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `NMEAReader` also implements an iterator.
 
@@ -99,6 +99,7 @@ The constructor accepts the following optional keyword arguments:
 * `validate`: validation flags `VALCKSUM` (0x01) = validate checksum (default), `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `quitonerror`: `ERR_IGNORE` (0) = ignore errors,  `ERR_LOG` (1) = log continue, `ERR_RAISE` (2) = (re)raise (1)
 * `userdefined`: An optional user-defined payload definition dictionary, supplementing the existing `NMEA_PAYLOADS_GET` and `NMEA_PAYLOADS_GET_PROP` dictionaries (None).
+* `encoding`: optional encoding for socket stream input, 0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd) (0)
 
 Examples:
 
@@ -134,6 +135,29 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as stream:
   nmr = NMEAReader(stream)
   for raw_data, parsed_data in nmr:
     print(parsed_data)
+```
+
+* <a name="userdef">User-defined NMEA message definition dictionary:</a>
+
+```python
+from pynmeagps import NMEAReader, DE, CH
+
+NMEA_PROD_DEVEL = {
+    "XX1": {
+        "roll": DE,
+        "pitch": DE,
+        "yaw": DE,
+        "status": CH,
+    }
+}
+
+with open('testfile.log', 'rb') as stream:
+    nmr = NMEAReader(stream, userdefined=NMEA_PROD_DEVEL)
+    for raw_data, parsed_data in nmr:
+        print(parsed_data)
+```
+```
+<NMEA(PXX1, roll=0.3455, pitch=1.5456, yaw=18.1844, status="SYNC")>
 ```
 
 ---

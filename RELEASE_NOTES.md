@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.0.57
+
+1. Add NMEAReader encoding argument for chunked-encoded socket streams.
+1. Type hints and docstrings updated
+1. VSCode actions updated
+
 ### RELEASE 1.0.56
 
 1. Cosmetic fix to GSV parsing - `elv` now rendered as `int` rather than `float`.
