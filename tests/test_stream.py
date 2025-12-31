@@ -144,6 +144,11 @@ class StreamTest(unittest.TestCase):
             "<NMEA(ANNAK, talkerid=UP, formatter=AID, identifier=999999990, reason=11, text=)>",
             "<NMEA(GPGBS, time=23:55:03, errLat=1.6, errLon=1.4, errAlt=3.2, svid=, prob=, bias=, stddev=, systemId=, signalId=)>",
             "<NMEA(GPGBS, time=23:54:58, errLat=1.4, errLon=1.3, errAlt=3.1, svid=3, prob=, bias=-21.4, stddev=3.8, systemId=1, signalId=0)>",
+            "<NMEA(GPHDT, headingT=274.07, headingTu=T)>",
+            "<NMEA(GPHDM, headingM=223.12, headingMag=M)>",
+            "<NMEA(IIHDM, headingM=70.6, headingMag=M)>",
+            "<NMEA(IIHDG, headingM=70.6, deviation=, deviationEW=, variation=, variationEW=W)>",
+            "<NMEA(IIROT, rot=-7.3, valid=A)>",
         )
 
         i = 0
