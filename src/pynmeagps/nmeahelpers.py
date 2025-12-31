@@ -14,6 +14,7 @@ Created on 04 Mar 2021
 import re
 from datetime import datetime
 from math import acos, asin, atan2, cos, pi, sin, sqrt
+from typing import Literal
 
 import pynmeagps.exceptions as nme
 from pynmeagps.nmeatypes_core import (
@@ -74,7 +75,7 @@ def area(
     lon1: float,
     lat2: float,
     lon2: float,
-    radius: int = WGS84_SMAJ_AXIS / 1000,
+    radius: float = WGS84_SMAJ_AXIS / 1000,
 ) -> float:
     """
     Calculate spherical area bounded by two coordinates.
@@ -113,11 +114,11 @@ def bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return brng
 
 
-def calc_checksum(content: object) -> str:
+def calc_checksum(content: str) -> str:
     """
     Calculate checksum for raw NMEA message.
 
-    :param object content: NMEA message content (everything except checksum)
+    :param str content: NMEA message content (everything except checksum)
     :return: checksum as hex string
     :rtype: str
     """
@@ -128,12 +129,13 @@ def calc_checksum(content: object) -> str:
     return f"{cksum:02X}"
 
 
-def date2str(dat: datetime.date, form: str = DT) -> str:
+def date2str(dat: datetime.date, form: Literal["DT", "DTL", "DM"] = DT) -> str:
     """
     Convert datetime.date to NMEA formatted string.
 
     :param datetime.date dat: date
-    :param str form: date format DT = ddmmyy, DTL = ddmmyyyy, DM = mmddyy (DT)
+    :param Literal["DT","DTL","DM"] form: date format DT = ddmmyy, DTL = ddmmyyyy,
+        DM = mmddyy (DT)
     :return: NMEA formatted date string
     :rtype: str
     """
@@ -150,12 +152,13 @@ def date2str(dat: datetime.date, form: str = DT) -> str:
         return ""
 
 
-def date2utc(dates: str, form: str = DT) -> datetime.date:
+def date2utc(dates: str, form: Literal["DT", "DTL", "DM"] = DT) -> datetime.date:
     """
     Convert NMEA Date to UTC datetime.
 
     :param str dates: NMEA date
-    :param str form: date format DT = ddmmyy, DTL = ddmmyyyy, DM = mmddyy (DT)
+    :param Literal["DT","DTL","DM"] form: date format DT = ddmmyy, DTL = ddmmyyyy,
+        DM = mmddyy (DT)
     :return: UTC date YYyy:mm:dd
     :rtype: datetime.date
     """
@@ -173,7 +176,7 @@ def date2utc(dates: str, form: str = DT) -> datetime.date:
         return ""
 
 
-def ddd2dmm(degrees: float, att: str, hpmode: bool = False) -> str:
+def ddd2dmm(degrees: float, att: Literal["LA", "LN"], hpmode: bool = False) -> str:
     """
     Convert decimal degrees to native NMEA degrees decimal
     minutes string (NB: standard NMEA only supports 5dp
@@ -181,7 +184,7 @@ def ddd2dmm(degrees: float, att: str, hpmode: bool = False) -> str:
     precision but this may not be accepted by all NMEA parsers).
 
     :param float degrees: degrees
-    :param str att: 'LA' (lat) or 'LN' (lon)
+    :param Literal["LA","LN"] att: 'LA' (lat) or 'LN' (lon)
     :param bool hpmode: high precision mode (7dp rather than 5dp)
     :return: degrees as (d)ddmm.mmmmm(mm) formatted string
     :rtype: str
@@ -207,13 +210,13 @@ def ddd2dmm(degrees: float, att: str, hpmode: bool = False) -> str:
         return ""
 
 
-def deg2dmm(degrees: float, att: str) -> str:
+def deg2dmm(degrees: float, att: Literal["LA", "LN"]) -> str:
     """
     Convert decimal degrees to degrees decimal minutes string
     e.g. '51°20.76′S'.
 
     :param float degrees: degrees
-    :param str att: 'LA' (lat) or 'LN' (lon)
+    :param Literal["LA","LN"] att: 'LA' (lat) or 'LN' (lon)
     :return: degrees as dm.m formatted string
     :rtype: str
 
@@ -232,13 +235,13 @@ def deg2dmm(degrees: float, att: str) -> str:
         return ""
 
 
-def deg2dms(degrees: float, att: str) -> str:
+def deg2dms(degrees: float, att: Literal["LA", "LN"]) -> str:
     """
     Convert decimal degrees to degrees minutes seconds string
     e.g. '51°20′45.6″N'
 
     :param float degrees: degrees
-    :param str att: 'LA' (lat) or 'LN' (lon)
+    :param Literal["LA","LN"] att: 'LA' (lat) or 'LN' (lon)
     :return: degrees as d.m.s formatted string
     :rtype: str
 
@@ -258,13 +261,13 @@ def deg2dms(degrees: float, att: str) -> str:
         return ""
 
 
-def dmm2ddd(pos: str) -> float:
+def dmm2ddd(pos: str) -> float | str:
     """
     Convert NMEA lat/lon string to (unsigned) decimal degrees.
 
     :param str pos: (d)ddmm.mmmmm
-    :return: pos as decimal degrees
-    :rtype: float or str if invalid
+    :return: pos as decimal degrees, or "" if invalid
+    :rtype: float | str
 
     """
 
@@ -473,7 +476,7 @@ def haversine(
     lon1: float,
     lat2: float,
     lon2: float,
-    radius: int = WGS84_SMAJ_AXIS / 1000,
+    radius: float = WGS84_SMAJ_AXIS / 1000,
 ) -> float:
     """
     Calculate spherical distance in km between two coordinates using haversine formula.
@@ -536,14 +539,14 @@ def knots2spd(knots: float, unit: str = "MS") -> float:
         ) from err
 
 
-def latlon2dmm(lat: float, lon: float) -> tuple:
+def latlon2dmm(lat: float, lon: float) -> tuple[str, str]:
     """
     Converts decimal lat/lon tuple to degrees decimal minutes.
 
     :param float lat: lat
     :param float lon: lon
     :return: (lat,lon) in d.mm.m format
-    :rtype: tuple
+    :rtype: tuple[str, str]
     """
 
     lat = deg2dmm(lat, LA)
@@ -551,14 +554,14 @@ def latlon2dmm(lat: float, lon: float) -> tuple:
     return lat, lon
 
 
-def latlon2dms(lat: float, lon: float) -> tuple:
+def latlon2dms(lat: float, lon: float) -> tuple[str, str]:
     """
     Converts decimal lat/lon tuple to degrees minutes seconds.
 
     :param float lat: lat
     :param float lon: lon
     :return: (lat,lon) in d.m.s. format
-    :rtype: tuple
+    :rtype: tuple[str, str]
     """
 
     lat = deg2dms(lat, LA)
@@ -667,7 +670,7 @@ def planar(
     lon1: float,
     lat2: float,
     lon2: float,
-    radius: int = WGS84_SMAJ_AXIS,
+    radius: float = WGS84_SMAJ_AXIS,
 ) -> float:
     """
     Calculate planar distance between two coordinates using planar
@@ -698,7 +701,7 @@ def time2str(tim: datetime.time) -> str:
     Convert datetime.time to NMEA formatted string.
 
     :param datetime.time tim: time
-    :return: NMEA formatted time string hhmmss.ss
+    :return: NMEA formatted time string hhmmss.ss or "" if invalid
     :rtype: str
     """
 
@@ -713,8 +716,8 @@ def time2utc(times: str) -> datetime.time:
     Convert NMEA Time to UTC datetime.
 
     :param str times: NMEA time hhmmss.ss
-    :return: UTC time hh:mm:ss.ss
-    :rtype: datetime.time
+    :return: UTC time hh:mm:ss.ss or "" if invalid
+    :rtype: datetime.time | str
     """
 
     try:

@@ -27,11 +27,15 @@ Created on 4 Mar 2021
 
 from logging import getLogger
 from socket import socket
+from types import FunctionType, NoneType
+from typing import Literal
 
 import pynmeagps.exceptions as nme
 from pynmeagps.nmeahelpers import calc_checksum, get_parts
 from pynmeagps.nmeamessage import NMEAMessage
 from pynmeagps.nmeatypes_core import (
+    DEFAULT_BUFSIZE,
+    ENCODE_NONE,
     ERR_LOG,
     ERR_RAISE,
     GET,
@@ -50,32 +54,35 @@ class NMEAReader:
     def __init__(
         self,
         stream,
-        msgmode: int = GET,
+        msgmode: Literal[0, 1, 2] = GET,
         validate: int = VALCKSUM,
         nmeaonly: bool = False,
-        quitonerror: int = ERR_LOG,
-        bufsize: int = 4096,
-        errorhandler: object = None,
-        userdefined: dict = None,
+        quitonerror: Literal[0, 1, 2] = ERR_LOG,
+        bufsize: int = DEFAULT_BUFSIZE,
+        errorhandler: FunctionType | NoneType = None,
+        userdefined: dict | NoneType = None,
+        encoding: int = ENCODE_NONE,
     ):
         """Constructor.
 
         :param stream stream: input data stream (e.g. Serial or binary File)
-        :param int msgmode: 0=GET, 1=SET, 2=POLL (0)
+        :param Literal[0,1,2] msgmode: 0=GET, 1=SET, 2=POLL (0)
         :param int validate: VALNONE (0), VALCKSUM (1), VALMSGID (2),
             (can be OR'd) (1)
         :param bool nmeaonly: True = error on non-NMEA data, False = ignore non-NMEA data
-        :param int quitonerror: ERR_IGNORE (0) = ignore errors,  ERR_LOG (1) = log continue,
-            ERR_RAISE (2) = (re)raise (1)
+        :param Literal[0,1,2] quitonerror: ERR_IGNORE (0) = ignore errors,  
+            ERR_LOG (1) = log continue, ERR_RAISE (2) = (re)raise (1)
         :param int bufsize: socket recv buffer size (4096)
-        :param object errorhandler: error handling object or function (None)
-        :param dict userdefined: user-defined payload definition dictionary (None)
+        :param FunctionType | NoneType errorhandler: error handling callback function (None)
+        :param dict | NoneType userdefined: user-defined payload definition dictionary (None)
+        :param int encoding: encoding for socket stream \
+            (0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd)) (0)
         :raises: NMEAParseError (if mode is invalid)
         """
         # pylint: disable=too-many-arguments
 
         if isinstance(stream, socket):
-            self._stream = SocketWrapper(stream, bufsize=bufsize)
+            self._stream = SocketWrapper(stream, encoding=encoding, bufsize=bufsize)
         else:
             self._stream = stream
         if msgmode not in (0, 1, 2):
@@ -95,12 +102,12 @@ class NMEAReader:
 
         return self
 
-    def __next__(self) -> tuple:
+    def __next__(self) -> tuple[bytes | NoneType, NMEAMessage | NoneType]:
         """
         Return next item in iteration.
 
         :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
-        :rtype: tuple
+        :rtype: tuple[bytes | NoneType, NMEAMessage | NoneType]
         :raises: StopIteration
 
         """
@@ -110,12 +117,12 @@ class NMEAReader:
             raise StopIteration
         return (raw_data, parsed_data)
 
-    def read(self) -> tuple:
+    def read(self) -> tuple[bytes | NoneType, NMEAMessage | NoneType]:
         """
         Read the binary data from the stream buffer.
 
         :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage)
-        :rtype: tuple
+        :rtype: tuple[bytes | NoneType, NMEAMessage | NoneType]
         :raises: NMEAStreamError (if nmeaonly=True and stream includes non-NMEA data)
 
         """
@@ -229,20 +236,20 @@ class NMEAReader:
     @staticmethod
     def parse(
         message: bytes,
-        msgmode: int = GET,
+        msgmode: Literal[0, 1, 2] = GET,
         validate: int = VALCKSUM,
-        userdefined: dict = None,
-    ) -> object:
+        userdefined: dict | NoneType = None,
+    ) -> NMEAMessage | NoneType:
         """
         Parse NMEA byte stream to NMEAMessage object.
 
         :param bytes message: bytes message to parse
-        :param int msgmode: 0=GET, 1=SET, 2=POLL (0)
+        :param Literal[0, 1, 2] msgmode: 0=GET, 1=SET, 2=POLL (0)
         :param int validate: VALNONE (0), VALCKSUM (1), VALMSGID (2),
             (can be OR'd) (1)
-        :param dict userdefined: user-defined payload definition dictionary (None)
+        :param dict | NoneType userdefined: user-defined payload definition dictionary (None)
         :return: NMEAMessage object (or None if unknown message and VALMSGID is not set)
-        :rtype: NMEAMessage
+        :rtype: NMEAMessage | NoneType
         :raises: NMEAParseError (if data stream contains invalid data or unknown message type)
 
         """

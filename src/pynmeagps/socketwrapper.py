@@ -35,11 +35,13 @@ class SocketWrapper:
     Supports chunked transfer-encoded datastreams.
     """
 
-    def __init__(self, sock: socket, encoding=ENCODE_NONE, bufsize=DEFAULT_BUFSIZE):
+    def __init__(
+        self, sock: socket.socket, encoding=ENCODE_NONE, bufsize=DEFAULT_BUFSIZE
+    ):
         """
         Constructor.
 
-        :param sock socket: socket object
+        :param socket.socket sock: socket object
         :param int encoding: transfer-encoding values \
             (0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd) (0)
         :param int bufsize: internal buffer size
@@ -135,7 +137,7 @@ class SocketWrapper:
 
         return len(self._buffer)
 
-    def dechunk(self, segment: bytes) -> tuple:  # pragma: no cover
+    def dechunk(self, segment: bytes) -> tuple:
         """
         Parse segment of chunked transfer-encoded byte stream.
 
@@ -170,7 +172,7 @@ class SocketWrapper:
                     # premature end of chunk bytes
                     partial = length_bytes + chunk
                     break
-                try:
+                try:  # pragma: no cover
                     if self._encoding & ENCODE_GZIP:
                         chunk = decompress(chunk, wbits=MAX_WBITS | 16)
                     if self._encoding & ENCODE_COMPRESS:

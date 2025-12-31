@@ -558,10 +558,7 @@ NMEA_PAYLOADS_GET = {
     },
     "HDM": {
         "headingM": DE,
-        "deviation": DE,
-        "deviationEW": LND,
-        "variation": DE,
-        "variationEW": LND,
+        "headingMag": CH,  # 'M'
     },
     "HDT": {
         "headingT": DE,

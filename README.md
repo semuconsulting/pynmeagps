@@ -88,7 +88,7 @@ class pynmeagps.nmeareader.NMEAReader(stream, **kwargs)
 
 You can create an `NMEAReader` object by calling the constructor with an active stream object. 
 The stream object can be any data stream which supports a `read(n) -> bytes` method (e.g. File or Serial, with 
-or without a buffer wrapper). `pynmeagps` implements an internal `SocketStream` class to allow sockets to be read in the same way as other streams (see example below).
+or without a buffer wrapper). `pynmeagps` implements an internal `SocketWrapper` class to allow sockets to be read in the same way as other streams (see example below).
 
 Individual input NMEA messages can then be read using the `NMEAReader.read()` function, which returns both the raw data (as bytes) and the parsed data (as an `NMEAMessage` object, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `NMEAReader` also implements an iterator.
 
@@ -99,6 +99,7 @@ The constructor accepts the following optional keyword arguments:
 * `validate`: validation flags `VALCKSUM` (0x01) = validate checksum (default), `VALMSGID` (0x02) = validate msgId (i.e. raise error if unknown NMEA message is received)
 * `quitonerror`: `ERR_IGNORE` (0) = ignore errors,  `ERR_LOG` (1) = log continue, `ERR_RAISE` (2) = (re)raise (1)
 * `userdefined`: An optional user-defined payload definition dictionary, supplementing the existing `NMEA_PAYLOADS_GET` and `NMEA_PAYLOADS_GET_PROP` dictionaries (None).
+* `encoding`: optional encoding for socket stream input, 0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd) (0)
 
 Examples:
 
