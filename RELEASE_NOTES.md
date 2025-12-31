@@ -2,6 +2,7 @@
 
 ### RELEASE 1.0.57
 
+1. Fix HDM definition - Fixes #89
 1. Add NMEAReader encoding argument for chunked-encoded socket streams.
 1. Type hints and docstrings updated
 1. VSCode actions updated
