@@ -1363,7 +1363,6 @@ NMEA_PAYLOADS_GET_UNICORE = {
     # *********************************************
     # UNICORE UM98n Extended NMEA Sentences
     # *********************************************
-    # Slave Antenna
     "GGAH": NMEA_PAYLOADS_GET["GGA"],
     "GLLH": NMEA_PAYLOADS_GET["GLL"],
     "GNSH": NMEA_PAYLOADS_GET["GNS"],
@@ -1374,7 +1373,6 @@ NMEA_PAYLOADS_GET_UNICORE = {
     "RMCH": NMEA_PAYLOADS_GET["RMC"],
     "VTGH": NMEA_PAYLOADS_GET["VTG"],
     "THS2": NMEA_PAYLOADS_GET["THS"],
-    # Attitude
     "HPR": {
         "time": TM,
         "heading": DE,
