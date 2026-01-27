@@ -333,6 +333,7 @@ NMEA_MSGIDS = {
     "THS": "True heading and status",
     "TLB": "Target label",
     "TLL": "Target latitude and longitude",
+    "TRA": "Heading, Pitch & Roll Information",
     "TRC": "Thruster control data",
     "TRL": "AIS transmitter-non-functioning log",
     "TRD": "Thruster response data",
@@ -363,6 +364,24 @@ NMEA_MSGIDS = {
     "ZDL": "Time and distance to variable point",
     "ZFO": "UTC and time from origin waypoint",
     "ZTG": "UTC and time to destination waypoint",
+    # ***************************************************************
+    # Unicore Extended NMEA (GET)
+    # ***************************************************************
+    "GGAH": "Global Positioning System Fix Data (Secondary Antenna)",
+    "GLLH": "Geographic Position (Secondary Antenna)",
+    "GNSH": "GNSS Fix Data (Secondary Antenna)",
+    "GRSH": "GNSS Range Residuals (Secondary Antenna)",
+    "GSAH": "GNSS DOP and Active Satellites (Secondary Antenna)",
+    "GSTH": "GNSS Pseudorange Error Statistics (Secondary Antenna)",
+    "GSVH": "GNSS Satellites in View (Secondary Antenna)",
+    "RMCH": "Recommended Minimum Specific GNSS Data (Secondary Antenna)",
+    "VTGH": "Course over Ground and Ground Speed (Secondary Antenna)",
+    "THS2": "True Heading and Status",
+    "HPR": "Attitude Parameters",
+    "HPR2": "Attitude Parameters",
+    "TRA2": "Heading, Pitch & Roll Information",
+    "ROT2": "Rate of Turn",
+    "HPD": "Positioning and Heading Information",
     # ***************************************************************
     # Dummy message for testing only
     # ***************************************************************

@@ -112,7 +112,7 @@ class NMEAReader:
 
         """
 
-        (raw_data, parsed_data) = self.read()
+        raw_data, parsed_data = self.read()
         if raw_data is None and parsed_data is None:
             raise StopIteration
         return (raw_data, parsed_data)

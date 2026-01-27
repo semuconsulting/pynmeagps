@@ -1085,6 +1085,16 @@ NMEA_PAYLOADS_GET = {
         "status": CH,
         "reftarget": CH,
     },
+    "TRA": {
+        "time": TM,
+        "heading": DE,
+        "pitch": DE,
+        "roll": DE,
+        "quality": IN,
+        "svid": IN,
+        "diffAge": DE,
+        "stationID": ST,
+    },
     "TRC": {
         "thrusternum": IN,
         "dmdrpm": DE,
@@ -1348,3 +1358,64 @@ NMEA_PAYLOADS_GET = {
     # *********************************************
     "FOO": {"spam": "Z2", "eggs": "Y1"},
 }
+
+NMEA_PAYLOADS_GET_UNICORE = {
+    # *********************************************
+    # UNICORE UM98n Extended NMEA Sentences
+    # *********************************************
+    # Slave Antenna
+    "GGAH": NMEA_PAYLOADS_GET["GGA"],
+    "GLLH": NMEA_PAYLOADS_GET["GLL"],
+    "GNSH": NMEA_PAYLOADS_GET["GNS"],
+    "GRSH": NMEA_PAYLOADS_GET["GRS"],
+    "GSAH": NMEA_PAYLOADS_GET["GSA"],
+    "GSTH": NMEA_PAYLOADS_GET["GST"],
+    "GSVH": NMEA_PAYLOADS_GET["GSV"],
+    "RMCH": NMEA_PAYLOADS_GET["RMC"],
+    "VTGH": NMEA_PAYLOADS_GET["VTG"],
+    "THS2": NMEA_PAYLOADS_GET["THS"],
+    # Attitude
+    "HPR": {
+        "time": TM,
+        "heading": DE,
+        "pitch": DE,
+        "roll": DE,
+        "quality": IN,
+        "svid": IN,
+        "diffAge": DE,
+        "stationID": ST,
+    },
+    "HPR2": {
+        "time": TM,
+        "heading": DE,
+        "pitch": DE,
+        "roll": DE,
+        "quality": IN,
+        "svid": IN,
+        "diffAge": DE,
+        "stationID": ST,
+    },
+    "TRA2": NMEA_PAYLOADS_GET["TRA"],
+    "ROT2": NMEA_PAYLOADS_GET["ROT"],
+    "HPD": {
+        "wno": IN,
+        "tow": DE,
+        "heading": DE,
+        "pitch": DE,
+        "cog": DE,
+        "lat": DE,
+        "lon": DE,
+        "alt": DE,
+        "velE": DE,
+        "velN": DE,
+        "velU": DE,
+        "veldeltaE": DE,
+        "veldeltaN": DE,
+        "veldeltaU": DE,
+        "baseline": DE,
+        "sivmain": IN,
+        "sivsecond": IN,
+    },
+}
+
+NMEA_PAYLOADS_GET = {**NMEA_PAYLOADS_GET, **NMEA_PAYLOADS_GET_UNICORE}

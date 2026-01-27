@@ -130,7 +130,7 @@ class NMEAMessage:
                     self._set_attribute_nominal(kwargs["payload"])
                 return
             for key in pdict.keys():  # process each attribute in dict
-                (pindex, gindex) = self._set_attribute(
+                pindex, gindex = self._set_attribute(
                     pindex, pdict, key, gindex, **kwargs
                 )
             # generate checksum for newly-created message
@@ -167,7 +167,7 @@ class NMEAMessage:
 
         att = pdict[key]  # get attribute type
         if isinstance(att, tuple):  # repeating group of attributes
-            (pindex, gindex) = self._set_attribute_group(att, pindex, gindex, **kwargs)
+            pindex, gindex = self._set_attribute_group(att, pindex, gindex, **kwargs)
         else:  # single attribute
             pindex = self._set_attribute_single(att, pindex, key, gindex, **kwargs)
 
@@ -206,7 +206,7 @@ class NMEAMessage:
         for i in range(rng):
             gindex[-1] = i + 1
             for key1 in attd.keys():
-                (pindex, gindex) = self._set_attribute(
+                pindex, gindex = self._set_attribute(
                     pindex, attd, key1, gindex, **kwargs
                 )
 
