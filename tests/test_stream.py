@@ -627,6 +627,80 @@ class StreamTest(unittest.TestCase):
                     i += 1
         self.assertEqual(i, 22)
 
+    def testNMEAUnicore(self):  # test Unicore extended NMEA GET messages
+        EXPECTED_RESULTS = (
+            "<NMEA(GNGGAH, time=07:33:46, lat=40.0789790502, NS=N, lon=116.2365129308, EW=E, quality=1, numSV=28, HDOP=0.6, alt=64.2831, altUnit=M, sep=8.4925, sepUnit=M, diffAge=, diffStation=)>",
+            "<NMEA(GNGLLH, lat=40.0789690995, NS=N, lon=116.2366513792, EW=E, time=05:45:01, status=A, posMode=D)>",
+            "<NMEA(GNGNSH, time=07:44:44, lat=40.0789773688, NS=N, lon=116.2365136922, EW=E, posMode=ANAAA, numSV=28, HDOP=0.7, alt=64.6536, sep=8.4925, diffAge=, diffStation=, navStatus=S)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.0, residual_02=0.8, residual_03=0.1, residual_04=, residual_05=0.1, residual_06=2.2, residual_07=0.2, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=1, signalId=1)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.1, residual_02=0.4, residual_03=0.1, residual_04=, residual_05=0.1, residual_06=1.5, residual_07=0.2, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=1, signalId=4)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.0, residual_02=0.2, residual_03=, residual_04=, residual_05=0.0, residual_06=0.1, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=1, signalId=8)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.1, residual_02=0.4, residual_03=0.1, residual_04=0.1, residual_05=, residual_06=, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=2, signalId=1)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.1, residual_02=0.1, residual_03=0.1, residual_04=0.3, residual_05=, residual_06=, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=2, signalId=3)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.6, residual_02=0.7, residual_03=0.3, residual_04=0.8, residual_05=0.1, residual_06=0.1, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=3, signalId=7)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.2, residual_02=0.2, residual_03=0.1, residual_04=0.2, residual_05=0.0, residual_06=0.0, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=3, signalId=1)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.1, residual_02=0.1, residual_03=0.1, residual_04=0.1, residual_05=0.0, residual_06=0.0, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=3, signalId=2)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.3, residual_02=0.2, residual_03=0.6, residual_04=0.1, residual_05=0.4, residual_06=0.8, residual_07=1.2, residual_08=0.9, residual_09=0.4, residual_10=0.4, residual_11=1.0, residual_12=2.0, systemId=4, signalId=1)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.9, residual_02=0.6, residual_03=0.6, residual_04=0.4, residual_05=0.3, residual_06=0.2, residual_07=0.8, residual_08=1.3, residual_09=0.2, residual_10=, residual_11=, residual_12=, systemId=4, signalId=1)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.2, residual_02=0.1, residual_03=0.1, residual_04=0.1, residual_05=0.1, residual_06=0.2, residual_07=0.2, residual_08=0.2, residual_09=0.1, residual_10=0.1, residual_11=0.2, residual_12=0.2, systemId=4, signalId=8)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.2, residual_02=0.2, residual_03=0.2, residual_04=0.1, residual_05=0.1, residual_06=0.1, residual_07=0.2, residual_08=0.2, residual_09=0.1, residual_10=, residual_11=, residual_12=, systemId=4, signalId=8)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=, residual_02=, residual_03=0.1, residual_04=0.0, residual_05=, residual_06=0.2, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=4, signalId=11)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.2, residual_02=0.1, residual_03=0.1, residual_04=, residual_05=, residual_06=0.1, residual_07=0.2, residual_08=, residual_09=0.1, residual_10=, residual_11=, residual_12=, systemId=4, signalId=11)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.3, residual_02=0.2, residual_03=0.1, residual_04=, residual_05=, residual_06=, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=5, signalId=1)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=1.2, residual_02=0.4, residual_03=0.1, residual_04=, residual_05=, residual_06=, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=5, signalId=6)>",
+            "<NMEA(GNGRSH, time=05:52:09, mode=0, residual_01=0.2, residual_02=0.0, residual_03=0.1, residual_04=, residual_05=, residual_06=, residual_07=, residual_08=, residual_09=, residual_10=, residual_11=, residual_12=, systemId=5, signalId=8)>",
+            "<NMEA(GNGSAH, opMode=M, navMode=3, svid_01=26, svid_02=29, svid_03=31, svid_04=32, svid_05=, svid_06=, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=1.1, HDOP=0.6, VDOP=0.9, systemId=1)>",
+            "<NMEA(GNGSAH, opMode=M, navMode=3, svid_01=1, svid_02=4, svid_03=9, svid_04=19, svid_05=21, svid_06=31, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=1.1, HDOP=0.6, VDOP=0.9, systemId=3)>",
+            "<NMEA(GNGSAH, opMode=M, navMode=3, svid_01=1, svid_02=3, svid_03=4, svid_04=6, svid_05=7, svid_06=9, svid_07=16, svid_08=19, svid_09=20, svid_10=22, svid_11=28, svid_12=36, PDOP=1.1, HDOP=0.6, VDOP=0.9, systemId=4)>",
+            "<NMEA(GNGSAH, opMode=M, navMode=3, svid_01=37, svid_02=39, svid_03=40, svid_04=46, svid_05=59, svid_06=60, svid_07=, svid_08=, svid_09=, svid_10=, svid_11=, svid_12=, PDOP=1.1, HDOP=0.6, VDOP=0.9, systemId=4)>",
+            "<NMEA(GNGSTH, time=05:55:43, rangeRms=0.45, stdMajor=0.01, stdMinor=0.01, orient=127.643, stdLat=0.01, stdLong=0.01, stdAlt=0.019)>",
+            "<NMEA(GPGSVH, numMsg=2, msgNum=1, numSV=8, svid_01=16, elv_01=28, az_01=217, cno_01=38, svid_02=32, elv_02=39, az_02=140, cno_02=45, svid_03=3, elv_03=29, az_03=290, cno_03=32, svid_04=31, elv_04=66, az_04=33, cno_04=50, signalID=1)>",
+            "<NMEA(GPGSVH, numMsg=2, msgNum=2, numSV=8, svid_01=4, elv_01=12, az_01=313, cno_01=34, svid_02=26, elv_02=69, az_02=220, cno_02=46, svid_03=25, elv_03=16, az_03=46, cno_03=34, svid_04=29, elv_04=28, az_04=71, cno_04=37, signalID=1)>",
+            "<NMEA(GPGSVH, numMsg=2, msgNum=1, numSV=7, svid_01=32, elv_01=39, az_01=140, cno_01=41, svid_02=3, elv_02=29, az_02=290, cno_02=37, svid_03=31, elv_03=66, az_03=33, cno_03=46, svid_04=4, elv_04=12, az_04=313, cno_04=35, signalID=4)>",
+            "<NMEA(GPGSVH, numMsg=2, msgNum=2, numSV=7, svid_01=26, elv_01=69, az_01=220, cno_01=46, svid_02=25, elv_02=16, az_02=46, cno_02=35, svid_03=29, elv_03=28, az_03=71, cno_03=41, signalID=4)>",
+            "<NMEA(GLGSVH, numMsg=2, msgNum=1, numSV=5, svid_01=74, elv_01=15, az_01=49, cno_01=37, svid_02=66, elv_02=38, az_02=321, cno_02=45, svid_03=76, elv_03=41, az_03=264, cno_03=42, svid_04=72, elv_04=21, az_04=168, cno_04=35, signalID=1)>",
+            "<NMEA(GLGSVH, numMsg=2, msgNum=2, numSV=5, svid_01=65, elv_01=63, az_01=206, cno_01=44, signalID=1)>",
+            "<NMEA(GLGSVH, numMsg=1, msgNum=1, numSV=4, svid_01=66, elv_01=38, az_01=321, cno_01=42, svid_02=76, elv_02=41, az_02=264, cno_02=43, svid_03=72, elv_03=21, az_03=168, cno_03=36, svid_04=65, elv_04=63, az_04=206, cno_04=43, signalID=3)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=1, numSV=21, svid_01=27, elv_01=15, az_01=113, cno_01=36, svid_02=46, elv_02=73, az_02=6, cno_02=50, svid_03=6, elv_03=81, az_03=19, cno_03=49, svid_04=7, elv_04=43, az_04=199, cno_04=36, signalID=1)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=2, numSV=21, svid_01=16, elv_01=79, az_01=68, cno_01=51, svid_02=19, elv_02=55, az_02=235, cno_02=42, svid_03=10, elv_03=33, az_03=205, cno_03=34, svid_04=28, elv_04=13, az_04=62, cno_04=34, signalID=1)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=3, numSV=21, svid_01=36, elv_01=40, az_01=265, cno_01=35, svid_02=59, elv_02=38, az_02=145, cno_02=43, svid_03=40, elv_03=52, az_03=184, cno_03=43, svid_04=20, elv_04=24, az_04=178, cno_04=35, signalID=1)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=4, numSV=21, svid_01=22, elv_01=31, az_01=308, cno_01=40, svid_02=4, elv_02=25, az_02=124, cno_02=36, svid_03=3, elv_03=42, az_03=188, cno_03=35, svid_04=1, elv_04=34, az_04=140, cno_04=41, signalID=1)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=5, numSV=21, svid_01=60, elv_01=28, az_01=227, cno_01=38, svid_02=39, elv_02=74, az_02=97, cno_02=51, svid_03=9, elv_03=72, az_03=329, cno_03=46, svid_04=2, elv_04=32, az_04=224, cno_04=35, signalID=1)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=6, numSV=21, svid_01=37, elv_01=24, az_01=62, cno_01=35, signalID=1)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=1, numSV=21, svid_01=27, elv_01=15, az_01=113, cno_01=39, svid_02=46, elv_02=73, az_02=6, cno_02=52, svid_03=6, elv_03=81, az_03=19, cno_03=49, svid_04=7, elv_04=43, az_04=199, cno_04=41, signalID=8)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=2, numSV=21, svid_01=16, elv_01=79, az_01=68, cno_01=48, svid_02=19, elv_02=55, az_02=235, cno_02=47, svid_03=10, elv_03=33, az_03=205, cno_03=36, svid_04=28, elv_04=13, az_04=62, cno_04=39, signalID=8)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=3, numSV=21, svid_01=36, elv_01=40, az_01=265, cno_01=45, svid_02=59, elv_02=38, az_02=145, cno_02=43, svid_03=40, elv_03=52, az_03=184, cno_03=46, svid_04=20, elv_04=24, az_04=178, cno_04=37, signalID=8)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=4, numSV=21, svid_01=22, elv_01=31, az_01=308, cno_01=41, svid_02=4, elv_02=25, az_02=124, cno_02=37, svid_03=3, elv_03=42, az_03=188, cno_03=38, svid_04=1, elv_04=34, az_04=140, cno_04=39, signalID=8)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=5, numSV=21, svid_01=60, elv_01=28, az_01=227, cno_01=40, svid_02=39, elv_02=74, az_02=97, cno_02=53, svid_03=9, elv_03=72, az_03=329, cno_03=47, svid_04=2, elv_04=32, az_04=224, cno_04=35, signalID=8)>",
+            "<NMEA(GBGSVH, numMsg=6, msgNum=6, numSV=21, svid_01=37, elv_01=24, az_01=62, cno_01=44, signalID=8)>",
+            "<NMEA(GBGSVH, numMsg=3, msgNum=1, numSV=9, svid_01=6, elv_01=81, az_01=19, cno_01=50, svid_02=7, elv_02=43, az_02=199, cno_02=43, svid_03=16, elv_03=79, az_03=68, cno_03=50, svid_04=10, elv_04=33, az_04=205, cno_04=40, signalID=B)>",
+            "<NMEA(GBGSVH, numMsg=3, msgNum=2, numSV=9, svid_01=4, elv_01=25, az_01=124, cno_01=40, svid_02=3, elv_02=42, az_02=188, cno_02=42, svid_03=1, elv_03=34, az_03=140, cno_03=40, svid_04=9, elv_04=72, az_04=329, cno_04=49, signalID=B)>",
+            "<NMEA(GBGSVH, numMsg=3, msgNum=3, numSV=9, svid_01=2, elv_01=32, az_01=224, cno_01=39, signalID=B)>",
+            "<NMEA(GAGSVH, numMsg=2, msgNum=1, numSV=6, svid_01=19, elv_01=27, az_01=146, cno_01=38, svid_02=4, elv_02=79, az_02=220, cno_02=51, svid_03=9, elv_03=34, az_03=312, cno_03=39, svid_04=31, elv_04=44, az_04=232, cno_04=43, signalID=2)>",
+            "<NMEA(GAGSVH, numMsg=2, msgNum=2, numSV=6, svid_01=21, elv_01=25, az_01=48, cno_01=44, svid_02=1, elv_02=76, az_02=38, cno_02=52, signalID=2)>",
+            "<NMEA(GAGSVH, numMsg=2, msgNum=1, numSV=6, svid_01=19, elv_01=27, az_01=146, cno_01=34, svid_02=4, elv_02=79, az_02=220, cno_02=48, svid_03=9, elv_03=34, az_03=312, cno_03=40, svid_04=31, elv_04=44, az_04=232, cno_04=38, signalID=7)>",
+            "<NMEA(GAGSVH, numMsg=2, msgNum=2, numSV=6, svid_01=21, elv_01=25, az_01=48, cno_01=36, svid_02=1, elv_02=76, az_02=38, cno_02=50, signalID=7)>",
+            "<NMEA(GQGSVH, numMsg=1, msgNum=1, numSV=3, svid_01=3, elv_01=13, az_01=146, cno_01=35, svid_02=2, elv_02=71, az_02=90, cno_02=49, svid_03=7, elv_03=42, az_03=163, cno_03=35, signalID=1)>",
+            "<NMEA(GQGSVH, numMsg=1, msgNum=1, numSV=3, svid_01=3, elv_01=13, az_01=146, cno_01=32, svid_02=2, elv_02=71, az_02=90, cno_02=49, svid_03=7, elv_03=42, az_03=163, cno_03=42, signalID=6)>",
+            "<NMEA(GNRMCH, time=05:58:08, status=A, lat=40.0789696527, NS=N, lon=116.2366485345, EW=E, spd=0.004, cog=99.7, date=2021-12-31, mv=6.9, mvEW=W, posMode=D, navStatus=V)>",
+            "<NMEA(GNVTGH, cogt=113.125, cogtUnit=T, cogm=120.041, cogmUnit=M, sogn=0.01474, sognUnit=N, sogk=0.0273, sogkUnit=K, posMode=D)>",
+            "<NMEA(GNTHS2, headt=88.364, mi=T)>",
+            "<NMEA(GNHPR, time=07:46:15, heading=320.961, pitch=-66.1712, roll=0.0, quality=4, svid=47, diffAge=0.0, stationID=0999)>",
+            "<NMEA(GNHPR2, time=, heading=88.364, pitch=-0.0873, roll=0.0, quality=4, svid=32, diffAge=0.0, stationID=0401)>",
+            "<NMEA(GNTRA2, time=09:04:15, heading=88.36, pitch=-0.09, roll=0.0, quality=4, svid=30, diffAge=0.0, stationID=0000)>",
+            "<NMEA(GNROT2, rot=-0.0, valid=A)>",
+            "<NMEA(GPHPD, wno=2319, tow=462170.0, heading=251.77, pitch=-48.16, cog=178.48, lat=40.0789783, lon=116.2365145, alt=63.03, velE=0.001, velN=0.0, velU=-0.003, veldeltaE=-0.001, veldeltaN=-0.002, veldeltaU=-0.001, baseline=0.0, sivmain=48, sivsecond=48)>",
+        )
+        i = 0
+        with open(os.path.join(DIRNAME, "unicore_nmea.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, len(EXPECTED_RESULTS))
+
     def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
         EXPECTED_ERROR = "Unknown protocol header b'$&'."
         with self.assertRaises(NMEAParseError) as context:
