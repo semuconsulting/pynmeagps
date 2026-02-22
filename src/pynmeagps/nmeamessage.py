@@ -14,7 +14,7 @@ import struct
 from datetime import datetime, timezone
 from logging import getLogger
 from types import NoneType
-from typing import Literal
+from typing import Any, Literal
 
 import pynmeagps.exceptions as nme
 import pynmeagps.nmeatypes_core as nmt
@@ -513,7 +513,9 @@ class NMEAMessage:
                 key += "_ALT"
         return key
 
-    def _get_dict_stmdrsenmsg(self, key: str, mode: int, **kwargs) -> str:
+    def _get_dict_stmdrsenmsg(
+        self, key: str, mode: int, **kwargs
+    ) -> str:  # pylint: disable=unused-argument
         """
         Get payload dictionary for proprietary Quectel PSTMDRSENMSG variants.
 
@@ -697,18 +699,18 @@ class NMEAMessage:
         return self._payload
 
     @property
-    def checksum(self) -> str:
+    def checksum(self) -> str | NoneType:
         """
         Checksum getter.
 
         :return: checksum as hex string
-        :rtype: str
+        :rtype: str | NoneType
         """
 
         return self._checksum
 
     @staticmethod
-    def str2val(vals: str, att: str) -> object:
+    def str2val(vals: str, att: str) -> Any:
         """
         Convert NMEA string to typed value
         (this is the format that will be available to end users).
@@ -716,7 +718,7 @@ class NMEAMessage:
         :param str vals: attribute value in NMEA protocol format
         :param str att: attribute type e.g. 'DE'
         :return: attribute value
-        :rtype: object
+        :rtype: Any
         :raises: MMEATypeError
         """
 
@@ -797,14 +799,14 @@ class NMEAMessage:
         return vals
 
     @staticmethod
-    def nomval(att: str, msgmode: int = nmt.GET) -> object:
+    def nomval(att: str, msgmode: int = nmt.GET) -> Any:
         """
         Return nominal value for specified attribute type
 
         :param str att: attribute type e.g. 'DE'
         :param int msgmode: message mode GET/SET/POLL
         :return: nominal value for type
-        :rtype: object
+        :rtype: Any
         :raises: NMEATypeError
         """
 

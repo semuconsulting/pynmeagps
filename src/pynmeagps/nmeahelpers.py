@@ -12,8 +12,9 @@ Created on 04 Mar 2021
 # pylint: disable=invalid-name
 
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from math import acos, asin, atan2, cos, pi, sin, sqrt
+from types import NoneType
 from typing import Literal
 
 import pynmeagps.exceptions as nme
@@ -32,7 +33,7 @@ from pynmeagps.nmeatypes_core import (
 )
 
 KNOTSCONV = {"MS": 0.5144447324, "FS": 1.68781084, "MPH": 1.15078, "KMPH": 1.852001}
-LEAPS0 = datetime(1900, 1, 1, 0, 0, 0)
+LEAPS0 = datetime(1900, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 LEAPSECONDS = [
     (2272060800, 10),  # 1 Jan 1972
     (2287785600, 11),  # 1 Jul 1972
@@ -414,21 +415,24 @@ def generate_checksum(talker: str, msgID: str, payload: list) -> str:
     return calc_checksum(content)
 
 
-def get_gpswnotow(dat: datetime) -> tuple:
+def get_gpswnotow(dat: datetime) -> tuple[int, int]:
     """
     Get GPS Week number (Wno) and Time of Week (Tow)
-    for midnight on given date.
+    for midnight on given UTC date. If supplied date
+    is timezone-naive, UTC will be inferred.
 
     GPS Epoch 0 = 6th Jan 1980
 
     :param datetime dat: calendar date
-    :return: tuple of (Wno, Tow)
-    :rtype: tuple
+    :return: wno, tow in seconds
+    :rtype: tuple[int, int]
     """
 
-    wno = int((dat - GPSEPOCH0).days / 7)
-    tow = ((dat.weekday() + 1) % 7) * 86400
-    return wno, tow
+    if dat.tzinfo is None:
+        dat = dat.replace(tzinfo=timezone.utc)
+
+    wno, tow, _ = utc2wnotow(dat)
+    return wno, int(tow / 1000)
 
 
 def get_parts(message: object) -> tuple:
@@ -572,16 +576,20 @@ def latlon2dms(lat: float, lon: float) -> tuple[str, str]:
 def leapsecond(dat: datetime) -> int:
     """
     Get GPS UTC leapsecond offset effective at date.
+    If supplied datetime is timezone naive, UTC will be inferred.
 
     Refer to LEAPSECONDS constant.
 
-    - LEAPS0 = 1900-01-01 00:00:00
-    - GPSEPOCH0 = 1980-01-06: 00:00:00
+    - LEAPS0 = 1900-01-01 00:00:00 UTC
+    - GPSEPOCH0 = 1980-01-06: 00:00:00 UTC
 
     :param datetime.datetime dat: effective date
     :return: leapsecond offset
     :rtype: int
     """
+
+    if dat.tzinfo is None:
+        dat = dat.replace(tzinfo=timezone.utc)
 
     def totsec(dt) -> int:
         return (dt - LEAPS0).total_seconds()
@@ -727,3 +735,51 @@ def time2utc(times: str) -> datetime.time:
         return utc.time()
     except (TypeError, ValueError):
         return ""
+
+
+def utc2wnotow(utc: datetime | NoneType = None) -> tuple[int, int, int]:
+    """
+    Get GPS Week number (wno), Time of Week (tow) in milliseconds
+    and leapsecond offset for given UTC datetime. If datetime is None,
+    will default to current datetime.
+
+    GPS Epoch 0 = 6th Jan 1980
+
+    :param datetime | NoneType utc: UTC datetime
+    :return: wno, tow, leapsecond
+    :rtype: tuple[int, int, int]
+    """
+
+    if utc is None:
+        utc = datetime.now(tz=timezone.utc)
+    if utc.tzinfo is None:
+        utc = utc.replace(tzinfo=timezone.utc)
+
+    ls = leapsecond(utc)
+    ts = ((utc - GPSEPOCH0).total_seconds() + ls) * 1000
+    wno = int((utc - GPSEPOCH0).days / 7)
+    tow = int(ts - wno * 604800000)
+    return wno, tow, ls
+
+
+def wnotow2utc(wno: int, tow: int, ls: int | NoneType = None) -> datetime:
+    """
+    Get UTC datetime from GPS Week number (wno), Time of Week (tow)
+    in milliseconds and leapsecond offset. If leapsecond is None, it
+    will default to the leapsecond offset applicable on the given date.
+
+    GPS Epoch 0 = 6th Jan 1980
+
+    :param int wno: week number
+    :param int tow: time of week in ms
+    :param int ls: leapsecond offset
+    :return: datetime
+    :rtype: datetime
+    """
+
+    utc = GPSEPOCH0 + timedelta(days=wno * 7)
+    utc += timedelta(milliseconds=tow)
+    if ls is None:
+        ls = leapsecond(utc)
+    utc -= timedelta(seconds=ls)
+    return utc
