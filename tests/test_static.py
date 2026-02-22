@@ -8,7 +8,7 @@ Created on 3 Oct 2020
 :author: semuadmin (Steve Smith)
 """
 
-import datetime
+from datetime import datetime, timezone, date, time
 import os
 import unittest
 
@@ -52,6 +52,8 @@ from pynmeagps.nmeahelpers import (
     time2str,
     time2utc,
     leapsecond,
+    utc2wnotow,
+    wnotow2utc,
 )
 from pynmeagps.nmeatypes_core import GET, POLL
 from pynmeagps.nmeatypes_decodes import (
@@ -213,30 +215,30 @@ class StaticTest(unittest.TestCase):
         res = date2utc("")
         self.assertEqual(res, "")
         res = date2utc("120320")
-        self.assertEqual(res, datetime.date(2020, 3, 12))
+        self.assertEqual(res, date(2020, 3, 12))
         res = date2utc("031220", "DM")
-        self.assertEqual(res, datetime.date(2020, 3, 12))
+        self.assertEqual(res, date(2020, 3, 12))
         res = date2utc("12032020", "DTL")
-        self.assertEqual(res, datetime.date(2020, 3, 12))
+        self.assertEqual(res, date(2020, 3, 12))
 
     def testTime2UTC(self):
         res = time2utc("")
         self.assertEqual(res, "")
         res = time2utc("081123.000")
-        self.assertEqual(res, datetime.time(8, 11, 23))
+        self.assertEqual(res, time(8, 11, 23))
 
     def testTime2str(self):
-        res = time2str(datetime.time(8, 11, 23))
+        res = time2str(time(8, 11, 23))
         self.assertEqual(res, "081123.00")
         res = time2str("wsdfasdf")
         self.assertEqual(res, "")
 
     def testDate2str(self):
-        res = date2str(datetime.date(2021, 3, 7))
+        res = date2str(date(2021, 3, 7))
         self.assertEqual(res, "070321")
-        res = date2str(datetime.date(2021, 3, 7), "DTL")
+        res = date2str(date(2021, 3, 7), "DTL")
         self.assertEqual(res, "07032021")
-        res = date2str(datetime.date(2021, 3, 7), "DM")
+        res = date2str(date(2021, 3, 7), "DM")
         self.assertEqual(res, "030721")
         res = date2str("wsdfasdf")
         self.assertEqual(res, "")
@@ -388,9 +390,9 @@ class StaticTest(unittest.TestCase):
         res = NMEAMessage.nomval("DE")
         self.assertEqual(res, 0.0)
         res = NMEAMessage.nomval("TM")
-        self.assertIsInstance(res, datetime.time)
+        self.assertIsInstance(res, time)
         res = NMEAMessage.nomval("DT")
-        self.assertIsInstance(res, datetime.date)
+        self.assertIsInstance(res, date)
 
     def testNomValBAD(self):
         EXPECTED_ERROR = "Unknown attribute type XX."
@@ -412,17 +414,17 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, "5530.00000")
         res = NMEAMessage.val2str(2.75, "LN")
         self.assertEqual(res, "00245.00000")
-        res = NMEAMessage.val2str(datetime.datetime(2021, 5, 7, 2, 45, 23), "TM")
+        res = NMEAMessage.val2str(datetime(2021, 5, 7, 2, 45, 23), "TM")
         self.assertEqual(res, "024523.00")
-        res = NMEAMessage.val2str(datetime.datetime(2020, 6, 7, 3, 27, 24), "DT")
+        res = NMEAMessage.val2str(datetime(2020, 6, 7, 3, 27, 24), "DT")
         self.assertEqual(res, "070620")
-        res = NMEAMessage.val2str(datetime.datetime(2020, 6, 7, 3, 27, 24), "DTL")
+        res = NMEAMessage.val2str(datetime(2020, 6, 7, 3, 27, 24), "DTL")
         self.assertEqual(res, "07062020")
         res = NMEAMessage.val2str("2020-06-07", "DTL")
         self.assertEqual(res, "07062020")
         res = NMEAMessage.val2str("20210708", "DTL")
         self.assertEqual(res, "08072021")
-        res = NMEAMessage.val2str(datetime.datetime(2020, 6, 7, 3, 27, 24), "DM")
+        res = NMEAMessage.val2str(datetime(2020, 6, 7, 3, 27, 24), "DM")
         self.assertEqual(res, "060720")
         res = NMEAMessage.val2str("2020-06-07", "DM")
         self.assertEqual(res, "060720")
@@ -593,16 +595,16 @@ class StaticTest(unittest.TestCase):
             (2023, 5, 27),
         ]
         vals = [
-            (2243, 0),
-            (1347, 518400),
-            (2119, 345600),
-            (1784, 0),
-            (2263, 0),
-            (2263, 518400),
+            (2243, 18),
+            (1347, 518413),
+            (2119, 345618),
+            (1784, 16),
+            (2263, 18),
+            (2263, 518418),
         ]
         for i, dat in enumerate(dats):
             y, m, d = dat
-            self.assertEqual(get_gpswnotow(datetime.datetime(y, m, d)), vals[i])
+            self.assertEqual(get_gpswnotow(datetime(y, m, d)), vals[i])
 
     def testhex2str(self):
         hex = 0x1234ABCD
@@ -622,11 +624,12 @@ class StaticTest(unittest.TestCase):
 
     def testleapsecond(self):
         self.assertEqual(leapsecond(GPSEPOCH0), 0)
-        self.assertEqual(leapsecond(datetime.datetime(1985, 1, 1, 0, 0, 0)), 3)
-        self.assertEqual(leapsecond(datetime.datetime(1997, 8, 1, 0, 0, 0)), 12)
-        self.assertEqual(leapsecond(datetime.datetime(2025, 9, 18, 16, 51, 34)), 18)
-        self.assertEqual(leapsecond(datetime.datetime(1974, 9, 18, 16, 51, 34)), -6)
-        self.assertEqual(leapsecond(datetime.datetime(1971, 9, 18, 16, 51, 34)), 0)
+        self.assertEqual(leapsecond(datetime(1985, 1, 1, 0, 0, 0)), 3)
+        self.assertEqual(leapsecond(datetime(1997, 8, 1, 0, 0, 0)), 12)
+        self.assertEqual(leapsecond(datetime(2025, 9, 18, 16, 51, 34)), 18)
+        self.assertEqual(leapsecond(datetime(2025, 9, 18, 16, 51, 34, tzinfo=timezone.utc)), 18)
+        self.assertEqual(leapsecond(datetime(1974, 9, 18, 16, 51, 34)), -6)
+        self.assertEqual(leapsecond(datetime(1971, 9, 18, 16, 51, 34)), 0)
 
     def testmaxidx(self):
         PYLD1 = {"svid_01": 7, "svid_02": 8, "elv_03": 15, "svid_04": 23}
@@ -637,6 +640,27 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(groupsize(**PYLD3), 0)
         PYLD4 = {}
         self.assertEqual(groupsize(**PYLD4), 0)
+
+    def testutc2wnotow(self):
+        dat = datetime(2026, 2, 20, 23, 21, 36, 123000, tzinfo=timezone.utc)
+        wno, tow, ls = utc2wnotow(dat)
+        # print(wno, tow, ls)
+        self.assertEqual((wno, tow), (2406, 516114123))
+        dat = datetime(2026, 2, 20, 23, 21, 36, 123000)
+        wno, tow, ls = utc2wnotow(dat)
+        # print(wno, tow, ls)
+        self.assertEqual((wno, tow), (2406, 516114123))
+        wno, tow, ls = utc2wnotow()
+        # print(wno, tow, ls)
+        self.assertIsInstance(wno, int)
+        self.assertIsInstance(tow, int)
+        self.assertIsInstance(ls, int)
+
+    def testwnotow2utc(self):
+        utc = wnotow2utc(2406,516114123,18)
+        self.assertEqual(utc, datetime(2026, 2, 20, 23, 21, 36, 123000, tzinfo=timezone.utc))
+        utc = wnotow2utc(2406,516114000)
+        self.assertEqual((utc.year, utc.month, utc.day, utc.hour), (2026, 2, 20, 23))
 
 
 if __name__ == "__main__":

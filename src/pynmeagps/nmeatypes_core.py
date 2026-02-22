@@ -12,7 +12,7 @@ has been collated from public domain sources.
 
 # pylint: disable=fixme
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 INPUT = 1
 """Input message type"""
@@ -65,7 +65,8 @@ ENCODE_COMPRESS = 4
 ENCODE_DEFLATE = 8
 """deflate socket encoding"""
 
-GPSEPOCH0 = datetime(1980, 1, 6)
+# GPSEPOCH0 = datetime(1980, 1, 6)
+GPSEPOCH0 = datetime(1980, 1, 6, tzinfo=timezone.utc)
 """GPS epoch base date"""
 # Geodetic datum spheroid values:
 # WGS84, ETRS89, EPSG4326

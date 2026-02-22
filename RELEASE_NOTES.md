@@ -1,5 +1,10 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.1.1
+
+1. Add helper methods `utc2wnotow` and `wnotow2utc` to convert between UTC datetime and GPS week number, time of week (in milliseconds) and leapsecond offset.
+1. Helper methods `leapsecond` and `get_gpswnotow` will now accept timezone-aware or timezone-naive datetimes. If naive, UTC will be inferred.
+
 ### RELEASE 1.1.0
 
 1. Add support for Unicore extended NMEA sentences:
