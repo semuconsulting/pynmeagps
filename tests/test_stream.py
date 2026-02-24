@@ -701,6 +701,24 @@ class StreamTest(unittest.TestCase):
                     i += 1
         self.assertEqual(i, len(EXPECTED_RESULTS))
 
+    def testNMEAUM981(self):  # test Unicore GLL firmware error workaround
+        EXPECTED_RESULTS = (
+            "<NMEA(GNGGA, time=13:00:58, lat=53.4505998242, NS=N, lon=-2.240244526, EW=W, quality=1, numSV=8, HDOP=7.5, alt=36.3017, altUnit=M, sep=51.6775, sepUnit=M, diffAge=, diffStation=)>",
+            "<NMEA(GNGLL, lat=53.4505998242, NS=N, lon=-2.240244526, EW=W, time=13:00:58, status=A, posMode=A)>",
+            "<NMEA(GNRMC, time=13:00:58, status=A, lat=53.4505998242, NS=N, lon=-2.240244526, EW=W, spd=0.097, cog=125.7, date=2026-02-24, mv=0.2, mvEW=W, posMode=A, navStatus=C)>",
+            "<NMEA(GNGGA, time=13:00:59, lat=53.450599707, NS=N, lon=-2.2402446755, EW=W, quality=1, numSV=8, HDOP=7.5, alt=36.3232, altUnit=M, sep=51.6775, sepUnit=M, diffAge=, diffStation=)>",
+            "<NMEA(GNGLL, lat=53.450599707, NS=N, lon=-2.2402446755, EW=W, time=13:00:59, status=A, posMode=A)>",
+        )
+        i = 0
+        with open(os.path.join(DIRNAME, "pygpsdata-um981.log"), "rb") as stream:
+            nmr = NMEAReader(stream, nmeaonly=False, quitonerror=2)
+            for raw, parsed in nmr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, len(EXPECTED_RESULTS))
+
     def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
         EXPECTED_ERROR = "Unknown protocol header b'$&'."
         with self.assertRaises(NMEAParseError) as context:

@@ -276,7 +276,7 @@ def dmm2ddd(pos: str) -> float | str:
         dp = pos.find(".")
         if dp < 4:
             raise ValueError()
-        posdeg = float(pos[0 : dp - 2])
+        posdeg = abs(float(pos[0 : dp - 2]))
         posmin = float(pos[dp - 2 :])
         return round((posdeg + posmin / 60), 10)
     except (TypeError, ValueError):

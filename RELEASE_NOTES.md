@@ -1,5 +1,9 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.1.2
+
+1. Add workaround for Unicore UM9* firmware error, which creates malformed NMEA GLL sentences (-ve latitude).
+
 ### RELEASE 1.1.1
 
 1. Add helper methods `utc2wnotow` and `wnotow2utc` to convert between UTC datetime and GPS week number, time of week (in milliseconds) and leapsecond offset.
