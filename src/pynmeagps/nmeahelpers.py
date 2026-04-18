@@ -13,16 +13,24 @@ Created on 04 Mar 2021
 
 import re
 from datetime import datetime, timedelta, timezone
-from math import acos, asin, atan2, cos, pi, sin, sqrt
+from math import acos, asin, atan2, cos, floor, pi, sin, sqrt
 from types import NoneType
 from typing import Literal
 
 import pynmeagps.exceptions as nme
 from pynmeagps.nmeatypes_core import (
+    BDS,
     DM,
     DT,
     DTL,
-    GPSEPOCH0,
+    EPOCH0_BEIDOU,
+    EPOCH0_GAL,
+    EPOCH0_GPS,
+    EPOCH0_IRN,
+    GAL,
+    GLO,
+    GPS,
+    IRN,
     LA,
     LN,
     NMEA_MSGIDS,
@@ -67,7 +75,7 @@ LEAPSECONDS = [
 """
 Leapsecond list from NTC - Updated through IERS Bulletin C69
 https://hpiers.obspm.fr/iers/bul/bulc/ntp/leap-seconds.list
-File expires on: 28 June 2026
+File expires on: 28 December 2026
 """
 
 
@@ -415,26 +423,6 @@ def generate_checksum(talker: str, msgID: str, payload: list) -> str:
     return calc_checksum(content)
 
 
-def get_gpswnotow(dat: datetime) -> tuple[int, int]:
-    """
-    Get GPS Week number (Wno) and Time of Week (Tow)
-    for midnight on given UTC date. If supplied date
-    is timezone-naive, UTC will be inferred.
-
-    GPS Epoch 0 = 6th Jan 1980
-
-    :param datetime dat: calendar date
-    :return: wno, tow in seconds
-    :rtype: tuple[int, int]
-    """
-
-    if dat.tzinfo is None:
-        dat = dat.replace(tzinfo=timezone.utc)
-
-    wno, tow, _ = utc2wnotow(dat)
-    return wno, int(tow / 1000)
-
-
 def get_parts(message: object) -> tuple:
     """
     Get content, talker, msgid, payload and checksum of raw NMEA message.
@@ -553,9 +541,9 @@ def latlon2dmm(lat: float, lon: float) -> tuple[str, str]:
     :rtype: tuple[str, str]
     """
 
-    lat = deg2dmm(lat, LA)
-    lon = deg2dmm(lon, LN)
-    return lat, lon
+    latd = deg2dmm(lat, LA)
+    lond = deg2dmm(lon, LN)
+    return latd, lond
 
 
 def latlon2dms(lat: float, lon: float) -> tuple[str, str]:
@@ -568,38 +556,46 @@ def latlon2dms(lat: float, lon: float) -> tuple[str, str]:
     :rtype: tuple[str, str]
     """
 
-    lat = deg2dms(lat, LA)
-    lon = deg2dms(lon, LN)
-    return lat, lon
+    latd = deg2dms(lat, LA)
+    lond = deg2dms(lon, LN)
+    return latd, lond
 
 
-def leapsecond(dat: datetime) -> int:
+def leapsecond(
+    dat: datetime, gnss: Literal["G", "R", "E", "C", "J", "S", "I"] = GPS
+) -> int:
     """
-    Get GPS UTC leapsecond offset effective at date.
-    If supplied datetime is timezone naive, UTC will be inferred.
+    Get leapsecond offset effective at given date and GNSS
+    time system. If supplied datetime is timezone naive,
+    UTC will be inferred.
+
+    G = GPS, E = Galileo, C = Beidou, I = IRNSS (NavIC),
+    J = QZSS, R = Glonass
 
     Refer to LEAPSECONDS constant.
 
     - LEAPS0 = 1900-01-01 00:00:00 UTC
-    - GPSEPOCH0 = 1980-01-06: 00:00:00 UTC
 
     :param datetime.datetime dat: effective date
+    :param Literal["G","R","E","C","J","S","I"] gnss: GNSS time system e.g. "G"
     :return: leapsecond offset
     :rtype: int
     """
 
+    def totsec(dt) -> int:
+        return (dt - LEAPS0).total_seconds()
+
     if dat.tzinfo is None:
         dat = dat.replace(tzinfo=timezone.utc)
 
-    def totsec(dt) -> int:
-        return (dt - LEAPS0).total_seconds()
+    ep0 = EPOCH0_BEIDOU if gnss == BDS else EPOCH0_GPS
 
     if totsec(dat) < LEAPSECONDS[0][0]:
         return 0
 
     dts = []
-    for dt in (dat, GPSEPOCH0):
-        dts.append(max((val for key, val in LEAPSECONDS if key < totsec(dt))))
+    for dt in (dat, ep0):
+        dts.append(max((val for key, val in LEAPSECONDS if key <= totsec(dt))))
     return dts[0] - dts[1]
 
 
@@ -704,7 +700,7 @@ def planar(
     return dist
 
 
-def time2str(tim: datetime.time) -> str:
+def time2str(tim: datetime) -> str:
     """
     Convert datetime.time to NMEA formatted string.
 
@@ -719,7 +715,7 @@ def time2str(tim: datetime.time) -> str:
         return ""
 
 
-def time2utc(times: str) -> datetime.time:
+def time2utc(times: str) -> datetime | str:
     """
     Convert NMEA Time to UTC datetime.
 
@@ -737,15 +733,21 @@ def time2utc(times: str) -> datetime.time:
         return ""
 
 
-def utc2wnotow(utc: datetime | NoneType = None) -> tuple[int, int, int]:
+def utc2wnotow(
+    utc: datetime | NoneType = None,
+    gnss: Literal["G", "R", "E", "C", "J", "I"] = GPS,
+) -> tuple[int, int, int]:
     """
-    Get GPS Week number (wno), Time of Week (tow) in milliseconds
-    and leapsecond offset for given UTC datetime. If datetime is None,
-    will default to current datetime.
+    Get Week number (wno), Time of Week (tow) in milliseconds
+    and leapsecond offset for given UTC datetime and GNSS time system.
+    If datetime is None, will default to current datetime.
 
-    GPS Epoch 0 = 6th Jan 1980
+    G = GPS, E = Galileo, C = Beidou, I = IRNSS (NavIC),
+    J = QZSS, R = Glonass
 
     :param datetime | NoneType utc: UTC datetime
+    :param Literal["G","R","E","C","J","S","I"] = GPS) gnss: \
+        GNSS time system (GPS)
     :return: wno, tow, leapsecond
     :rtype: tuple[int, int, int]
     """
@@ -755,31 +757,86 @@ def utc2wnotow(utc: datetime | NoneType = None) -> tuple[int, int, int]:
     if utc.tzinfo is None:
         utc = utc.replace(tzinfo=timezone.utc)
 
-    ls = leapsecond(utc)
-    ts = ((utc - GPSEPOCH0).total_seconds() + ls) * 1000
-    wno = int((utc - GPSEPOCH0).days / 7)
+    if gnss == BDS:
+        ep0 = EPOCH0_BEIDOU
+        rollover = 8192
+    elif gnss == GAL:
+        ep0 = EPOCH0_GAL
+        rollover = 4096
+    elif gnss == IRN:
+        ep0 = EPOCH0_IRN
+        rollover = 1024
+    else:
+        ep0 = EPOCH0_GPS
+        rollover = 1024
+
+    ls = 0 if gnss == GLO else leapsecond(utc, gnss)
+    ts = ((utc - ep0).total_seconds() + ls) * 1000
+    wno = floor((utc - ep0).days / 7)
     tow = int(ts - wno * 604800000)
-    return wno, tow, ls
+    return wno % rollover, tow, ls
 
 
-def wnotow2utc(wno: int, tow: int, ls: int | NoneType = None) -> datetime:
+def wnotow2utc(
+    wno: int,
+    tow: int,
+    ls: int | NoneType = None,
+    gnss: Literal["G", "R", "E", "C", "J", "I"] = GPS,
+    autoroll: bool = False,
+) -> datetime:
     """
-    Get UTC datetime from GPS Week number (wno), Time of Week (tow)
-    in milliseconds and leapsecond offset. If leapsecond is None, it
-    will default to the leapsecond offset applicable on the given date.
+    Convert week number and seconds of week (expressed as
+    milliseconds) in given GNSS time system to UTC time.
 
-    GPS Epoch 0 = 6th Jan 1980
+    G = GPS, E = Galileo, C = Beidou, I = IRNSS (NavIC),
+    J = QZSS, R = Glonass
 
-    :param int wno: week number
-    :param int tow: time of week in ms
-    :param int ls: leapsecond offset
-    :return: datetime
-    :rtype: datetime
+    If autoroll is True, rolls over modular wno to LATEST
+    date less than current date.
+
+    e.g. if current date is 2026-04-17:
+
+    wno=366, tow=381600000, gnss=GPS gives...
+
+    - autoroll on:  2026-04-16 09:59:42+00:00
+    - autoroll off: 1987-01-15 09:59:56+00:00
+
+    wno=368, tow=610000000, gnss=GPS gives...
+
+    - autoroll on:  2006-09-17 01:26:26+00:00
+    - autoroll off: 1987-02-01 01:26:36+00:00
+
+    :param int wno: week number (modular or mon-modular)
+    :param int tow: time of week in milliseconds (<= 604,800,000)
+    :param int | NoneType ls: leapsecond offset (will be derived if None) (None)
+    :param Literal["G","R","E","C","J","S","I"] = GPS) gnss: GNSS time system (GPS)
+    :param bool autoroll: automatic rollover (False)
     """
 
-    utc = GPSEPOCH0 + timedelta(days=wno * 7)
-    utc += timedelta(milliseconds=tow)
-    if ls is None:
-        ls = leapsecond(utc)
-    utc -= timedelta(seconds=ls)
+    if gnss == BDS:
+        ep0 = EPOCH0_BEIDOU
+        rollover = 8192
+    elif gnss == GAL:
+        ep0 = EPOCH0_GAL
+        rollover = 4096
+    elif gnss == IRN:
+        ep0 = EPOCH0_IRN
+        rollover = 1024
+    else:
+        ep0 = EPOCH0_GPS
+        rollover = 1024
+    wno %= rollover
+    tow %= 604800000
+    current = datetime.now(timezone.utc)
+    i = 0
+    while True:
+        utc = ep0 + timedelta(days=(wno + (i * rollover)) * 7, milliseconds=tow)
+        if gnss != GLO:  # apply leapsecond offset
+            lps = leapsecond(utc, gnss) if ls is None else ls
+            utc -= timedelta(seconds=lps)
+        if not autoroll:
+            break
+        if utc + timedelta(days=rollover * 7) > current:
+            break
+        i += 1
     return utc

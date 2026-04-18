@@ -1312,6 +1312,11 @@ NMEA_PAYLOADS_GET = {
             {
                 "tdrtype": CH,
                 "data": DE,
+                # Units of measurement A = Amperes B = Bars B = Binary
+                # C = Celsius D = Degrees H = Hertz I = liters/second
+                # K = Kelvin K = kg/m3 M = Meters M = cubic Meters
+                # N = Newton P = % of full range P = Pascal R = RPM
+                # S = Parts per thousand V = Volts
                 "dataunit": CH,
                 "tdrid": ST,
             },

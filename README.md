@@ -330,8 +330,8 @@ b'$EIGNQ,RMC*24\r\n'
  - `bearing` - finds bearing in degrees between two sets of (lat, lon) coordinates
  - `area` - finds spherical area bounded by two sets of (lat, lon) coordinates
  - `leapsecond` - find GPS UTC leapsecond offset for a given effective date
- - `utc2wnotow` - converts UTC datetime to GPS WNO (week number), TOW (time of week in milliseconds) and Leapsecond offset
- - `wnotow2utc` - converts GPS WNO, TOW and Leapsecond offset to UTC datetime
+ - `utc2wnotow` - converts UTC datetime to WNO (week number), TOW (time of week in milliseconds) and Leapsecond offset for various GNSS time systems.
+ - `wnotow2utc` - converts WNO (week number), TOW (time of week in milliseconds) and Leapsecond offset to UTC datetime for various GNSS time systems.
 
 See [Sphinx documentation](https://www.semuconsulting.com/pynmeagps/pynmeagps.html#module-pynmeagaps.nmeahelpers) for details.
 

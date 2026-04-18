@@ -65,9 +65,16 @@ ENCODE_COMPRESS = 4
 ENCODE_DEFLATE = 8
 """deflate socket encoding"""
 
-# GPSEPOCH0 = datetime(1980, 1, 6)
-GPSEPOCH0 = datetime(1980, 1, 6, tzinfo=timezone.utc)
-"""GPS epoch base date"""
+EPOCH0_BEIDOU = datetime(2006, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+"""Base epoch for Beidou time system (BDT)"""
+EPOCH0_GAL = datetime(1999, 8, 22, 0, 0, 0, tzinfo=timezone.utc)
+"""Base epoch for Galileo time system"""
+EPOCH0_GPS = datetime(1980, 1, 6, 0, 0, 0, tzinfo=timezone.utc)
+"""Base epoch for GPS time system"""
+EPOCH0_IRN = datetime(1999, 8, 22, 0, 0, 0, tzinfo=timezone.utc)
+"""Base epoch for IRNSS/NAVIC time system"""
+GPSEPOCH0 = EPOCH0_GPS  # deprecated, for backward compatibility
+
 # Geodetic datum spheroid values:
 # WGS84, ETRS89, EPSG4326
 WGS84 = "WGS_84"
@@ -76,6 +83,14 @@ WGS84_SMAJ_AXIS = 6378137.0  # semi-major axis
 """WGS84 semi-major axis"""
 WGS84_FLATTENING = 298.257223563  # flattening
 """WGS84 flattening"""
+
+BDS = "C"
+GAL = "E"
+GLO = "R"
+GPS = "G"
+IRN = "I"
+QZS = "J"
+SBA = "S"
 
 # ***************************************************
 # THESE ARE THE NMEA PROTOCOL PAYLOAD ATTRIBUTE TYPES
