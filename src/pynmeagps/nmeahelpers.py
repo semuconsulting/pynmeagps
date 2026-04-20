@@ -73,7 +73,7 @@ LEAPSECONDS = [
     (3692217600, 37),  # 1 Jan 2017
 ]
 """
-Leapsecond list from NTC - Updated through IERS Bulletin C69
+Leapsecond reference table from NTC - Updated through IERS Bulletin C69
 https://hpiers.obspm.fr/iers/bul/bulc/ntp/leap-seconds.list
 File expires on: 28 December 2026
 """
@@ -561,23 +561,21 @@ def latlon2dms(lat: float, lon: float) -> tuple[str, str]:
     return latd, lond
 
 
-def leapsecond(
-    dat: datetime, gnss: Literal["G", "R", "E", "C", "J", "S", "I"] = GPS
-) -> int:
+def leapsecond(dat: datetime, gnss: Literal["G", "E", "C", "J", "I"] = GPS) -> int:
     """
-    Get leapsecond offset effective at given date and GNSS
+    Get leapsecond offset effective at given GNSS epoch and
     time system. If supplied datetime is timezone naive,
     UTC will be inferred.
 
-    G = GPS, E = Galileo, C = Beidou, I = IRNSS (NavIC),
-    J = QZSS, R = Glonass
+    G = GPS, E = Galileo, C = Beidou, J = QZSS, I = IRNSS (NavIC)
 
-    Refer to LEAPSECONDS constant.
+    Note: GLONASS is a non-continuous time system which already
+    takes into account UTC leapseconds.
 
-    - LEAPS0 = 1900-01-01 00:00:00 UTC
+    Refer to LEAPSECONDS reference table.
 
     :param datetime.datetime dat: effective date
-    :param Literal["G","R","E","C","J","S","I"] gnss: GNSS time system e.g. "G"
+    :param Literal["G","E","C","J","I"] gnss: GNSS time system e.g. "G"
     :return: leapsecond offset
     :rtype: int
     """
@@ -735,18 +733,20 @@ def time2utc(times: str) -> datetime | str:
 
 def utc2wnotow(
     utc: datetime | NoneType = None,
-    gnss: Literal["G", "R", "E", "C", "J", "I"] = GPS,
+    gnss: Literal["G", "E", "C", "J", "I"] = GPS,
 ) -> tuple[int, int, int]:
     """
     Get Week number (wno), Time of Week (tow) in milliseconds
-    and leapsecond offset for given UTC datetime and GNSS time system.
-    If datetime is None, will default to current datetime.
+    and leapsecond offset for given GNSS UTC epoch and time system.
 
-    G = GPS, E = Galileo, C = Beidou, I = IRNSS (NavIC),
-    J = QZSS, R = Glonass
+    G = GPS, E = Galileo, C = Beidou, J = QZSS, I = IRNSS (NavIC)
+    
+    Note: GLONASS does not use GPS-style wno or tow.
 
-    :param datetime | NoneType utc: UTC datetime
-    :param Literal["G","R","E","C","J","S","I"] = GPS) gnss: \
+    If `utc` is None, will default to current UTC datetime.
+
+    :param datetime | NoneType utc: UTC epoch
+    :param Literal["G","E","C","J","I"] = GPS) gnss: \
         GNSS time system (GPS)
     :return: wno, tow, leapsecond
     :rtype: tuple[int, int, int]
@@ -781,17 +781,21 @@ def wnotow2utc(
     wno: int,
     tow: int,
     ls: int | NoneType = None,
-    gnss: Literal["G", "R", "E", "C", "J", "I"] = GPS,
+    gnss: Literal["G", "E", "C", "J", "I"] = GPS,
     autoroll: bool = False,
 ) -> datetime:
     """
     Convert week number and seconds of week (expressed as
-    milliseconds) in given GNSS time system to UTC time.
+    milliseconds) for given GNSS epoch to UTC time.
 
-    G = GPS, E = Galileo, C = Beidou, I = IRNSS (NavIC),
-    J = QZSS, R = Glonass
+    G = GPS, E = Galileo, C = Beidou, J = QZSS, I = IRNSS (NavIC)
 
-    If autoroll is True, rolls over modular wno to LATEST
+    Note: GLONASS does not use GPS-style wno or tow.
+
+    If `ls` is None (the default), leapsecond offset will be
+    automatically derived from NTC reference table.
+
+    If `autoroll` is True, rolls over modular wno to LATEST
     date less than current date.
 
     e.g. if current date is 2026-04-17:
@@ -807,10 +811,12 @@ def wnotow2utc(
     - autoroll off: 1987-02-01 01:26:36+00:00
 
     :param int wno: week number (modular or mon-modular)
-    :param int tow: time of week in milliseconds (<= 604,800,000)
+    :param int tow: time of week in milliseconds (mod 604,800,000)
     :param int | NoneType ls: leapsecond offset (will be derived if None) (None)
-    :param Literal["G","R","E","C","J","S","I"] = GPS) gnss: GNSS time system (GPS)
+    :param Literal["G","E","C","J","I"] = GPS) gnss: GNSS time system (GPS)
     :param bool autoroll: automatic rollover (False)
+    :return: GNSS epoch as UTC datetime
+    :rtype: datetime
     """
 
     if gnss == BDS:
