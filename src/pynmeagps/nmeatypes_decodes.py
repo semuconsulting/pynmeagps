@@ -23,6 +23,16 @@ FIXTYPE_GGA = QUALITY = {
 }
 """GGA quality/fix type values"""
 
+POSMODE = {
+    "A": "2D",
+    "N": "N/A",
+    "E": "DR",
+    "D": "3D",
+    "F": "RTK FLOAT",
+    "R": "RTK FIXED",
+}
+"""RMC, GNS, GLL posmode values"""
+
 GNSSLIST = {
     0: "GPS",
     1: "SBAS",

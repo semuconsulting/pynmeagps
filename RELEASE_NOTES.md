@@ -1,5 +1,9 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.1.3
+
+1. Update wnotow2utc, utc2wnotow and leapsecond helper functions to accommodate all GNSS time systems. wnotow2utc method also adds an 'autoroll' argument which, if True, will automatically roll forward modular GNSS week numbers to the latest date less than the current date - see API docs for details.
+
 ### RELEASE 1.1.2
 
 1. Add workaround for Unicore UM9* firmware error, which creates malformed NMEA GLL sentences (-ve latitude).

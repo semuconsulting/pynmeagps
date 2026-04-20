@@ -258,6 +258,7 @@ class StreamTest(unittest.TestCase):
             "<NMEA(IISPW, pwdprotectsentence=EPV, id=211000001, pwdlevel=2, password=SESAME)>",
             "<NMEA(IIEPV, status=C, equipmenttype=AI, equipmentid=211000001, propertyid=111, value=HEUREKA143)>",
             "<NMEA(AIEPV, status=R, equipmenttype=AI, equipmentid=211000001, propertyid=111, value=HEUREKA143)>",
+            "<NMEA(HCXDR, tdrtype_01=A, data_01=171.0, dataunit_01=D, tdrid_01=PITCH, tdrtype_02=A, data_02=-37.0, dataunit_02=D, tdrid_02=ROLL, tdrtype_03=G, data_03=367.0, dataunit_03=, tdrid_03=MAGX, tdrtype_04=G, data_04=2420.0, dataunit_04=, tdrid_04=MAGY, tdrtype_05=G, data_05=-8984.0, dataunit_05=, tdrid_05=MAGZ)>",
         )
 
         i = 0
@@ -269,7 +270,7 @@ class StreamTest(unittest.TestCase):
                     # print(f'"{parsed}",')
                     self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                     i += 1
-        self.assertEqual(i, 14)
+        self.assertEqual(i, len(EXPECTED_RESULTS))
 
     def testNMEAITER(self):  # NMEAReader iterator
         EXPECTED_RESULTS = (
