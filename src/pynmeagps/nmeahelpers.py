@@ -775,9 +775,9 @@ def utc2wnotow(
     ls = 0 if gnss == GLO else leapsecond(utc, gnss)
     ts = ((utc - ep0).total_seconds() + ls) * 1000
     wno = floor((utc - ep0).days / 7)
-    wno = wno % rollover if modwno else wno
+    wnom = wno % rollover
     tow = int(ts - wno * 604800000)
-    return wno, tow, ls
+    return wnom if modwno else wno, tow, ls
 
 
 def wnotow2utc(
