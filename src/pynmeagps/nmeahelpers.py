@@ -734,6 +734,7 @@ def time2utc(times: str) -> datetime | str:
 def utc2wnotow(
     utc: datetime | NoneType = None,
     gnss: Literal["G", "E", "C", "J", "I"] = GPS,
+    modwno: bool = True,
 ) -> tuple[int, int, int]:
     """
     Get Week number (wno), Time of Week (tow) in milliseconds
@@ -748,6 +749,7 @@ def utc2wnotow(
     :param datetime | NoneType utc: UTC epoch
     :param Literal["G","E","C","J","I"] = GPS) gnss: \
         GNSS time system (GPS)
+    :param bool modwno: True = modular wno, False = continuous wno
     :return: wno, tow, leapsecond
     :rtype: tuple[int, int, int]
     """
@@ -773,8 +775,9 @@ def utc2wnotow(
     ls = 0 if gnss == GLO else leapsecond(utc, gnss)
     ts = ((utc - ep0).total_seconds() + ls) * 1000
     wno = floor((utc - ep0).days / 7)
+    wno = wno % rollover if modwno else wno
     tow = int(ts - wno * 604800000)
-    return wno % rollover, tow, ls
+    return wno, tow, ls
 
 
 def wnotow2utc(
@@ -783,6 +786,7 @@ def wnotow2utc(
     ls: int | NoneType = None,
     gnss: Literal["G", "E", "C", "J", "I"] = GPS,
     autoroll: bool = False,
+    modwno: bool = True,
 ) -> datetime:
     """
     Convert week number and seconds of week (expressed as
@@ -815,6 +819,7 @@ def wnotow2utc(
     :param int | NoneType ls: leapsecond offset (will be derived if None) (None)
     :param Literal["G","E","C","J","I"] = GPS) gnss: GNSS time system (GPS)
     :param bool autoroll: automatic rollover (False)
+    :param bool modwno: True = modular wno, False = continuous wno
     :return: GNSS epoch as UTC datetime
     :rtype: datetime
     """
@@ -831,7 +836,7 @@ def wnotow2utc(
     else:
         ep0 = EPOCH0_GPS
         rollover = 1024
-    wno %= rollover
+    wno = wno % rollover if modwno else wno
     tow %= 604800000
     current = datetime.now(timezone.utc)
     i = 0
