@@ -631,12 +631,12 @@ class StaticTest(unittest.TestCase):
     #     self.assertIsInstance(ls, int)
 
     def testwnotow2utcGPS(self):
-        res = wnotow2utc(2406, 516114123, None, GPS,False, True)
+        res = wnotow2utc(2406, 516114123, None, GPS, False, True)
         # print(res)
         self.assertEqual(
             res, datetime(1986, 11, 21, 23, 21, 50, 123000, tzinfo=timezone.utc)
         )
-        res = wnotow2utc(2406, 516114123, None,GPS,False, False)
+        res = wnotow2utc(2406, 516114123, None, GPS, False, False)
         # print(res)
         self.assertEqual(
             res, datetime(2026, 2, 20, 23, 21, 36, 123000, tzinfo=timezone.utc)
@@ -652,12 +652,12 @@ class StaticTest(unittest.TestCase):
         res = wnotow2utc(1390, 381600000, None, GPS, False)
         # print(res)
         self.assertEqual(str(res), "1987-01-15 09:59:56+00:00")
-    
+
     def testwnotow2utcBDS(self):
         res = wnotow2utc(1390, 381600000, None, BDS, False)
         # print(res)
         self.assertEqual(str(res), "2032-08-26 09:59:56+00:00")
-    
+
     def testwnotow2utcGAL(self):
         res = wnotow2utc(1390, 381600000, None, GAL, False)
         # print(res)
@@ -665,7 +665,7 @@ class StaticTest(unittest.TestCase):
         res = wnotow2utc(1390, 381600000, None, GAL, False, False)
         # print(res)
         self.assertEqual(str(res), "2026-04-16 09:59:42+00:00")
-    
+
     def testwnotow2utcIRN(self):
         res = wnotow2utc(1390, 381600000, None, IRN, False)
         # print(res)
@@ -711,6 +711,14 @@ class StaticTest(unittest.TestCase):
                 utc = wnotow2utc(wno, tow, None, gnss)
                 wno2, tow2, ls = utc2wnotow(utc, gnss)
                 self.assertEqual((wno, tow), (wno2, tow2))
+
+    def testutc2wnotow(self):
+
+        wno, tow, ls = utc2wnotow()
+        # print(wno, tow, ls)
+        wno, tow, ls = utc2wnotow(datetime(2026, 4, 1, 2, 3, 4))
+        # print(wno, tow, ls)
+        self.assertEqual((wno, tow, ls), (364, 266602000, 18))
 
 
 if __name__ == "__main__":
