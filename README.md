@@ -31,7 +31,7 @@ Companion libraries are available which handle UBX &copy; and RTCM3 &copy; messa
 ![Status](https://img.shields.io/pypi/status/pynmeagps)
 ![Release](https://img.shields.io/github/v/release/semuconsulting/pynmeagps?include_prereleases)
 ![Build](https://img.shields.io/github/actions/workflow/status/semuconsulting/pynmeagps/main.yml?branch=master)
-![Codecov](https://img.shields.io/codecov/c/github/semuconsulting/pynmeagps)
+![Coverage](https://github.com/semuconsulting/pynmeagps/blob/master/images/coverage.svg?raw=true)
 ![Release Date](https://img.shields.io/github/release-date-pre/semuconsulting/pynmeagps)
 ![Last Commit](https://img.shields.io/github/last-commit/semuconsulting/pynmeagps)
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pynmeagps.svg)
