@@ -112,4 +112,36 @@ NMEA_PAYLOADS_POLL_PROP = {
     "QTMUNIQID": {},
     "QTMVEHATT": {},
     "QTMVERNO": {},
+    "QTMLSTMSG_CURR": {},  # TODO
+    "QTMLSTMSG": {
+        "porttype": IN,
+        "portid": IN,
+    },  # TODO
+    "QTMCFGSTANDALONE": {
+        "status": QS,
+    },
+    "QTMCFGRTKRL": {
+        "status": QS,
+    },
+    "QTMCFGPPS2": {
+        "status": QS,
+        "index": IN,
+    },
+    "QTMCFGPPP": {
+        "status": QS,
+    },
+    "QTMCFGPINALT": {
+        "status": QS,
+        "pinnum": IN,
+    },
+    "QTMCFGEVENT": {
+        "status": QS,
+        "index": IN,
+    },
+    "QTMCFGCNRTHD": {
+        "status": QS,
+    },
+    "QTMCFGANTENNA": {
+        "status": QS,
+    },
 }

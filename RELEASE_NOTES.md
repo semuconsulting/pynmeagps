@@ -1,5 +1,26 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.1.5
+
+1. Add support for additional proprietary Quectel PQTM configuration messages from LG290/LG580 firmware version 1.3.
+
+    - "QTMAIDINI": "Inputs aiding position and time data"
+    - "QTMAIDPOS": "Inputs aiding position data"
+    - "QTMAIDTIME": "Inputs aiding time data"
+    - "QTMCFGANTENNA": "Sets/gets GNSS antenna power supply"
+    - "QTMCFGCNRTHD": "Sets/gets the CNR threshold for position engine"
+    - "QTMCFGEVENT": "Sets/gets external interrupt event"
+    - "QTMCFGPINALT": "Sets/gets the function of module's pin 14"
+    - "QTMCFGPPP": "Sets/gets the PPP feature"
+    - "QTMCFGPPS2": "Sets/gets the PPS extend feature"
+    - "QTMCFGRTKRL": "Sets/gets the RTK reliability level"
+    - "QTMCFGSTANDALONE": "Sets/gets the Standalone mode"
+    - "QTMCLRMSG": "Disables serial message output." (2 variants)
+    - "QTMENV": "Outputs the environment information."
+    - "QTMLSTMSG": "Queries message output of serial port" (2 variants)
+    - "QTMPPPNAV": "Outputs the PPP navigation information"
+    - "QTMRTCMIS": "Outputs the RTCM input status"
+
 ### RELEASE 1.1.4
 
 1. Add `modwno` boolean argument to wnotow2utc and utc2wnotow helper functions - True => modular week number, False => continuous week number. The default is True (modular week no).

@@ -155,6 +155,9 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PSTMDRSENMSG, msgtype=30, timestamp=3248512115, xacc=299.0, yacc=-35.0, zacc=16514.0)>",
             "<NMEA(PSTMDRSENMSG, msgtype=31, timestamp=5855224, xgyro=62.0, ygyro=-119.0, zgyro=-49.0)>",
             "<NMEA(PQTMSN, snid=1, length=16, status=OK, serialno=1234567890ABCDEF)>",
+            "<NMEA(PQTMPPPNAV, msgver=1, timestatus=1, timeref=1, utc=190423.000, date=20241224, tow=212681000, wn=2346, leapsec=18, datumid=1, reserved1=, soltype=7, reserved2=, lat=31.45874521, lon=117.41532415, alt=45.1254, sep=-6.1245, reserved3=, reserved4=, latstd=1.2451, lonstd=2.1254, altstd=5.1242, reserved5=, reserved6=, diffid=9001, diffage=1.0, reserved7=, satview=78, satused=56, reserved8=, reserved9=, reserved10=, reserved11=, reserved12=, reserved13=, hvel=1.2101, vvel=1.2148, hvelstd=0.4578, vvelstd=1.1547, reserved14=, reserved15=, cog=45.124, reserved16=, reserved17=)>",
+            "<NMEA(PQTMENV, msgver=1, tow=212681000, wn=2236, date=20241224, time=190423.000, basescore=90, conflevel=34.52, satvis=64, satslo=34, movedflag=0, movingflag=0, posdiff=0.000, slotype=50, basesatnum=51, pubsatnum=27, reserved1=, reserved2=, reserved3=, reserved4=, reserved5=)>",
+            "<NMEA(PQTMRTCMIS, msgver=1, recvutc=190423.412, porttype=1, portid=1, msgtype=1074, subtype=, refstaid=290, flag=04, msglen=82, msgnum=1451, satnum=9, signum=3, sigid_01=2, sigsatnum_01=9, sigid_02=15, sigsatnum_02=5, sigid_03=24, sigsatnum_03=3)>",
         )
         i = 0
         raw = 0
@@ -164,7 +167,7 @@ class QuectelStreamTest(unittest.TestCase):
             )
             for raw, parsed in nmr:
                 if raw is not None:
-                    # print(f'"{parsed}",')
+                    #print(f'"{parsed}",')
                     self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                     i += 1
         self.assertEqual(i, len(EXPECTED_RESULTS))
@@ -212,6 +215,17 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PQTMCFGMSGRATE, status=R, msgname=RTCM3-1019)>",
             "<NMEA(PQTMCFGMSGRATE, status=R, porttype=1, portid=1, msgname=GGA)>",
             "<NMEA(PQTMCFGMSGRATE, status=R, porttype=1, portid=1, msgname=0AB2, msgver=1)>",
+            "<NMEA(PQTMCFGSTANDALONE, status=R)>",
+            "<NMEA(PQTMCFGRTKRL, status=R)>",
+            "<NMEA(PQTMCFGPPS2, status=R, index=1)>",
+            "<NMEA(PQTMCFGPPP, status=R)>",
+            "<NMEA(PQTMCFGPINALT, status=R, pinnum=14)>",
+            "<NMEA(PQTMCFGANTENNA, status=R)>",
+            "<NMEA(PQTMCFGEVENT, status=R, index=1)>",
+            "<NMEA(PQTMCFGCNRTHD, status=R)>",
+            "<NMEA(PQTMCFGANTENNA, status=R)>",
+            "<NMEA(PQTMLSTMSG)>",
+            "<NMEA(PQTMLSTMSG, porttype=1, portid=1)>",
         )
         i = 0
         raw = 0
@@ -221,7 +235,7 @@ class QuectelStreamTest(unittest.TestCase):
             )
             for raw, parsed in nmr:
                 if raw is not None:
-                    # print(f'"{parsed}",')
+                    #print(f'"{parsed}",')
                     self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                     i += 1
         self.assertEqual(i, len(EXPECTED_RESULTS))
@@ -312,6 +326,19 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PSTMINITGPS, lat=31.8186833333, NS=N, lon=117.1313833333, EW=E, alt=530.0, day=5, month=8, year=2022, hour=9, minute=44, second=12)>",
             "<NMEA(PSTMINITTIME, day=5, month=8, year=2022, hour=9, minute=44, second=12)>",
             "<NMEA(PSTMEPHEM, satID=12, ephdatalen=64, ephdata=0f06bc34bc3437373790f40045a7ff00fcf5d522480b4bf71b00fbff8931000096126f271f869101c3870ca107afce79a763e13e360a1ce8e7003100380ff903)>",
+            "<NMEA(PQTMAIDINI, postype=1, pos1=31.821692, pos2=117.115337, pos3=131.88, posacc=0.0, timetype=1, leapsec=18, year=2023, month=11, day=10, hour=6, minute=5, second=11, millisecond=636, tacc_s=0, reserved=0)>",
+            "<NMEA(PQTMAIDTIME, timetype=1, leapsec=18, year=2023, month=11, day=10, hour=6, minute=5, second=11, millisecond=636, tacc_s=0, reserved=0)>",
+            "<NMEA(PQTMAIDPOS, postype=1, pos1=31.821692, pos2=117.115337, pos3=131.88, posacc=0.0)>",
+            "<NMEA(PQTMCLRMSG)>",
+            "<NMEA(PQTMCLRMSG, porttype=1, portid=1)>",
+            "<NMEA(PQTMCFGSTANDALONE, status=W, mode=1, time=100, timeout=86400, lat=31.822006, lon=117.1154453, alt=44.51)>",
+            "<NMEA(PQTMCFGRTKRL, status=W, reliability=3, reserved1=0, reserved2=0, reserved3=0)>",
+            "<NMEA(PQTMCFGPPS2, status=W, index=1, enable=1, duration=100, mode=1, reserved1=1, period=0, userdelay=1000, reserved2=0, reserved3=1, reserved4=0, reserved5=0)>",
+            "<NMEA(PQTMCFGPPP, status=W, mode=1, datum=2, timeout=120, horstd=0.1, verstd=0.15)>",
+            "<NMEA(PQTMCFGPINALT, status=W, pinnum=14, mode=1)>",
+            "<NMEA(PQTMCFGEVENT, status=W, index=1, mode=1, edge=1, guard=150)>",
+            "<NMEA(PQTMCFGCNRTHD, status=W, cnr=10.0)>",
+            "<NMEA(PQTMCFGANTENNA, status=W, power=0, reserved=0)>",
         )
         i = 0
         raw = 0
@@ -430,6 +457,15 @@ class QuectelStreamTest(unittest.TestCase):
             "<NMEA(PSTMSETPAROK, msgId=P35, status1=L00, status2=F00, status3=00000007)>",
             "<NMEA(PSTMINITGPSOK)>",
             "<NMEA(PSTMINITTIMEOK)>",
+            "<NMEA(PQTMCFGSTANDALONE, status=OK, mode=1, time=100, timeout=86400, lat=31.822006, lon=117.1154453, alt=44.51)>",
+            "<NMEA(PQTMCFGRTKRL, status=OK, reliability=3, reserved1=0, reserved2=0, reserved3=0)>",
+            "<NMEA(PQTMCFGPPS2, status=OK, index=1, enable=1, duration=100, mode=1, reserved1=1, period=0, userdelay=1000, reserved2=0, reserved3=1, reserved4=0, reserved5=0)>",
+            "<NMEA(PQTMCFGPPP, status=OK, mode=01, datum=2, timeout=120, horstd=0.1, verstd=0.15)>",
+            "<NMEA(PQTMCFGPINALT, status=OK, pinnum=14, mode=1)>",
+            "<NMEA(PQTMCFGEVENT, status=OK, index=1, mode=1, edge=1, guard=150)>",
+            "<NMEA(PQTMCFGCNRTHD, status=OK, cnr=10.0)>",
+            "<NMEA(PQTMCFGANTENNA, status=OK, power=0, reserved=0)>",
+            "<NMEA(PQTMLSTMSG, status=OK, porttype=1, portid=1, msgname=RTCM3-107X, rate=1, msgver/offset=0)>",
         )
         i = 0
         raw = 0
@@ -439,7 +475,7 @@ class QuectelStreamTest(unittest.TestCase):
             )
             for raw, parsed in nmr:
                 if raw is not None:
-                    # print(f'"{parsed}",')
+                    #print(f'"{parsed}",')
                     self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                     i += 1
 

@@ -356,6 +356,10 @@ class NMEAMessage:
             key = self._get_dict_qtmcfgsat(key, self._mode, **kwargs)
         elif key == "QTMCFGUART":
             key = self._get_dict_qtmcfguart(key, self._mode, **kwargs)
+        elif key == "QTMCLRMSG":
+            key = self._get_dict_qtmclrmsg(key, self._mode, **kwargs)
+        elif key == "QTMLSTMSG":
+            key = self._get_dict_qtmlstmsg(key, self._mode, **kwargs)
         elif key == "QTMSN":
             key = self._get_dict_qtmsn(key, self._mode, **kwargs)
         elif key == "STMDRSENMSG":
@@ -394,6 +398,46 @@ class NMEAMessage:
                 key += "_CURR"
         elif mode == nmt.POLL:
             if (py and lp == 1) or (not py and not pt):
+                key += "_CURR"
+        return key
+
+    def _get_dict_qtmclrmsg(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMCLRMSG
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = self._streaming
+        pt = "porttype" in kwargs
+        pi = "portid" in kwargs
+        if mode == nmt.SET:
+            if (py and lp == 0) or (not py and not pt and not pi):
+                key += "_CURR"
+        return key
+
+    def _get_dict_qtmlstmsg(self, key: str, mode: int, **kwargs) -> str:
+        """
+        Get payload dictionary for proprietary Quectel QTMLSTMSG
+        command and query variants.
+
+        :param str key: msgid
+        :param int mode: msgmode 1/2
+        :return: key of payload definition
+        :rtype: str
+        """
+
+        lp = len(self._payload)
+        py = self._streaming
+        pt = "porttype" in kwargs
+        pi = "portid" in kwargs
+        if mode == nmt.POLL:
+            if (py and lp == 0) or (not py and not pi and not pt):
                 key += "_CURR"
         return key
 
