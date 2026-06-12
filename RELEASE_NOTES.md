@@ -4,22 +4,22 @@
 
 1. Add support for additional proprietary Quectel PQTM configuration messages from LG290/LG580 firmware version 1.3.
 
-    - "QTMAIDINI": "Inputs aiding position and time data"
-    - "QTMAIDPOS": "Inputs aiding position data"
-    - "QTMAIDTIME": "Inputs aiding time data"
-    - "QTMCFGANTENNA": "Sets/gets GNSS antenna power supply"
-    - "QTMCFGCNRTHD": "Sets/gets the CNR threshold for position engine"
-    - "QTMCFGEVENT": "Sets/gets external interrupt event"
-    - "QTMCFGPINALT": "Sets/gets the function of module's pin 14"
-    - "QTMCFGPPP": "Sets/gets the PPP feature"
-    - "QTMCFGPPS2": "Sets/gets the PPS extend feature"
-    - "QTMCFGRTKRL": "Sets/gets the RTK reliability level"
-    - "QTMCFGSTANDALONE": "Sets/gets the Standalone mode"
-    - "QTMCLRMSG": "Disables serial message output." (2 variants)
-    - "QTMENV": "Outputs the environment information."
-    - "QTMLSTMSG": "Queries message output of serial port" (2 variants)
-    - "QTMPPPNAV": "Outputs the PPP navigation information"
-    - "QTMRTCMIS": "Outputs the RTCM input status"
+    - PQTMAIDINI: Inputs aiding position and time data
+    - PQTMAIDPOS: Inputs aiding position data
+    - PQTMAIDTIME: Inputs aiding time data
+    - PQTMCFGANTENNA: Sets/gets GNSS antenna power supply
+    - PQTMCFGCNRTHD: Sets/gets the CNR threshold for position engine
+    - PQTMCFGEVENT: Sets/gets external interrupt event
+    - PQTMCFGPINALT: Sets/gets the function of module's pin 14
+    - PQTMCFGPPP: Sets/gets the PPP feature
+    - PQTMCFGPPS2: Sets/gets the PPS extend feature
+    - PQTMCFGRTKRL: Sets/gets the RTK reliability level
+    - PQTMCFGSTANDALONE: Sets/gets the Standalone mode
+    - PQTMCLRMSG: Disables serial message output. (2 variants)
+    - PQTMENV: Outputs the environment information.
+    - PQTMLSTMSG: Queries message output of serial port (2 variants)
+    - PQTMPPPNAV: Outputs the PPP navigation information
+    - PQTMRTCMIS: Outputs the RTCM input status
 
 ### RELEASE 1.1.4
 
