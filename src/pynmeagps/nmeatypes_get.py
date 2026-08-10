@@ -142,6 +142,7 @@ NMEA_PAYLOADS_GET = {
             {
                 "mfrcode": ST,
                 "alertid": ST,
+                "alertinst": ST,
                 "revisionctr": ST,
             },
         ),
