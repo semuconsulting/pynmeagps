@@ -1,5 +1,9 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.1.7
+
+1. Fix typo in release version (v1.1.6 rather than V1.1.6) for those using pkgsrc to deploy.
+
 ### RELEASE 1.1.6
 
 1. Add fix for ALC message definition - thanks to @SoerenDittman for contribution #96.
