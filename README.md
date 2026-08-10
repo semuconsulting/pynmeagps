@@ -41,7 +41,7 @@ The library implements a comprehensive set of outbound (GET) and inbound (SET/PO
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pynmeagps/](https://www.semuconsulting.com/pynmeagps/).
 
-Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pynmeagps/blob/master/CONTRIBUTING.md).
+Contributions _**from human beings**_ welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pynmeagps/blob/master/CONTRIBUTING.md).
 
 [Bug reports](https://github.com/semuconsulting/pynmeagps/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) and [Feature requests](https://github.com/semuconsulting/pynmeagps/blob/master/.github/ISSUE_TEMPLATE/feature_request.md) - please use the templates provided. For general queries and advice, post a message to one of the [pynmeagps Discussions](https://github.com/semuconsulting/pynmeagps/discussions) channels.
 
