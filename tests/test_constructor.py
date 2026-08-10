@@ -332,6 +332,160 @@ class FillTest(unittest.TestCase):
         self.assertEqual(str(NMEAReader.parse(msg.serialize())), EXPECTED_RESULT)
 
 
+    def testALC_empty(self):
+        """ALC sentence with zero alert entries."""
+        EXPECTED_STR = "<NMEA(IIALC, numSen=01, senNum=01, seqmid=00, numAlerts=0)>"
+        EXPECTED_BIN = b"$IIALC,01,01,00,0*7E\r\n"
+        msg = NMEAMessage(
+            "II",
+            "ALC",
+            GET,
+            numSen="01",
+            senNum="01",
+            seqmid="00",
+            numAlerts=0,
+        )
+        self.assertEqual(str(msg), EXPECTED_STR)
+        self.assertEqual(msg.serialize(), EXPECTED_BIN)
+        # Parse round-trip: IN fields normalise to int, so zero-padding is lost
+        parsed = NMEAReader.parse(msg.serialize())
+        self.assertEqual(parsed.numAlerts, 0)
+        self.assertEqual(parsed.seqmid, 0)
+
+    def testALC_single_entry_null_alertinst(self):
+        """ALC sentence with one alert entry, null alert instance (single-instance alert)."""
+        EXPECTED_STR = "<NMEA(IIALC, numSen=01, senNum=01, seqmid=00, numAlerts=1, mfrcode_01=, alertid_01=192, alertinst_01=, revisionctr_01=3)>"
+        EXPECTED_BIN = b"$IIALC,01,01,00,1,,192,,3*76\r\n"
+        msg = NMEAMessage(
+            "II",
+            "ALC",
+            GET,
+            numSen="01",
+            senNum="01",
+            seqmid="00",
+            numAlerts=1,
+            mfrcode_01="",
+            alertid_01="192",
+            alertinst_01="",
+            revisionctr_01="3",
+        )
+        self.assertEqual(str(msg), EXPECTED_STR)
+        self.assertEqual(msg.serialize(), EXPECTED_BIN)
+        parsed = NMEAReader.parse(msg.serialize())
+        self.assertEqual(parsed.numAlerts, 1)
+        self.assertEqual(parsed.alertid_01, "192")
+        self.assertEqual(parsed.alertinst_01, "")
+        self.assertEqual(parsed.revisionctr_01, "3")
+
+    def testALC_two_entries_mixed_alertinst(self):
+        """ALC sentence with two alert entries; first has a numeric alert instance,
+        second has null alert instance. Verifies all four fields per entry decode
+        correctly — regression test for the missing alertinst field bug."""
+        EXPECTED_STR = (
+            "<NMEA(IIALC, numSen=01, senNum=01, seqmid=00, numAlerts=2, "
+            "mfrcode_01=, alertid_01=192, alertinst_01=1, revisionctr_01=3, "
+            "mfrcode_02=XYZ, alertid_02=512, alertinst_02=, revisionctr_02=7)>"
+        )
+        EXPECTED_BIN = b"$IIALC,01,01,00,2,,192,1,3,XYZ,512,,7*1E\r\n"
+        msg = NMEAMessage(
+            "II",
+            "ALC",
+            GET,
+            numSen="01",
+            senNum="01",
+            seqmid="00",
+            numAlerts=2,
+            mfrcode_01="",
+            alertid_01="192",
+            alertinst_01="1",
+            revisionctr_01="3",
+            mfrcode_02="XYZ",
+            alertid_02="512",
+            alertinst_02="",
+            revisionctr_02="7",
+        )
+        self.assertEqual(str(msg), EXPECTED_STR)
+        self.assertEqual(msg.serialize(), EXPECTED_BIN)
+        parsed = NMEAReader.parse(msg.serialize())
+        # Verify all four fields of entry 1
+        self.assertEqual(parsed.mfrcode_01, "")
+        self.assertEqual(parsed.alertid_01, "192")
+        self.assertEqual(parsed.alertinst_01, "1")
+        self.assertEqual(parsed.revisionctr_01, "3")
+        # Verify all four fields of entry 2
+        self.assertEqual(parsed.mfrcode_02, "XYZ")
+        self.assertEqual(parsed.alertid_02, "512")
+        self.assertEqual(parsed.alertinst_02, "")
+        self.assertEqual(parsed.revisionctr_02, "7")
+
+    def testALC_parse_wire_sentence(self):
+        """Parse a raw ALC wire sentence and verify field mapping.
+
+        Confirms that alertinst is not conflated with revisionctr — the
+        defect this fix addresses (IEC 61162-1 §8.3.13, comment 4).
+        """
+        raw = b"$IIALC,01,01,05,1,,10001,2,3*4B\r\n"
+        parsed = NMEAReader.parse(raw)
+        self.assertEqual(parsed.numAlerts, 1)
+        self.assertEqual(parsed.alertid_01, "10001")
+        self.assertEqual(parsed.alertinst_01, "2")
+        self.assertEqual(parsed.revisionctr_01, "3")
+
+    def testALC_two_entries_mixed_alertinst(self):
+        """ALC sentence with two alert entries; first has a numeric alert instance,
+        second has null alert instance. Verifies all four fields per entry decode
+        correctly — regression test for the missing alertinst field bug."""
+        EXPECTED_RESULT = (
+            "<NMEA(IIALC, numSen=01, senNum=01, seqmid=00, numAlerts=2, "
+            "mfrcode_01=, alertid_01=192, alertinst_01=1, revisionctr_01=3, "
+            "mfrcode_02=XYZ, alertid_02=512, alertinst_02=, revisionctr_02=7)>"
+        )
+        EXPECTED_BIN = b"$IIALC,01,01,00,2,,192,1,3,XYZ,512,,7*1E\r\n"
+        msg = NMEAMessage(
+            "II",
+            "ALC",
+            GET,
+            numSen="01",
+            senNum="01",
+            seqmid="00",
+            numAlerts=2,
+            mfrcode_01="",
+            alertid_01="192",
+            alertinst_01="1",
+            revisionctr_01="3",
+            mfrcode_02="XYZ",
+            alertid_02="512",
+            alertinst_02="",
+            revisionctr_02="7",
+        )
+        self.assertEqual(str(msg), EXPECTED_RESULT)
+        self.assertEqual(msg.serialize(), EXPECTED_BIN)
+        parsed = NMEAReader.parse(msg.serialize())
+        # Verify all four fields of entry 1
+        self.assertEqual(parsed.mfrcode_01, "")
+        self.assertEqual(parsed.alertid_01, "192")
+        self.assertEqual(parsed.alertinst_01, "1")
+        self.assertEqual(parsed.revisionctr_01, "3")
+        # Verify all four fields of entry 2
+        self.assertEqual(parsed.mfrcode_02, "XYZ")
+        self.assertEqual(parsed.alertid_02, "512")
+        self.assertEqual(parsed.alertinst_02, "")
+        self.assertEqual(parsed.revisionctr_02, "7")
+
+    def testALC_parse_wire_sentence(self):
+        """Parse a raw ALC wire sentence and verify field mapping.
+
+        Confirms that alertinst is not conflated with revisionctr — the
+        defect this fix addresses (IEC 61162-1 §8.3.13, comment 4).
+        """
+        raw = b"$IIALC,01,01,05,1,,10001,2,3*4B\r\n"
+        parsed = NMEAReader.parse(raw)
+        self.assertEqual(parsed.numAlerts, 1)
+        self.assertEqual(parsed.alertid_01, "10001")
+        self.assertEqual(parsed.alertinst_01, "2")
+        self.assertEqual(parsed.revisionctr_01, "3")
+
+
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
