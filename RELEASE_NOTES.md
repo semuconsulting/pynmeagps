@@ -1,5 +1,9 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.1.6
+
+1. Add fix for ALC message definition - thanks to @SoerenDittman for contribution #96.
+
 ### RELEASE 1.1.5
 
 1. Add support for additional proprietary Quectel PQTM configuration messages from LG290/LG580 firmware version 1.3.
