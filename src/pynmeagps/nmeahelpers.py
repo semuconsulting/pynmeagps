@@ -75,7 +75,7 @@ LEAPSECONDS = [
 """
 Leapsecond reference table from NTC - Updated through IERS Bulletin C69
 https://hpiers.obspm.fr/iers/bul/bulc/ntp/leap-seconds.list
-File expires on: 28 December 2026
+File expires on 28 June 2027
 """
 
 
