@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: "pynmeagps"
+abstract: "Python library for parsing and generating NMEA 0183 GNSS/GPS protocol messages."
+authors:
+  - family-names: "Smith"
+    given-names: "Steve"
+    orcid: "https://orcid.org/0009-0002-5751-8719"
+  - name: "semuadmin"
+version: 1.1.7
+date-released: 2021-03-07
+license: "BSD-3-Clause"
+repository-code: "https://github.com/semuconsulting/pynmeagps"
