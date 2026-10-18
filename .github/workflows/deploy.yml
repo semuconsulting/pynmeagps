@@ -11,10 +11,9 @@ jobs:
   release-build:
     runs-on: ubuntu-latest
     steps:
-
-      - uses: actions/checkout@v6
-      - name: Set up Python 
-        uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
 
@@ -35,11 +34,10 @@ jobs:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
     environment:
-        name: pypi
+      name: pypi
     permissions:
       id-token: write
     steps:
-
       - name: Download all the dists # download build artifacts saved in previous job
         uses: actions/download-artifact@v8
         with:

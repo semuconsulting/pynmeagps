@@ -230,7 +230,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "UBX03": {
         "msgId": ST,  # '03'
         "numSv": IN,
-        "groupSV": (
+        "groupSV_grp": (
             "numSv",
             {  # repeating group * numSv
                 "svid": IN,
@@ -341,7 +341,7 @@ NMEA_PAYLOADS_GET_PROP = {
     },
     "ASHRBTS": {
         "msgId": ST,  # "BTS"
-        "portgroup": (
+        "portgroup_grp": (
             3,
             {
                 "port": CH,  # C, H or T
@@ -512,7 +512,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSBD": {
         "msgId": ST,  # "SBD"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "prn": IN,
@@ -529,7 +529,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSGA": {
         "msgId": ST,  # "SGA"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "prn": IN,
@@ -546,7 +546,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSGL": {
         "msgId": ST,  # "SGL"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "prn": IN,
@@ -563,7 +563,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSGO": {
         "msgId": ST,  # "SGO"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "prn": IN,
@@ -582,7 +582,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSGP": {
         "msgId": ST,  # "SGP"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "prn": IN,
@@ -599,7 +599,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSIR": {
         "msgId": ST,  # "SIR"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "prn": IN,
@@ -616,7 +616,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSLB": {
         "msgId": ST,  # "SLB"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "satNum": IN,
@@ -630,7 +630,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSQZ": {
         "msgId": ST,  # "SQZ"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "prn": IN,
@@ -647,7 +647,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "ASHRSSB": {
         "msgId": ST,  # "SSB"
         "siv": IN,
-        "satgroup": (  # repeating group * siv
+        "satgroup_grp": (  # repeating group * siv
             "siv",
             {
                 "prn": IN,
@@ -747,7 +747,7 @@ NMEA_PAYLOADS_GET_PROP = {
     },
     "GPPADV120": {
         "msgId": ST,  # "120"
-        "satgrp": (  # repeating group * 2
+        "satgrp_grp": (  # repeating group * 2
             2,
             {
                 "prn": IN,
@@ -1428,7 +1428,7 @@ NMEA_PAYLOADS_GET_PROP = {
         "epe2d": DE,
         "epe3d": DE,
     },
-    "QTMGEOFENCESTATUS": {"msgver": IN, "time": TM, "group": (4, {"staten": IN})},
+    "QTMGEOFENCESTATUS": {"msgver": IN, "time": TM, "group_grp": (4, {"staten": IN})},
     "QTMGETUTC": {
         "status": QS,
         "year": IN,
@@ -1648,7 +1648,7 @@ NMEA_PAYLOADS_GET_PROP = {
         "msgnum": IN,
         "satnum": IN,
         "signum": IN,
-        "siggroup": (
+        "siggroup_grp": (
             "signum",
             {
                 "sigid": IN,
@@ -1670,7 +1670,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "QTMSENMSG": {
         "msgver": IN,  # 2 or 4
         "timestamp": IN,
-        "group": (
+        "group_grp": (
             "None",
             {
                 "sensor_info": DE,
@@ -1757,7 +1757,7 @@ NMEA_PAYLOADS_GET_PROP = {
     },
     "QTMVEHMOT": {
         "msgver": IN,  # 1 or 2
-        "group": (
+        "group_grp": (
             "None",
             {
                 "vehicle_info": DE,
@@ -1767,7 +1767,7 @@ NMEA_PAYLOADS_GET_PROP = {
     "QTMVEHMSG": {
         "msgver": IN,  # 1 = speed, 2 = tick, 3 = speed 4wd, 4 = ticks 4wd
         "timestamp": IN,
-        "group": (
+        "group_grp": (
             "None",
             {
                 "vehicle_info": DE,
@@ -2052,7 +2052,7 @@ NMEA_PAYLOADS_GET_PROP = {
         "yangularrate": DE,  # dps vehicle angular rate in y direction.
         "zangularrate": DE,  # dps vehicle angular rate in z direction.
     },
-    "STMDRUPD": {"group": ("None", {"data": HX})},
+    "STMDRUPD": {"group_grp": ("None", {"data": HX})},
     "STMDRSTYPE": {
         "sensortype": IN,
     },
@@ -2214,7 +2214,7 @@ NMEA_PAYLOADS_GET_PROP = {
         "rev": CH,
         "tim": IN,  # milliseconds
         "week": IN,
-        "group": (
+        "group_grp": (
             "None",
             {
                 # "[",

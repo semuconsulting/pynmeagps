@@ -166,7 +166,7 @@ class NMEAMessage:
         """
 
         att = pdict[key]  # get attribute type
-        if isinstance(att, tuple):  # repeating group of attributes
+        if key[-4:] == nmt.GROUP:  # attribute group
             pindex, gindex = self._set_attribute_group(att, pindex, gindex, **kwargs)
         else:  # single attribute
             pindex = self._set_attribute_single(att, pindex, key, gindex, **kwargs)
