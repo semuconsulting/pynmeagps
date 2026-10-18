@@ -12,7 +12,7 @@ Created on 04 Mar 2021
 # pylint: disable=invalid-name
 
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from math import acos, asin, atan2, cos, floor, pi, sin, sqrt
 from types import NoneType
 from typing import Literal
@@ -138,11 +138,11 @@ def calc_checksum(content: str) -> str:
     return f"{cksum:02X}"
 
 
-def date2str(dat: datetime.date, form: Literal["DT", "DTL", "DM"] = DT) -> str:
+def date2str(dat: date, form: Literal["DT", "DTL", "DM"] = DT) -> str:
     """
     Convert datetime.date to NMEA formatted string.
 
-    :param datetime.date dat: date
+    :param date dat: date
     :param Literal["DT","DTL","DM"] form: date format DT = ddmmyy, DTL = ddmmyyyy,
         DM = mmddyy (DT)
     :return: NMEA formatted date string
@@ -161,15 +161,15 @@ def date2str(dat: datetime.date, form: Literal["DT", "DTL", "DM"] = DT) -> str:
         return ""
 
 
-def date2utc(dates: str, form: Literal["DT", "DTL", "DM"] = DT) -> datetime.date:
+def date2utc(dates: str, form: Literal["DT", "DTL", "DM"] = DT) -> date | str:
     """
     Convert NMEA Date to UTC datetime.
 
     :param str dates: NMEA date
     :param Literal["DT","DTL","DM"] form: date format DT = ddmmyy, DTL = ddmmyyyy,
         DM = mmddyy (DT)
-    :return: UTC date YYyy:mm:dd
-    :rtype: datetime.date
+    :return: UTC date YYyy:mm:dd or "" if invalid
+    :rtype: datetime.date | str
     """
 
     try:
@@ -335,7 +335,7 @@ def ecef2llh(
     z: float,
     a: float = WGS84_SMAJ_AXIS,
     f: float = WGS84_FLATTENING,
-) -> tuple:
+) -> tuple[float, float, float]:
     """
     Convert ECEF coordinates to geodetic (LLH) using Olson algorithm.
 
@@ -348,8 +348,8 @@ def ecef2llh(
     :param float z: Z coordinate
     :param float a: semi-major axis (6378137.0 for WGS84)
     :param float f: flattening (298.257223563 for WGS84)
-    :return: tuple of (lat, lon, ellipsoidal height in m) as floats
-    :rtype: tuple
+    :return: lat, lon, hae
+    :rtype: tuple[float, float, float]
     """
     # pylint: disable=too-many-locals
 
@@ -398,12 +398,12 @@ def ecef2llh(
     m = c * v - s * u
     p = m / (rf / g + f)
     lat = lat + p
-    height = f + m * p / 2.0
+    hae = f + m * p / 2.0
     if z < 0.0:
         lat = -lat
 
     lat, lon = [c * 180 / pi for c in (lat, lon)]
-    return lat, lon, height
+    return lat, lon, hae
 
 
 def generate_checksum(talker: str, msgID: str, payload: list) -> str:
@@ -423,13 +423,13 @@ def generate_checksum(talker: str, msgID: str, payload: list) -> str:
     return calc_checksum(content)
 
 
-def get_parts(message: object) -> tuple:
+def get_parts(message: object) -> tuple[str, str, str, list, str]:
     """
     Get content, talker, msgid, payload and checksum of raw NMEA message.
 
     :param object message: entire message as bytes or string
     :return: tuple of (content, talker, msgID, payload as list, checksum)
-    :rtype: tuple
+    :rtype: tuple[str, str, str, list, str]
     :raises: NMEAMessageError (if message is badly formed)
     """
 
@@ -603,7 +603,7 @@ def llh2ecef(
     height: float,
     a: float = WGS84_SMAJ_AXIS,
     f: float = WGS84_FLATTENING,
-) -> tuple:
+) -> tuple[float, float, float]:
     """
     Convert geodetic coordinates (LLH) to ECEF.
 
@@ -613,7 +613,7 @@ def llh2ecef(
     :param float a: semi-major axis (6378137.0 for WGS84)
     :param float f: flattening (298.257223563 for WGS84)
     :return: tuple of ECEF (X, Y, Z) as floats
-    :rtype: tuple
+    :rtype: tuple[float, float, float]
     """
 
     lat, lon = [c * pi / 180 for c in (lat, lon)]
@@ -713,13 +713,13 @@ def time2str(tim: datetime) -> str:
         return ""
 
 
-def time2utc(times: str) -> datetime | str:
+def time2utc(times: str) -> time | str:
     """
     Convert NMEA Time to UTC datetime.
 
     :param str times: NMEA time hhmmss.ss
     :return: UTC time hh:mm:ss.ss or "" if invalid
-    :rtype: datetime.time | str
+    :rtype: time | str
     """
 
     try:

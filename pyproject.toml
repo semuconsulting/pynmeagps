@@ -49,7 +49,7 @@ changelog = "https://github.com/semuconsulting/pynmeagps/blob/master/RELEASE_NOT
 build = [
     "build",
     "packaging>=24.2",
-    "pip",
+    "pip>=25.1",
     "setuptools>=75.0.0",
     "twine>=6.1.0",
     "wheel",

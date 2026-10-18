@@ -147,9 +147,8 @@ class NMEAReader:
                         userdefined=self._userdefined,
                     )
                     break
-                else:  # it's not a NMEA message (UBX or something else)
-                    if self._nmea_only:  # raise error and quit
-                        raise nme.NMEAParseError(f"Unknown protocol header {bytehdr}.")
+                if self._nmea_only:  # raise error and quit
+                    raise nme.NMEAParseError(f"Unknown protocol header {bytehdr}.")
 
             except EOFError:
                 return (None, None)
