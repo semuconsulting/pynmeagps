@@ -84,6 +84,7 @@ WGS84_SMAJ_AXIS = 6378137.0  # semi-major axis
 WGS84_FLATTENING = 298.257223563  # flattening
 """WGS84 flattening"""
 
+GROUP = "_grp"
 BDS = "C"
 GAL = "E"
 GLO = "R"

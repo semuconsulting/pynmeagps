@@ -9,109 +9,109 @@ pynmeagps.exceptions module
 
 .. automodule:: pynmeagps.exceptions
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeahelpers module
 ----------------------------
 
 .. automodule:: pynmeagps.nmeahelpers
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeamessage module
 ----------------------------
 
 .. automodule:: pynmeagps.nmeamessage
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeareader module
 ---------------------------
 
 .. automodule:: pynmeagps.nmeareader
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeatypes\_core module
 --------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_core
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeatypes\_decodes module
 -----------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_decodes
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeatypes\_get module
 -------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_get
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeatypes\_get\_prop module
 -------------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_get_prop
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeatypes\_poll module
 --------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_poll
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeatypes\_poll\_prop module
 --------------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_poll_prop
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeatypes\_set module
 -------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_set
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.nmeatypes\_set\_prop module
 -------------------------------------
 
 .. automodule:: pynmeagps.nmeatypes_set_prop
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pynmeagps.socketwrapper module
 ------------------------------
 
 .. automodule:: pynmeagps.socketwrapper
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------
 
 .. automodule:: pynmeagps
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:

@@ -137,7 +137,7 @@ NMEA_PAYLOADS_GET = {
         "senNum": IN,
         "seqmid": IN,
         "numAlerts": IN,
-        "alertgroup": (  # repeating group * numAlerts
+        "alertgroup_grp": (  # repeating group * numAlerts
             "numAlerts",
             {
                 "mfrcode": ST,
@@ -335,7 +335,7 @@ NMEA_PAYLOADS_GET = {
         "senNum": IN,
         "queryflag": CH,
         "mmsi": ST,
-        "datagroup": (
+        "datagroup_grp": (
             "None",  # variable repeating group
             {
                 "code": ST,
@@ -421,7 +421,7 @@ NMEA_PAYLOADS_GET = {
     "GEN": {
         "index": HX,
         "time": TM,
-        "group": ("None", {"data": HX}),  # variable repeating group
+        "group_grp": ("None", {"data": HX}),  # variable repeating group
     },
     "GFA": {
         "time": TM,
@@ -491,7 +491,7 @@ NMEA_PAYLOADS_GET = {
     "GRS": {
         "time": TM,
         "mode": IN,
-        "groupSV": (
+        "groupSV_grp": (
             12,
             {  # repeating group * 12
                 "residual": DE,
@@ -503,7 +503,7 @@ NMEA_PAYLOADS_GET = {
     "GSA": {
         "opMode": CH,
         "navMode": IN,
-        "groupSV": (
+        "groupSV_grp": (
             12,
             {  # repeating group * 12
                 "svid": IN,
@@ -528,7 +528,7 @@ NMEA_PAYLOADS_GET = {
         "numMsg": IN,
         "msgNum": IN,
         "numSV": IN,
-        "group_sv": (
+        "group_sv_grp": (
             "None",
             {  # repeating group * 1..4
                 "svid": IN,
@@ -949,7 +949,7 @@ NMEA_PAYLOADS_GET = {
         "msgNum": IN,
         "status": CH,  # 'c'/'w'
         "routeid": ST,
-        "group_wp": (
+        "group_wp_grp": (
             "None",
             {  # repeating group
                 "wpt": ST,
@@ -959,7 +959,7 @@ NMEA_PAYLOADS_GET = {
     "SFI": {
         "numSen": IN,
         "senNum": IN,
-        "freqgroup": (
+        "freqgroup_grp": (
             6,  # repeating group * 6
             {
                 "freq": IN,
@@ -1067,7 +1067,7 @@ NMEA_PAYLOADS_GET = {
         "mi": CH,
     },
     "TLB": {
-        "group": (
+        "group_grp": (
             "None",  # indeterminate repeating group
             {
                 "targetnum": IN,
@@ -1308,7 +1308,7 @@ NMEA_PAYLOADS_GET = {
         "wpt": ST,
     },
     "XDR": {
-        "group": (
+        "group_grp": (
             "None",  # indeterminate repeating group
             {
                 "tdrtype": CH,
