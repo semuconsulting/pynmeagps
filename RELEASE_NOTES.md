@@ -1,5 +1,11 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.1.8
+
+1. Internal refactoring.
+1. Update doc strings, type hints and workflows.
+1. No functional changes.
+
 ### RELEASE 1.1.7
 
 1. Fix typo in release version (v1.1.6 rather than V1.1.6) for those using pkgsrc to deploy.

@@ -27,8 +27,8 @@ Created on 4 Mar 2021
 
 from logging import getLogger
 from socket import socket
-from types import FunctionType, NoneType
-from typing import Literal
+from types import NoneType
+from typing import Callable, Literal
 
 import pynmeagps.exceptions as nme
 from pynmeagps.nmeahelpers import calc_checksum, get_parts
@@ -59,7 +59,7 @@ class NMEAReader:
         nmeaonly: bool = False,
         quitonerror: Literal[0, 1, 2] = ERR_LOG,
         bufsize: int = DEFAULT_BUFSIZE,
-        errorhandler: FunctionType | NoneType = None,
+        errorhandler: Callable | NoneType = None,
         userdefined: dict | NoneType = None,
         encoding: int = ENCODE_NONE,
     ):
@@ -73,7 +73,7 @@ class NMEAReader:
         :param Literal[0,1,2] quitonerror: ERR_IGNORE (0) = ignore errors,  
             ERR_LOG (1) = log continue, ERR_RAISE (2) = (re)raise (1)
         :param int bufsize: socket recv buffer size (4096)
-        :param FunctionType | NoneType errorhandler: error handling callback function (None)
+        :param Callable | NoneType errorhandler: error handling callback function (None)
         :param dict | NoneType userdefined: user-defined payload definition dictionary (None)
         :param int encoding: encoding for socket stream \
             (0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd)) (0)
@@ -127,11 +127,10 @@ class NMEAReader:
 
         """
 
-        parsing = True
         raw_data = None
         parsed_data = None
 
-        while parsing:  # loop until end of valid NMEA message or EOF
+        while True:  # loop until end of valid NMEA message or EOF
             try:
                 byte1 = self._read_bytes(1)  # read 1st byte
                 if byte1 != b"\x24":  # not NMEA, discard and continue
@@ -147,10 +146,9 @@ class NMEAReader:
                         validate=self._validate,
                         userdefined=self._userdefined,
                     )
-                    parsing = False
-                else:  # it's not a NMEA message (UBX or something else)
-                    if self._nmea_only:  # raise error and quit
-                        raise nme.NMEAParseError(f"Unknown protocol header {bytehdr}.")
+                    break
+                if self._nmea_only:  # raise error and quit
+                    raise nme.NMEAParseError(f"Unknown protocol header {bytehdr}.")
 
             except EOFError:
                 return (None, None)

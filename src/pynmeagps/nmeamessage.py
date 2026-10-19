@@ -103,6 +103,8 @@ class NMEAMessage:
         self._talker = talker
         self._msgID = msgID
         self._checksum = checksum
+        self._index = []
+        self._offset = 0
         # flag to show message is being streamed rather than generated
         self._streaming = "payload" in kwargs
         self._do_attributes(**kwargs)
@@ -117,10 +119,7 @@ class NMEAMessage:
         :raises: UBXTypeError
         """
 
-        pindex = 0  # payload index
-        gindex = []  # (nested) grouped attribute indices
-        key = ""
-
+        anam = ""
         try:
             self._payload = kwargs.get("payload", [])
             # self._checksum = kwargs.get("checksum", None)
@@ -129,10 +128,8 @@ class NMEAMessage:
                 if "payload" in kwargs:
                     self._set_attribute_nominal(kwargs["payload"])
                 return
-            for key in pdict.keys():  # process each attribute in dict
-                pindex, gindex = self._set_attribute(
-                    pindex, pdict, key, gindex, **kwargs
-                )
+            for anam, adef in pdict.items():  # process each attribute in dict
+                self._set_attribute(anam, adef, **kwargs)
             # generate checksum for newly-created message
             if self._checksum is None:
                 self._checksum = generate_checksum(
@@ -147,48 +144,33 @@ class NMEAMessage:
             ValueError,
         ) as err:
             raise nme.NMEATypeError(
-                f"Incorrect type for attribute {key} in msgID {self._msgID}."
+                f"Incorrect type for attribute {anam} in msgID {self._msgID}."
             ) from err
 
-    def _set_attribute(
-        self, pindex: int, pdict: dict, key: str, gindex: list, **kwargs
-    ) -> tuple:
+    def _set_attribute(self, anam: str, adef: str | tuple[str, dict], **kwargs):
         """
         Recursive routine to set individual or grouped payload attributes.
 
-        :param int pindex: payload index
-        :param dict pdict: dict representing payload definition
-        :param str key: attribute keyword
-        :param list gindex: repeating group index array
+        :param str anam: attribute name
+        :param str | tuple[str, dict] adef: attribute definition
         :param kwargs: optional payload key/value pairs
-        :return: (pindex, gindex[])
-        :rtype: tuple
         """
 
-        att = pdict[key]  # get attribute type
-        if isinstance(att, tuple):  # repeating group of attributes
-            pindex, gindex = self._set_attribute_group(att, pindex, gindex, **kwargs)
+        if anam[-4:] == nmt.GROUP:  # attribute group
+            self._set_attribute_group(adef, **kwargs)
         else:  # single attribute
-            pindex = self._set_attribute_single(att, pindex, key, gindex, **kwargs)
+            self._set_attribute_single(anam, adef, **kwargs)
 
-        return (pindex, gindex)
-
-    def _set_attribute_group(
-        self, att: tuple[int, dict], pindex: int, gindex: list, **kwargs
-    ) -> tuple:
+    def _set_attribute_group(self, adef: tuple[int | str, dict], **kwargs):
         """
         Process (nested) group of attributes.
 
-        :param tuple att: attribute group - tuple of (num repeats, attribute dict)
-        :param int pindex: payload index
-        :param list gindex: repeating group index array
+        :param tuple[int | str, dict] adef: attribute group - tuple of (num repeats, attribute dict)
         :param kwargs: optional payload key/value pairs
-        :return: (pindex, gindex[])
-        :rtype: tuple
         """
 
-        gindex.append(0)  # add a (nested) group index
-        numr, attd = att  # number of repeats, group dictionary
+        self._index.append(0)  # add a (nested) group index
+        numr, attd = adef  # number of repeats, group dictionary
 
         # derive or retrieve number of items in group
         if isinstance(numr, int):  # fixed number of repeats
@@ -196,7 +178,9 @@ class NMEAMessage:
         elif numr == "None":  # indeterminate number of repeats
             pindexend = 0  # may need tweaking
             if self._streaming:
-                rng = self._calc_num_repeats(attd, self._payload, pindex, pindexend)
+                rng = self._calc_num_repeats(
+                    attd, self._payload, self._offset, pindexend
+                )
             else:
                 rng = groupsize(**kwargs)
         else:  # number of repeats is defined in named attribute
@@ -204,83 +188,71 @@ class NMEAMessage:
         # recursively process each group attribute,
         # incrementing the payload index and group index as we go
         for i in range(rng):
-            gindex[-1] = i + 1
-            for key1 in attd.keys():
-                pindex, gindex = self._set_attribute(
-                    pindex, attd, key1, gindex, **kwargs
-                )
+            self._index[-1] = i + 1
+            for anam1, adef1 in attd.items():
+                self._set_attribute(anam1, adef1, **kwargs)
 
-        gindex.pop()  # remove this (nested) group index
+        self._index.pop()  # remove this (nested) group index
 
-        return (pindex, gindex)
-
-    def _set_attribute_single(
-        self, att: str, pindex: int, key: str, gindex: list, **kwargs
-    ) -> int:
+    def _set_attribute_single(self, anam: str, adef: str, **kwargs):
         """
         Set individual attribute value.
 
-        :param str att: attribute type e.g. 'NU'
-        :param int pindex: payload index
-        :param str key: attribute keyword
-        :param list gindex: repeating group index array
+        :param str anam: attribute name
+        :param str adef: attribute definition e.g. 'NU'
         :param kwargs: optional payload key/value pairs
-        :return: pindex
-        :rtype: int
         """
         # pylint: disable=no-member, access-member-before-definition, attribute-defined-outside-init
 
         # if attribute is part of a (nested) repeating group, suffix name with group index
-        keyr = key
-        for i in gindex:  # one index for each nested level
+        anamr = anam
+        for i in self._index:  # one index for each nested level
             if i > 0:
-                keyr += f"_{i:02d}"
+                anamr += f"_{i:02d}"
 
         try:
             # all attribute values have been provided
             if self._streaming:
                 # remove group delimiters in proprietary PSSNSNC message
                 if self.identity == "PSSNSNC":
-                    self._payload[pindex] = (
-                        self._payload[pindex].replace("[", "").replace("]", "")
+                    self._payload[self._offset] = (
+                        self._payload[self._offset].replace("[", "").replace("]", "")
                     )
-                val = self._payload[pindex]
-                val = self.str2val(val, att)
+                val = self._payload[self._offset]
+                val = self.str2val(val, adef)
             # some attribute values have been provided,
             # the rest will be set to a nominal value
             else:
-                if att == nmt.LND and hasattr(self, "lon"):
+                if adef == nmt.LND and hasattr(self, "lon"):
                     if isinstance(self.lon, (int, float)):
                         val = "W" if self.lon < 0 else "E"
                     else:  # pragma: no cover
                         val = "E"
-                elif att == nmt.LAD and hasattr(self, "lat"):
+                elif adef == nmt.LAD and hasattr(self, "lat"):
                     if isinstance(self.lat, (int, float)):
                         val = "S" if self.lat < 0 else "N"
                     else:  # pragma: no cover
                         val = "N"
                 else:
-                    val = kwargs.get(keyr, self.nomval(att, self.msgmode))
-                vals = self.val2str(val, att, self._hpnmeamode)
+                    val = kwargs.get(anamr, self.nomval(adef, self.msgmode))
+                vals = self.val2str(val, adef, self._hpnmeamode)
                 self._payload.append(vals)
 
         except (
             IndexError
         ):  # probably just an older device missing NMEA <=4.10 dict attributes
-            return pindex
+            return
 
-        setattr(self, keyr, val)  # add attribute to NMEAMessage object
+        setattr(self, anamr, val)  # add attribute to NMEAMessage object
         if self._streaming:
             # override sign of lat/lon according to NS and EW values
-            if att == nmt.LND and hasattr(self, "lon"):
+            if adef == nmt.LND and hasattr(self, "lon"):
                 if isinstance(self.lon, (int, float)):
                     self.lon = -abs(self.lon) if val == "W" else abs(self.lon)
-            elif att == nmt.LAD and hasattr(self, "lat"):
+            elif adef == nmt.LAD and hasattr(self, "lat"):
                 if isinstance(self.lat, (int, float)):
                     self.lat = -abs(self.lat) if val == "S" else abs(self.lat)
-        pindex += 1  # move on to next attribute in payload definition
-
-        return pindex
+        self._offset += 1  # move on to next attribute in payload definition
 
     def _set_attribute_nominal(self, payload: list):
         """
