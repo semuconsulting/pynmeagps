@@ -3,7 +3,7 @@ name: pynmeagps
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
