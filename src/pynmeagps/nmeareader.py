@@ -196,7 +196,6 @@ class NMEAReader:
 
         data = self._stream.readline(MAXBUFSIZE + 1)  # NMEA protocol is CRLF-terminated
         ld = len(data)
-        print(f"DEBUG NMEAReader read_line {ld=}")
         if ld == 0:  # EOF
             raise EOFError()  # pragma: no cover
         if ld > MAXBUFSIZE:

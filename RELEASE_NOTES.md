@@ -3,6 +3,7 @@
 ### RELEASE 1.1.9
 
 1. Limit NMEAReader readline() buffer size - Fixes #102
+1. Remove Python 3.10 from build and test workflows (now End of Life). pynmeagps will continue to work under Python 3.10 until otherwise advised.
 
 ### RELEASE 1.1.8
 

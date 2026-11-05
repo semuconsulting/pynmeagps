@@ -108,7 +108,6 @@ class SocketWrapper:
         :param int size: maximum number of bytes to read
         :returns: bytes
         :rtype: bytes
-        :raises: BufferError
         """
 
         size = min(size, MAXBUFSIZE)
