@@ -17,7 +17,9 @@ from pynmeagps import (
     POLL,
     ENCODE_CHUNKED,
     ENCODE_NONE,
+    ERR_RAISE,
     DEFAULT_BUFSIZE,
+    MAXBUFSIZE,
     SocketWrapper,
 )
 
@@ -60,7 +62,6 @@ class DummySocket(socket):
         self._timeout = kwargs.pop("timeout", False)
 
         super().__init__(*args, **kwargs)
-
         self._stream = pool * round(DEFAULT_BUFSIZE / len(pool))
         self._buffer = self._stream
 
@@ -185,6 +186,11 @@ class SocketTest(unittest.TestCase):
             if i >= 12:
                 break
         self.assertEqual(i, 0)
+
+    def testBufSize(self):  # test for maximum buffer size
+        stream = DummySocket(SOCKETPOOL, timeout=True)
+        with self.assertRaisesRegex(ValueError,f"Buffer size {MAXBUFSIZE+1} exceeds maximum {MAXBUFSIZE}"):
+            _ = NMEAReader(stream, bufsize=MAXBUFSIZE+1)
 
 
 if __name__ == "__main__":
