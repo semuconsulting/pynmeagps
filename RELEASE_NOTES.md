@@ -1,5 +1,9 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.1.9
+
+1. Limit NMEAReader readline() buffer size - Fixes #102
+
 ### RELEASE 1.1.8
 
 1. Internal refactoring.

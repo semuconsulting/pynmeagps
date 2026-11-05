@@ -9,26 +9,32 @@ Created on 04 Mar 2021
 """
 
 
-class NMEAParseError(Exception):
+class NMEAError(Exception):
+    """
+    NMEA Generic error.
+    """
+
+
+class NMEAParseError(NMEAError):
     """
     NMEA Parsing error.
     """
 
 
-class NMEAStreamError(Exception):
+class NMEAStreamError(NMEAError):
     """
     NMEA Streaming error.
     """
 
 
-class NMEAMessageError(Exception):
+class NMEAMessageError(NMEAError):
     """
     NMEA Undefined message class/id.
     Essentially a prompt to add missing payload types to UBX_PAYLOADS.
     """
 
 
-class NMEATypeError(Exception):
+class NMEATypeError(NMEAError):
     """
     NMEA Undefined payload attribute type.
     Essentially a prompt to fix incorrect payload definitions to UBX_PAYLOADS.
