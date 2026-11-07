@@ -11,12 +11,14 @@ Created on 4 Mar 2021
 import os
 import sys
 import unittest
+from io import BytesIO
 from logging import ERROR
 
 from pynmeagps import (
     NMEAReader,
     NMEAParseError,
     NMEATypeError,
+    NMEAStreamError,
     VALCKSUM,
     ERR_RAISE,
     ERR_IGNORE,
@@ -787,6 +789,13 @@ class StreamTest(unittest.TestCase):
                 i += 1
             self.assertEqual(i, 2)
 
+    def testbufferoverflow(self):  # test user-defined payload definition dictionary
+        golarge = b"$PGRMM," + b"Ridiculously long sentence" * 630 + b"*2F\r\n"
+        with self.assertRaisesRegex(NMEAStreamError,"Maximum buffer size 16384 exceeded"):
+            with BytesIO(golarge) as stream:
+                ubr = NMEAReader(stream, quitonerror=ERR_RAISE)
+                for raw, parsed in ubr:
+                        print(f'"{parsed}",')
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

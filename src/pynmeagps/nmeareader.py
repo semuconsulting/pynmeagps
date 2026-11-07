@@ -28,7 +28,7 @@ Created on 4 Mar 2021
 from logging import getLogger
 from socket import socket
 from types import NoneType
-from typing import Callable, Literal
+from typing import Any, Callable, Literal
 
 import pynmeagps.exceptions as nme
 from pynmeagps.nmeahelpers import calc_checksum, get_parts
@@ -39,6 +39,7 @@ from pynmeagps.nmeatypes_core import (
     ERR_LOG,
     ERR_RAISE,
     GET,
+    MAXBUFSIZE,
     NMEA_HDR,
     VALCKSUM,
     VALMSGID,
@@ -53,7 +54,7 @@ class NMEAReader:
 
     def __init__(
         self,
-        stream,
+        stream: Any,
         msgmode: Literal[0, 1, 2] = GET,
         validate: int = VALCKSUM,
         nmeaonly: bool = False,
@@ -65,7 +66,7 @@ class NMEAReader:
     ):
         """Constructor.
 
-        :param stream stream: input data stream (e.g. Serial or binary File)
+        :param Any stream stream: input data stream (e.g. Serial or binary File)
         :param Literal[0,1,2] msgmode: 0=GET, 1=SET, 2=POLL (0)
         :param int validate: VALNONE (0), VALCKSUM (1), VALMSGID (2),
             (can be OR'd) (1)
@@ -193,13 +194,16 @@ class NMEAReader:
         :raises: EOFError if stream ends prematurely
         """
 
-        data = self._stream.readline()  # NMEA protocol is CRLF-terminated
-        if len(data) == 0:  # EOF
+        data = self._stream.readline(MAXBUFSIZE + 1)  # NMEA protocol is CRLF-terminated
+        ld = len(data)
+        if ld == 0:  # EOF
             raise EOFError()  # pragma: no cover
+        if ld > MAXBUFSIZE:
+            raise nme.NMEAStreamError(f"Maximum buffer size {MAXBUFSIZE} exceeded")
         if data[-1:] != b"\x0a":  # truncated stream
             raise nme.NMEAStreamError(  # pragma: no cover
                 "Serial stream terminated unexpectedly. "
-                f"Line requested, {len(data)} bytes returned."
+                f"Line requested, {ld} bytes returned."
             )
         return data
 

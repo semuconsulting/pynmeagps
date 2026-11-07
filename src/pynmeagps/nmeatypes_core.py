@@ -64,6 +64,8 @@ ENCODE_COMPRESS = 4
 """compress socket encoding"""
 ENCODE_DEFLATE = 8
 """deflate socket encoding"""
+MAXBUFSIZE = 16384
+"""Maximum buffer size"""
 
 EPOCH0_BEIDOU = datetime(2006, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 """Base epoch for Beidou time system (BDT)"""

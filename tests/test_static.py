@@ -461,12 +461,12 @@ class StaticTest(unittest.TestCase):
         self,
     ):  # double check that evaluation of repr(message) reproduces original message
         res1 = self.msgGLL
-        res2 = eval(repr(self.msgGLL))
+        res2 = eval(repr(self.msgGLL)) #nosec
         self.assertEqual(str(res1), str(res2))
 
     def testEvalReprP(self):
         res1 = self.msgPUBX00
-        res2 = eval(repr(self.msgPUBX00))
+        res2 = eval(repr(self.msgPUBX00)) #nosec
         self.assertEqual(str(res1), str(res2))
 
     # *******************************************

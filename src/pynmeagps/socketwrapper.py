@@ -25,6 +25,7 @@ from pynmeagps.nmeatypes_core import (
     ENCODE_DEFLATE,
     ENCODE_GZIP,
     ENCODE_NONE,
+    MAXBUFSIZE,
 )
 
 
@@ -47,10 +48,13 @@ class SocketWrapper:
         :param int bufsize: internal buffer size
         """
 
+        if abs(bufsize) > MAXBUFSIZE:
+            raise (ValueError(f"Buffer size {bufsize} exceeds maximum {MAXBUFSIZE}"))
+
         # configure logger with name "pygnssutils" in calling module
         self.logger = getLogger(__name__)
         self._socket = sock
-        self._bufsize = bufsize
+        self._bufsize = abs(bufsize)
         self._encoding = encoding
         self._buffer = bytearray()
         self._partial = b""  # partial chunk
@@ -96,21 +100,23 @@ class SocketWrapper:
         self._buffer = self._buffer[num:]
         return bytes(data)
 
-    def readline(self) -> bytes:
+    def readline(self, size: int = MAXBUFSIZE) -> bytes:
         """
         Read bytes from buffer until CRLF reached.
         NB: always check that return data terminator is CRLF.
 
+        :param int size: maximum number of bytes to read
         :returns: bytes
         :rtype: bytes
         """
 
+        size = min(size, MAXBUFSIZE)
         line = b""
         while True:
             data = self.read(1)
             if len(data) == 1:
                 line += data
-                if line[-2:] == b"\r\n":
+                if line[-2:] == b"\r\n" or len(line) > size:
                     break
             else:
                 break
