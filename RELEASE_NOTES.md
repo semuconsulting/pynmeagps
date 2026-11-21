@@ -1,5 +1,9 @@
 # pynmeagps Release Notes
 
+### RELEASE 1.2.0
+
+1. Fix dechunk CRLF issue #104
+
 ### RELEASE 1.1.9
 
 1. Limit NMEAReader readline() buffer size - Fixes #102
