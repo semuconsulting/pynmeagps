@@ -192,6 +192,15 @@ class SocketTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,f"Buffer size {MAXBUFSIZE+1} exceeds maximum {MAXBUFSIZE}"):
             _ = NMEAReader(stream, bufsize=MAXBUFSIZE+1)
 
+    def testDechunkAcrossReads(self):  # a chunk may end anywhere in a socket read
+        sw = SocketWrapper(DummySocket(SOCKETPOOL_CHUNKED), encoding=ENCODE_CHUNKED)
+        for size in range(1, 40):
+            output = b""
+            partial = b""
+            for pos in range(0, len(SOCKETPOOL_CHUNKED), size):
+                chunks, partial = sw.dechunk(partial + SOCKETPOOL_CHUNKED[pos : pos + size])
+                output += chunks
+            self.assertEqual(output, SOCKETPOOL, f"read size {size}")
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

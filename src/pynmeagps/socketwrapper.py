@@ -174,9 +174,10 @@ class SocketWrapper:
                 break
             if chunk_length != 0:
                 chunk = instream.read(chunk_length)
-                if len(chunk) != chunk_length:
+                crlf = instream.read(2)
+                if len(chunk) != chunk_length or len(crlf) != 2:
                     # premature end of chunk bytes
-                    partial = length_bytes + chunk
+                    partial = length_bytes + chunk + crlf
                     break
                 try:  # pragma: no cover
                     if self._encoding & ENCODE_GZIP:
@@ -190,9 +191,9 @@ class SocketWrapper:
                     # parser will discard data
                 chunks += chunk
 
-            instream.readline()
             if chunk_length == 0:
                 # final chunk
+                instream.readline()
                 break
 
         return chunks, partial
